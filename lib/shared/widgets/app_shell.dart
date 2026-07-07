@@ -96,13 +96,11 @@ class _SidebarDestination extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 160),
-        curve: Curves.easeOut,
-        decoration: BoxDecoration(
-          color: selected ? colorScheme.primaryContainer : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
-        ),
+      child: Material(
+        color: selected ? colorScheme.primaryContainer : Colors.transparent,
+        borderRadius: BorderRadius.circular(8),
+        clipBehavior: Clip.antiAlias,
+        animationDuration: const Duration(milliseconds: 160),
         child: ListTile(
           selected: selected,
           selectedColor: colorScheme.primary,
