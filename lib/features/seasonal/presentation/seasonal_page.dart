@@ -124,6 +124,7 @@ class _SeasonalControls extends ConsumerWidget {
                 onChanged: (value) {
                   ref.read(seasonalTypeFilterProvider.notifier).setType(value);
                   ref.read(seasonalLastPageProvider.notifier).reset();
+                  ref.read(seasonalMaxLoadedPageProvider.notifier).reset();
                   ref.read(seasonalPageProvider.notifier).reset();
                 },
               ),
@@ -166,8 +167,12 @@ class _SeasonalPagination extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final page = ref.watch(seasonalPageProvider);
     final lastPage = ref.watch(seasonalLastPageProvider);
-    final pages = _visiblePages(page, lastPage);
-    final canGoNext = hasNextPage && (lastPage == null || page < lastPage);
+    final maxLoadedPage = ref.watch(seasonalMaxLoadedPageProvider);
+    final pages = _visiblePages(page, lastPage, maxLoadedPage);
+    final canGoNext =
+        hasNextPage &&
+        page < maxLoadedPage &&
+        (lastPage == null || page < lastPage);
 
     return Center(
       child: Wrap(
@@ -206,11 +211,10 @@ class _SeasonalPagination extends ConsumerWidget {
     );
   }
 
-  List<int> _visiblePages(int currentPage, int? lastPage) {
+  List<int> _visiblePages(int currentPage, int? lastPage, int maxLoadedPage) {
+    final availableEnd = lastPage ?? maxLoadedPage;
     final preferredEnd = currentPage <= 3 ? 5 : currentPage + 2;
-    final end = lastPage == null
-        ? preferredEnd
-        : preferredEnd.clamp(1, lastPage);
+    final end = preferredEnd.clamp(1, availableEnd);
     final start = (end - 4).clamp(1, end);
 
     return [for (var page = start; page <= end; page++) page];
