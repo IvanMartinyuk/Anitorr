@@ -5,6 +5,8 @@ import 'package:jikan_api/jikan_api.dart';
 
 import '../data/seasonal_anime_repository.dart';
 
+const visibleSeasonalPageCount = 5;
+
 final seasonalAnimeRepositoryProvider = Provider<SeasonalAnimeRepository>((
   ref,
 ) {
@@ -30,12 +32,18 @@ final seasonalLastPageProvider =
       SeasonalLastPageNotifier.new,
     );
 
+final seasonalMaxLoadedPageProvider =
+    NotifierProvider<SeasonalMaxLoadedPageNotifier, int>(
+      SeasonalMaxLoadedPageNotifier.new,
+    );
+
 final seasonalAnimeProvider = FutureProvider<List<Anime>>((ref) async {
   final type = ref.watch(seasonalTypeFilterProvider);
   final sort = ref.watch(seasonalSortProvider);
   final page = ref.watch(seasonalPageProvider);
   final repository = ref.watch(seasonalAnimeRepositoryProvider);
   final anime = await repository.getCurrentSeasonAnime(type: type, page: page);
+  _syncPaginationCacheState(ref: ref, repository: repository, type: type);
 
   if (anime.isEmpty) {
     final lastPage = page <= 1 ? 1 : page - 1;
@@ -44,14 +52,12 @@ final seasonalAnimeProvider = FutureProvider<List<Anime>>((ref) async {
     return [];
   }
 
-  unawaited(
-    _discoverLastPageAhead(
-      ref: ref,
-      repository: repository,
-      type: type,
-      currentPage: page,
-    ),
-  );
+  if (!repository.isVisiblePageCacheStarted(type: type)) {
+    repository.markVisiblePageCacheStarted(type: type);
+    unawaited(
+      _cacheVisiblePagesThenRest(ref: ref, repository: repository, type: type),
+    );
+  }
 
   return _sortAnime(_distinctByTitle(anime), sort);
 });
@@ -98,6 +104,11 @@ class SeasonalPageNotifier extends Notifier<int> {
       return;
     }
 
+    final maxLoadedPage = ref.read(seasonalMaxLoadedPageProvider);
+    if (lastPage == null && state >= maxLoadedPage) {
+      return;
+    }
+
     state += 1;
   }
 
@@ -107,7 +118,9 @@ class SeasonalPageNotifier extends Notifier<int> {
     }
 
     final lastPage = ref.read(seasonalLastPageProvider);
-    state = lastPage == null || page <= lastPage ? page : lastPage;
+    final maxLoadedPage = ref.read(seasonalMaxLoadedPageProvider);
+    final availablePage = lastPage ?? maxLoadedPage;
+    state = page <= availablePage ? page : availablePage;
   }
 
   void reset() {
@@ -130,6 +143,23 @@ class SeasonalLastPageNotifier extends Notifier<int?> {
 
   void reset() {
     state = null;
+  }
+}
+
+class SeasonalMaxLoadedPageNotifier extends Notifier<int> {
+  @override
+  int build() {
+    return 1;
+  }
+
+  void rememberMaxLoadedPage(int page) {
+    if (page > state) {
+      state = page;
+    }
+  }
+
+  void reset() {
+    state = 1;
   }
 }
 
@@ -186,38 +216,79 @@ String _normalizedTitle(Anime anime) {
   return title.trim().toLowerCase();
 }
 
-Future<void> _discoverLastPageAhead({
+Future<void> _cacheVisiblePagesThenRest({
   required Ref ref,
   required SeasonalAnimeRepository repository,
   required AnimeType? type,
-  required int currentPage,
 }) async {
-  if (ref.read(seasonalLastPageProvider) != null) {
+  await _cachePagesUntilEmpty(
+    ref: ref,
+    repository: repository,
+    type: type,
+    startPage: 2,
+    endPage: visibleSeasonalPageCount,
+  );
+
+  if (!ref.mounted || repository.getKnownLastPage(type: type) != null) {
     return;
   }
 
-  final visibleEndPage = _visiblePageRangeEnd(currentPage);
-  final probeEndPage = visibleEndPage + 5;
+  if (repository.isFullCacheStarted(type: type)) {
+    return;
+  }
 
-  for (var page = currentPage + 1; page <= probeEndPage; page++) {
+  repository.markFullCacheStarted(type: type);
+  await _cachePagesUntilEmpty(
+    ref: ref,
+    repository: repository,
+    type: type,
+    startPage: visibleSeasonalPageCount + 1,
+  );
+}
+
+Future<void> _cachePagesUntilEmpty({
+  required Ref ref,
+  required SeasonalAnimeRepository repository,
+  required AnimeType? type,
+  required int startPage,
+  int? endPage,
+}) async {
+  var page = startPage;
+  while (endPage == null || page <= endPage) {
     final anime = await repository.getCurrentSeasonAnime(
       type: type,
       page: page,
     );
-    if (anime.isEmpty) {
-      if (!ref.mounted) {
-        return;
-      }
 
+    if (!ref.mounted) {
+      return;
+    }
+
+    _syncPaginationCacheState(ref: ref, repository: repository, type: type);
+
+    if (anime.isEmpty) {
       ref.read(seasonalLastPageProvider.notifier).rememberLastPage(page - 1);
       return;
     }
+
+    page += 1;
   }
 }
 
-int _visiblePageRangeEnd(int currentPage) {
-  final start = currentPage <= 3 ? 1 : currentPage - 2;
-  return start + 4;
+void _syncPaginationCacheState({
+  required Ref ref,
+  required SeasonalAnimeRepository repository,
+  required AnimeType? type,
+}) {
+  final lastPage = repository.getKnownLastPage(type: type);
+  final maxLoadedPage = repository.getMaxContiguousLoadedPage(type: type);
+  if (lastPage != null) {
+    ref.read(seasonalLastPageProvider.notifier).rememberLastPage(lastPage);
+  }
+
+  ref
+      .read(seasonalMaxLoadedPageProvider.notifier)
+      .rememberMaxLoadedPage(maxLoadedPage);
 }
 
 int _compareNullableAsc(num? a, num? b) {
