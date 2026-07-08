@@ -2,318 +2,510 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jikan_api/jikan_api.dart';
 
+import '../../../shared/widgets/filter_controls.dart';
+import '../../../shared/widgets/list_navigation.dart';
 import '../domain/seasonal_anime_providers.dart';
+
+const _seasonalItemsPerDisplayPage = 25;
+const _seasonalFilterHeaderHeight = 48.0;
 
 class SeasonalPage extends ConsumerWidget {
   const SeasonalPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textTheme = Theme.of(context).textTheme;
     final anime = ref.watch(seasonalAnimeProvider);
+    final filtersActive = ref.watch(seasonalHasActiveCachedFiltersProvider);
+    final page = ref.watch(seasonalPageProvider);
+    final lastPage = ref.watch(seasonalLastPageProvider);
+    final maxLoadedPage = ref.watch(seasonalMaxLoadedPageProvider);
+    final isFullCacheLoading = ref.watch(seasonalFullCacheLoadingProvider);
+    final loadedItems = anime.maybeWhen(
+      data: (items) => items,
+      orElse: () => const <Anime>[],
+    );
+    final displayLastPage = _displayLastPage(loadedItems.length);
+    const listMode = ListNavigationMode.infiniteScroll;
+    final isLoadingMore =
+        anime.isLoading && maxLoadedPage > 0 ||
+        filtersActive && isFullCacheLoading;
+    final canLoadMore = !filtersActive && (lastPage == null || page < lastPage);
+    final pageConfig = filtersActive
+        ? PageNavigationConfig(
+            currentPage: page,
+            maxLoadedPage: displayLastPage,
+            lastPage: displayLastPage,
+            hasNextPage: page < displayLastPage,
+            onPreviousPage: () {
+              ref.read(seasonalPageProvider.notifier).goToPreviousPage();
+            },
+            onNextPage: () {
+              ref
+                  .read(seasonalPageProvider.notifier)
+                  .goToNextPage(lastPageOverride: displayLastPage);
+            },
+            onPageSelected: (selectedPage) {
+              ref
+                  .read(seasonalPageProvider.notifier)
+                  .goToPage(selectedPage, lastPageOverride: displayLastPage);
+            },
+          )
+        : PageNavigationConfig(
+            currentPage: page,
+            maxLoadedPage: maxLoadedPage,
+            lastPage: lastPage,
+            hasNextPage: true,
+            onPreviousPage: () {
+              ref.read(seasonalPageProvider.notifier).goToPreviousPage();
+            },
+            onNextPage: () {
+              ref.read(seasonalPageProvider.notifier).goToNextPage();
+            },
+            onPageSelected: (selectedPage) {
+              ref.read(seasonalPageProvider.notifier).goToPage(selectedPage);
+            },
+          );
 
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: () => ref.refresh(seasonalAnimeProvider.future),
-        child: CustomScrollView(
+        child: NavigableSliverList(
+          mode: listMode,
+          pageConfig: pageConfig,
+          infiniteConfig: InfiniteScrollConfig(
+            canLoadMore: canLoadMore,
+            isLoading: isLoadingMore,
+            thresholdPixels: 0,
+            onLoadMore: () {
+              ref.read(seasonalPageProvider.notifier).loadNextPage();
+            },
+            endLabel: 'All seasonal anime loaded',
+          ),
           slivers: [
-            SliverPadding(
-              padding: const EdgeInsets.fromLTRB(32, 32, 32, 20),
-              sliver: SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Seasonal', style: textTheme.headlineMedium),
-                    const SizedBox(height: 24),
-                    const _SeasonalControls(),
-                  ],
-                ),
-              ),
+            const SliverPadding(
+              padding: EdgeInsets.fromLTRB(32, 32, 32, 20),
+              sliver: SliverToBoxAdapter(child: _SeasonalControls()),
             ),
-            anime.when(
-              data: (items) {
-                if (items.isEmpty) {
-                  return const SliverPadding(
+            ...anime.when(
+              skipLoadingOnReload: true,
+              data: (items) => [
+                if (items.isEmpty)
+                  const SliverPadding(
                     padding: EdgeInsets.fromLTRB(32, 0, 32, 32),
                     sliver: SliverFillRemaining(
                       hasScrollBody: false,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _SeasonalEmptyState(),
-                          SizedBox(height: 24),
-                          _SeasonalPagination(hasNextPage: false),
-                        ],
-                      ),
+                      child: _SeasonalEmptyState(),
                     ),
-                  );
-                }
-
-                return SliverMainAxisGroup(
-                  slivers: [
-                    _SeasonalAnimeGrid(items: items),
-                    const SliverPadding(
-                      padding: EdgeInsets.fromLTRB(32, 0, 32, 32),
-                      sliver: SliverToBoxAdapter(
-                        child: _SeasonalPagination(hasNextPage: true),
-                      ),
-                    ),
-                  ],
-                );
-              },
-              loading: () => const SliverFillRemaining(
-                hasScrollBody: false,
-                child: _SeasonalLoadingState(),
-              ),
-              error: (error, stackTrace) => SliverFillRemaining(
-                hasScrollBody: false,
-                child: _SeasonalErrorState(error: error),
-              ),
+                  )
+                else
+                  _SeasonalAnimeGrid(
+                    items: items,
+                    page: filtersActive && listMode == ListNavigationMode.pages
+                        ? page
+                        : 1,
+                    maxItemsPerPage:
+                        filtersActive && listMode == ListNavigationMode.pages
+                        ? _seasonalItemsPerDisplayPage
+                        : null,
+                  ),
+              ],
+              loading: () => const [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: _SeasonalLoadingState(),
+                ),
+              ],
+              error: (error, stackTrace) => [
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: _SeasonalErrorState(error: error),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
   }
+
+  int _displayLastPage(int itemCount) {
+    if (itemCount <= 0) {
+      return 1;
+    }
+
+    return (itemCount / _seasonalItemsPerDisplayPage).ceil();
+  }
 }
 
-class _SeasonalControls extends ConsumerWidget {
+class _SeasonalControls extends ConsumerStatefulWidget {
   const _SeasonalControls();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final colorScheme = Theme.of(context).colorScheme;
+  ConsumerState<_SeasonalControls> createState() => _SeasonalControlsState();
+}
+
+class _SeasonalControlsState extends ConsumerState<_SeasonalControls> {
+  bool _showAdvancedFilters = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     final type = ref.watch(seasonalTypeFilterProvider);
     final sort = ref.watch(seasonalSortProvider);
+    final filters = ref.watch(seasonalFiltersProvider);
+    final genres = ref.watch(seasonalAvailableGenresProvider);
+    final activeAdvancedFilterCount = _activeAdvancedFilterCount(
+      type: type,
+      filters: filters,
+    );
+    final header = _SeasonalFilterHeader(
+      expanded: _showAdvancedFilters,
+      filters: filters,
+      sort: sort,
+      activeAdvancedFilterCount: activeAdvancedFilterCount,
+      onQueryChanged: (value) {
+        ref.read(seasonalFiltersProvider.notifier).setQuery(value);
+      },
+      onSortSelected: (value) {
+        ref.read(seasonalSortProvider.notifier).setSort(value);
+      },
+      onToggleAdvancedFilters: () {
+        setState(() {
+          _showAdvancedFilters = !_showAdvancedFilters;
+        });
+      },
+    );
+
+    if (!_showAdvancedFilters) {
+      return header;
+    }
+
+    return FilterPanel(
+      children: [
+        header,
+        const SizedBox(height: 18),
+        FilterRow(
+          children: [
+            DropdownFilter<AnimeType?>(
+              label: 'Type',
+              value: type,
+              options: const [
+                FilterOption(value: null, label: 'All types'),
+                FilterOption(value: AnimeType.tv, label: 'TV'),
+                FilterOption(value: AnimeType.movie, label: 'Movie'),
+                FilterOption(value: AnimeType.ova, label: 'OVA'),
+                FilterOption(value: AnimeType.ona, label: 'ONA'),
+                FilterOption(value: AnimeType.special, label: 'Special'),
+              ],
+              onChanged: (value) {
+                ref.read(seasonalTypeFilterProvider.notifier).setType(value);
+                ref.read(seasonalPageProvider.notifier).reset();
+              },
+            ),
+            DropdownFilter<bool?>(
+              label: 'Airing',
+              value: filters.airing,
+              options: const [
+                FilterOption(value: null, label: 'Any airing'),
+                FilterOption(value: true, label: 'Airing now'),
+                FilterOption(value: false, label: 'Not airing'),
+              ],
+              onChanged: (value) {
+                ref.read(seasonalFiltersProvider.notifier).setAiring(value);
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 18),
+        RangeFilter(
+          label: 'Score',
+          values: RangeValues(filters.minScore, filters.maxScore),
+          min: 0,
+          max: 10,
+          divisions: 20,
+          onChanged: (values) {
+            ref
+                .read(seasonalFiltersProvider.notifier)
+                .setScoreRange(values.start, values.end);
+          },
+        ),
+        const SizedBox(height: 12),
+        Text('Rating', style: textTheme.labelLarge),
+        const SizedBox(height: 8),
+        MultiChoiceFilter<AnimeContentRating>(
+          options: [
+            for (final rating in AnimeContentRating.values)
+              FilterOption(value: rating, label: rating.label),
+          ],
+          selectedValues: filters.ratings,
+          onToggle: (rating) {
+            ref.read(seasonalFiltersProvider.notifier).toggleRating(rating);
+          },
+        ),
+        if (genres.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Text('Genres', style: textTheme.labelLarge),
+          const SizedBox(height: 8),
+          MultiChoiceFilter<String>(
+            options: [
+              for (final genre in genres)
+                FilterOption(value: genre, label: genre),
+            ],
+            selectedValues: filters.genres,
+            onToggle: (genre) {
+              ref.read(seasonalFiltersProvider.notifier).toggleGenre(genre);
+            },
+          ),
+        ],
+        if (type != null || filters.hasActiveCachedFilters) ...[
+          const SizedBox(height: 14),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: () {
+                ref.read(seasonalTypeFilterProvider.notifier).setType(null);
+                ref.read(seasonalFiltersProvider.notifier).clear();
+              },
+              icon: const Icon(Icons.filter_alt_off_outlined),
+              label: const Text('Clear filters'),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  int _activeAdvancedFilterCount({
+    required AnimeType? type,
+    required SeasonalFilters filters,
+  }) {
+    var count = 0;
+    if (type != null) {
+      count += 1;
+    }
+    if (filters.airing != null) {
+      count += 1;
+    }
+    if (filters.minScore > 0 || filters.maxScore < 10) {
+      count += 1;
+    }
+
+    return count + filters.ratings.length + filters.genres.length;
+  }
+}
+
+class _SeasonalFilterHeader extends StatelessWidget {
+  const _SeasonalFilterHeader({
+    required this.expanded,
+    required this.filters,
+    required this.sort,
+    required this.activeAdvancedFilterCount,
+    required this.onQueryChanged,
+    required this.onSortSelected,
+    required this.onToggleAdvancedFilters,
+  });
+
+  final bool expanded;
+  final SeasonalFilters filters;
+  final SeasonalSort sort;
+  final int activeAdvancedFilterCount;
+  final ValueChanged<String> onQueryChanged;
+  final ValueChanged<SeasonalSort> onSortSelected;
+  final VoidCallback onToggleAdvancedFilters;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final search = _SearchFieldSurface(
+          expanded: expanded,
+          child: TextSearchFilter(
+            label: 'Title',
+            value: filters.query,
+            hintText: 'English, Japanese, synonym',
+            borderless: !expanded,
+            width: double.infinity,
+            onChanged: onQueryChanged,
+          ),
+        );
+        final actions = Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _SortMenuButton(
+              sort: sort,
+              showLabel: expanded,
+              onSelected: onSortSelected,
+            ),
+            const SizedBox(width: 8),
+            _FilterToggleButton(
+              count: activeAdvancedFilterCount,
+              onPressed: onToggleAdvancedFilters,
+            ),
+          ],
+        );
+
+        if (constraints.maxWidth < 620) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              search,
+              const SizedBox(height: 12),
+              Align(alignment: Alignment.centerRight, child: actions),
+            ],
+          );
+        }
+
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: search),
+            const SizedBox(width: 12),
+            actions,
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _SearchFieldSurface extends StatelessWidget {
+  const _SearchFieldSurface({required this.expanded, required this.child});
+
+  final bool expanded;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
 
     return DecoratedBox(
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainer,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(expanded ? 8 : 24),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Wrap(
-          spacing: 16,
-          runSpacing: 16,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            SizedBox(
-              width: 220,
-              child: DropdownButtonFormField<AnimeType?>(
-                initialValue: type,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Filter',
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                ),
-                items: const [
-                  DropdownMenuItem(value: null, child: Text('All types')),
-                  DropdownMenuItem(value: AnimeType.tv, child: Text('TV')),
-                  DropdownMenuItem(
-                    value: AnimeType.movie,
-                    child: Text('Movie'),
-                  ),
-                  DropdownMenuItem(value: AnimeType.ova, child: Text('OVA')),
-                  DropdownMenuItem(value: AnimeType.ona, child: Text('ONA')),
-                  DropdownMenuItem(
-                    value: AnimeType.special,
-                    child: Text('Special'),
-                  ),
-                ],
-                onChanged: (value) {
-                  ref.read(seasonalTypeFilterProvider.notifier).setType(value);
-                  ref.read(seasonalLastPageProvider.notifier).reset();
-                  ref.read(seasonalMaxLoadedPageProvider.notifier).reset();
-                  ref.read(seasonalPageProvider.notifier).reset();
-                },
-              ),
-            ),
-            SizedBox(
-              width: 220,
-              child: DropdownButtonFormField<SeasonalSort>(
-                initialValue: sort,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Sort',
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                ),
-                items: [
-                  for (final option in SeasonalSort.values)
-                    DropdownMenuItem(value: option, child: Text(option.label)),
-                ],
-                onChanged: (value) {
-                  if (value == null) {
-                    return;
-                  }
-
-                  ref.read(seasonalSortProvider.notifier).setSort(value);
-                },
-              ),
-            ),
-          ],
+      child: SizedBox(
+        height: _seasonalFilterHeaderHeight,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: expanded ? 0 : 4),
+          child: child,
         ),
       ),
     );
   }
 }
 
-class _SeasonalPagination extends ConsumerWidget {
-  const _SeasonalPagination({required this.hasNextPage});
+class _SortMenuButton extends StatelessWidget {
+  const _SortMenuButton({
+    required this.sort,
+    required this.showLabel,
+    required this.onSelected,
+  });
 
-  final bool hasNextPage;
+  final SeasonalSort sort;
+  final bool showLabel;
+  final ValueChanged<SeasonalSort> onSelected;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final page = ref.watch(seasonalPageProvider);
-    final lastPage = ref.watch(seasonalLastPageProvider);
-    final maxLoadedPage = ref.watch(seasonalMaxLoadedPageProvider);
-    final pages = _visiblePages(page, lastPage, maxLoadedPage);
-    final canGoNext =
-        hasNextPage &&
-        page < maxLoadedPage &&
-        (lastPage == null || page < lastPage);
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
-    return Center(
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: [
-          _PaginationButton(
-            tooltip: 'Previous page',
-            onPressed: page <= 1
-                ? null
-                : () {
-                    ref.read(seasonalPageProvider.notifier).goToPreviousPage();
-                  },
-            child: const Icon(Icons.chevron_left_rounded),
+    return PopupMenuButton<SeasonalSort>(
+      tooltip: 'Sort',
+      initialValue: sort,
+      onSelected: onSelected,
+      itemBuilder: (context) {
+        return [
+          for (final option in SeasonalSort.values)
+            PopupMenuItem(value: option, child: Text(option.label)),
+        ];
+      },
+      child: SizedBox(
+        height: _seasonalFilterHeaderHeight,
+        width: showLabel ? null : _seasonalFilterHeaderHeight,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: colorScheme.surfaceContainer,
+            borderRadius: BorderRadius.circular(showLabel ? 8 : 24),
           ),
-          for (final visiblePage in pages)
-            _PageNumberButton(
-              page: visiblePage,
-              selected: visiblePage == page,
-              onPressed: () {
-                ref.read(seasonalPageProvider.notifier).goToPage(visiblePage);
-              },
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: showLabel ? 12 : 0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.sort_rounded,
+                  size: 20,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+                if (showLabel) ...[
+                  const SizedBox(width: 8),
+                  Text(
+                    sort.label,
+                    style: textTheme.labelLarge?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ],
             ),
-          _PaginationButton(
-            tooltip: 'Next page',
-            onPressed: canGoNext
-                ? () {
-                    ref.read(seasonalPageProvider.notifier).goToNextPage();
-                  }
-                : null,
-            child: const Icon(Icons.chevron_right_rounded),
           ),
-        ],
+        ),
       ),
     );
   }
-
-  List<int> _visiblePages(int currentPage, int? lastPage, int maxLoadedPage) {
-    final availableEnd = lastPage ?? maxLoadedPage;
-    final preferredEnd = currentPage <= 3 ? 5 : currentPage + 2;
-    final end = preferredEnd.clamp(1, availableEnd);
-    final start = (end - 4).clamp(1, end);
-
-    return [for (var page = start; page <= end; page++) page];
-  }
 }
 
-class _PageNumberButton extends StatelessWidget {
-  const _PageNumberButton({
-    required this.page,
-    required this.selected,
-    required this.onPressed,
-  });
+class _FilterToggleButton extends StatelessWidget {
+  const _FilterToggleButton({required this.count, required this.onPressed});
 
-  final int page;
-  final bool selected;
+  final int count;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
 
-    return _PaginationButton(
-      selected: selected,
-      onPressed: selected ? null : onPressed,
-      child: Text(
-        '$page',
-        style: textTheme.labelLarge?.copyWith(
-          color: selected
-              ? colorScheme.onPrimaryContainer
-              : colorScheme.onSurface,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
-  }
-}
-
-class _PaginationButton extends StatelessWidget {
-  const _PaginationButton({
-    required this.child,
-    this.onPressed,
-    this.selected = false,
-    this.tooltip,
-  });
-
-  final Widget child;
-  final VoidCallback? onPressed;
-  final bool selected;
-  final String? tooltip;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final enabled = onPressed != null;
-    final foregroundColor = selected
-        ? colorScheme.onPrimaryContainer
-        : enabled
-        ? colorScheme.onSurface
-        : colorScheme.onSurface.withValues(alpha: 0.38);
-
-    final button = SizedBox.square(
-      dimension: 40,
+    return SizedBox.square(
+      dimension: _seasonalFilterHeaderHeight,
       child: Material(
-        color: selected
-            ? colorScheme.primaryContainer
-            : colorScheme.surfaceContainer,
-        borderRadius: BorderRadius.circular(8),
+        color: colorScheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(24),
         clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onPressed,
-          child: Center(
-            child: IconTheme(
-              data: IconThemeData(color: foregroundColor),
-              child: DefaultTextStyle.merge(
-                style: TextStyle(color: foregroundColor),
-                child: child,
-              ),
-            ),
+        child: IconButton(
+          tooltip: 'Filters',
+          color: colorScheme.onSurfaceVariant,
+          onPressed: onPressed,
+          icon: Badge(
+            isLabelVisible: count > 0,
+            label: Text('$count'),
+            backgroundColor: colorScheme.primary,
+            textColor: colorScheme.onPrimary,
+            child: const Icon(Icons.tune_rounded),
           ),
         ),
       ),
     );
-
-    if (tooltip == null) {
-      return button;
-    }
-
-    return Tooltip(message: tooltip!, child: button);
   }
 }
 
 class _SeasonalAnimeGrid extends StatelessWidget {
-  const _SeasonalAnimeGrid({required this.items});
+  const _SeasonalAnimeGrid({
+    required this.items,
+    this.page = 1,
+    this.maxItemsPerPage,
+  });
 
   final List<Anime> items;
+  final int page;
+  final int? maxItemsPerPage;
 
   @override
   Widget build(BuildContext context) {
+    final displayedItems = _itemsForPage();
+
     return SliverPadding(
       padding: const EdgeInsets.fromLTRB(32, 0, 32, 32),
       sliver: SliverLayoutBuilder(
@@ -322,7 +514,7 @@ class _SeasonalAnimeGrid extends StatelessWidget {
           final columnCount = (width / 220).floor().clamp(2, 6);
 
           return SliverGrid.builder(
-            itemCount: items.length,
+            itemCount: displayedItems.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: columnCount,
               mainAxisSpacing: 14,
@@ -330,12 +522,28 @@ class _SeasonalAnimeGrid extends StatelessWidget {
               childAspectRatio: 0.58,
             ),
             itemBuilder: (context, index) {
-              return _SeasonalAnimeCard(anime: items[index]);
+              return _SeasonalAnimeCard(anime: displayedItems[index]);
             },
           );
         },
       ),
     );
+  }
+
+  List<Anime> _itemsForPage() {
+    final maxItems = maxItemsPerPage;
+    if (maxItems == null) {
+      return items;
+    }
+
+    final normalizedPage = page < 1 ? 1 : page;
+    final start = (normalizedPage - 1) * maxItems;
+    if (start >= items.length) {
+      return const [];
+    }
+
+    final end = (start + maxItems).clamp(start, items.length);
+    return items.sublist(start, end);
   }
 }
 
