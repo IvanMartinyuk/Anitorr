@@ -1,0 +1,170 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jikan_api/jikan_api.dart';
+
+import '../../../../shared/widgets/filters/filters.dart';
+import '../../domain/models/seasonal_filters.dart';
+import '../../domain/seasonal_anime_providers.dart';
+
+class SeasonalFilterPanel extends ConsumerStatefulWidget {
+  const SeasonalFilterPanel({super.key});
+
+  @override
+  ConsumerState<SeasonalFilterPanel> createState() =>
+      _SeasonalFilterPanelState();
+}
+
+class _SeasonalFilterPanelState extends ConsumerState<SeasonalFilterPanel> {
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final type = ref.watch(seasonalTypeFilterProvider);
+    final sort = ref.watch(seasonalSortProvider);
+    final filters = ref.watch(seasonalFiltersProvider);
+    final genres = ref.watch(seasonalAvailableGenresProvider);
+    final header = FilterBar<SeasonalSort>(
+      expanded: _expanded,
+      searchLabel: 'Title',
+      searchValue: filters.query,
+      searchHintText: 'English, Japanese, synonym',
+      sortValue: sort,
+      sortOptions: [
+        for (final option in SeasonalSort.values)
+          FilterSortOption(value: option, label: option.label),
+      ],
+      activeFilterCount: _activeAdvancedFilterCount(
+        type: type,
+        filters: filters,
+      ),
+      onSearchChanged: (value) {
+        ref.read(seasonalFiltersProvider.notifier).setQuery(value);
+      },
+      onSortSelected: (value) {
+        ref.read(seasonalSortProvider.notifier).setSort(value);
+      },
+      onToggleFilters: () {
+        setState(() {
+          _expanded = !_expanded;
+        });
+      },
+    );
+
+    if (!_expanded) {
+      return header;
+    }
+
+    return FilterLayout(
+      modules: [
+        FilterWidgetModule(header),
+        FilterRowModule(
+          children: [
+            DropdownFilter<AnimeType?>(
+              label: 'Type',
+              value: type,
+              options: const [
+                FilterOption(value: null, label: 'All types'),
+                FilterOption(value: AnimeType.tv, label: 'TV'),
+                FilterOption(value: AnimeType.movie, label: 'Movie'),
+                FilterOption(value: AnimeType.ova, label: 'OVA'),
+                FilterOption(value: AnimeType.ona, label: 'ONA'),
+                FilterOption(value: AnimeType.special, label: 'Special'),
+              ],
+              onChanged: (value) {
+                ref.read(seasonalTypeFilterProvider.notifier).setType(value);
+                ref.read(seasonalPageProvider.notifier).reset();
+              },
+            ),
+            DropdownFilter<bool?>(
+              label: 'Airing',
+              value: filters.airing,
+              options: const [
+                FilterOption(value: null, label: 'Any airing'),
+                FilterOption(value: true, label: 'Airing now'),
+                FilterOption(value: false, label: 'Not airing'),
+              ],
+              onChanged: (value) {
+                ref.read(seasonalFiltersProvider.notifier).setAiring(value);
+              },
+            ),
+          ],
+        ),
+        FilterWidgetModule(
+          RangeFilter(
+            label: 'Score',
+            values: RangeValues(filters.minScore, filters.maxScore),
+            min: 0,
+            max: 10,
+            divisions: 20,
+            onChanged: (values) {
+              ref
+                  .read(seasonalFiltersProvider.notifier)
+                  .setScoreRange(values.start, values.end);
+            },
+          ),
+        ),
+        FilterWidgetModule(
+          LabeledMultiChoiceFilter<AnimeContentRating>(
+            label: 'Rating',
+            options: [
+              for (final rating in AnimeContentRating.values)
+                FilterOption(value: rating, label: rating.label),
+            ],
+            selectedValues: filters.ratings,
+            onToggle: (rating) {
+              ref.read(seasonalFiltersProvider.notifier).toggleRating(rating);
+            },
+          ),
+        ),
+        if (genres.isNotEmpty) ...[
+          FilterWidgetModule(
+            LabeledMultiChoiceFilter<String>(
+              label: 'Genres',
+              options: [
+                for (final genre in genres)
+                  FilterOption(value: genre, label: genre),
+              ],
+              selectedValues: filters.genres,
+              onToggle: (genre) {
+                ref.read(seasonalFiltersProvider.notifier).toggleGenre(genre);
+              },
+            ),
+          ),
+        ],
+        if (type != null || filters.hasActiveCachedFilters) ...[
+          FilterWidgetModule(
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                onPressed: () {
+                  ref.read(seasonalTypeFilterProvider.notifier).setType(null);
+                  ref.read(seasonalFiltersProvider.notifier).clear();
+                },
+                icon: const Icon(Icons.filter_alt_off_outlined),
+                label: const Text('Clear filters'),
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  int _activeAdvancedFilterCount({
+    required AnimeType? type,
+    required SeasonalFilters filters,
+  }) {
+    var count = 0;
+    if (type != null) {
+      count += 1;
+    }
+    if (filters.airing != null) {
+      count += 1;
+    }
+    if (filters.minScore > 0 || filters.maxScore < 10) {
+      count += 1;
+    }
+
+    return count + filters.ratings.length + filters.genres.length;
+  }
+}
