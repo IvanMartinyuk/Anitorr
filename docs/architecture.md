@@ -7,7 +7,9 @@ The app should be built as a clean, modular Flutter app that can later support m
 ## Main principles
 
 - Keep UI, state, and data access separate.
-- Prefer small reusable widgets.
+- Keep widget as small as possible
+- Abstract code and widgets first, then think how to make it reusable and only after this write new code/widgets.
+- Before writing new code, make sure it wasn't implemented earlier. If it was, use/modify/extend it.
 - Avoid putting business logic inside widgets.
 - Use Riverpod for state management.
 - Use GoRouter for navigation.
