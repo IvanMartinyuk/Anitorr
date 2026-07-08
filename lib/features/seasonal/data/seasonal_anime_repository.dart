@@ -58,6 +58,22 @@ final class SeasonalAnimeRepository {
     ];
   }
 
+  List<Anime> getCachedAnimeUpToPage(int page, {AnimeType? type}) {
+    final cache = _cacheFor(type);
+    final normalizedPage = page < 1 ? 1 : page;
+    final pages =
+        cache.pages.keys
+            .where((cachedPage) => cachedPage <= normalizedPage)
+            .toList()
+          ..sort();
+
+    return [
+      for (final cachedPage in pages)
+        if (cache.pages[cachedPage]?.isNotEmpty ?? false)
+          ...cache.pages[cachedPage]!,
+    ];
+  }
+
   _SeasonCache _cacheFor(AnimeType? type) {
     return _seasonCaches.putIfAbsent(type?.name ?? 'all', _SeasonCache.new);
   }
