@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jikan_api/jikan_api.dart';
 
 import '../../../shared/widgets/anime/anime_grid.dart';
-import '../../../shared/widgets/list_navigation.dart';
+import '../../../shared/widgets/navigable_list/navigable_list_widgets.dart';
 import '../domain/seasonal_anime_providers.dart';
 import 'widgets/seasonal_filters.dart';
 import 'widgets/seasonal_states.dart';
