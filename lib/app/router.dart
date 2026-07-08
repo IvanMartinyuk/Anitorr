@@ -1,11 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jikan_api/jikan_api.dart';
 
+import '../features/anime_details/presentation/anime_details_page.dart';
 import '../features/browse/presentation/browse_page.dart';
 import '../features/my_list/presentation/my_list_page.dart';
 import '../features/seasonal/presentation/seasonal_page.dart';
 import '../features/settings/presentation/settings_page.dart';
 import '../shared/widgets/app_shell.dart';
+import '../shared/widgets/empty_page.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -31,6 +34,30 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             },
           ),
           GoRoute(
+            path: AppRoute.animeDetails.path,
+            name: AppRoute.animeDetails.name,
+            pageBuilder: (context, state) {
+              final animeId = int.tryParse(
+                state.pathParameters['animeId'] ?? '',
+              );
+
+              if (animeId == null) {
+                return const NoTransitionPage<void>(
+                  child: EmptyPage(title: 'Anime not found'),
+                );
+              }
+
+              return NoTransitionPage<void>(
+                child: AnimeDetailsPage(
+                  animeId: animeId,
+                  initialAnime: state.extra is Anime
+                      ? state.extra as Anime
+                      : null,
+                ),
+              );
+            },
+          ),
+          GoRoute(
             path: AppRoute.browse.path,
             name: AppRoute.browse.name,
             pageBuilder: (context, state) {
@@ -53,6 +80,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
 enum AppRoute {
   myList('/my-list', 'my-list', 'My list'),
   seasonal('/seasonal', 'seasonal', 'Seasonal'),
+  animeDetails('/anime/:animeId', 'anime-details', 'Anime details'),
   browse('/browse', 'browse', 'Browse'),
   settings('/settings', 'settings', 'Settings');
 

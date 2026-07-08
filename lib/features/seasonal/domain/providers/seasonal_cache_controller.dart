@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jikan_api/jikan_api.dart';
 
@@ -17,9 +18,11 @@ final class SeasonalCacheController {
   SeasonalCacheController(this._ref) {
     _taskCounter = RunningTaskCounter(
       onChanged: (isLoading) {
-        _ref
-            .read(seasonalFullCacheLoadingProvider.notifier)
-            .setLoading(isLoading);
+        runAfterBuildIfNeeded(_ref, () {
+          _ref
+              .read(seasonalFullCacheLoadingProvider.notifier)
+              .setLoading(isLoading);
+        });
       },
     );
   }
@@ -67,15 +70,18 @@ Future<void> cachePagesUntilEmpty({
       return;
     }
 
-    syncSeasonalPaginationCacheState(
-      ref: ref,
-      repository: repository,
-      type: type,
-    );
-    ref.read(seasonalCacheGenerationProvider.notifier).bump();
+    runAfterBuildIfNeeded(ref, () {
+      syncSeasonalPaginationCacheState(
+        ref: ref,
+        repository: repository,
+        type: type,
+      );
+    });
 
     if (anime.isEmpty) {
-      ref.read(seasonalLastPageProvider.notifier).rememberLastPage(page - 1);
+      runAfterBuildIfNeeded(ref, () {
+        ref.read(seasonalLastPageProvider.notifier).rememberLastPage(page - 1);
+      });
       return;
     }
 
@@ -97,4 +103,16 @@ void syncSeasonalPaginationCacheState({
   ref
       .read(seasonalMaxLoadedPageProvider.notifier)
       .rememberMaxLoadedPage(maxLoadedPage);
+}
+
+void runAfterBuildIfNeeded(Ref ref, void Function() action) {
+  if (!ref.mounted) {
+    return;
+  }
+
+  SchedulerBinding.instance.addPostFrameCallback((_) {
+    if (ref.mounted) {
+      action();
+    }
+  });
 }
