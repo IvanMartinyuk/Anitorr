@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jikan_api/jikan_api.dart';
 
+import '../../../app/router.dart';
 import '../../../shared/widgets/anime/anime_grid.dart';
 import '../../../shared/widgets/navigable_list/navigable_list_widgets.dart';
 import '../domain/seasonal_anime_providers.dart';
@@ -44,14 +46,17 @@ class SeasonalPage extends ConsumerWidget {
               padding: EdgeInsets.fromLTRB(32, 32, 32, 20),
               sliver: SliverToBoxAdapter(child: SeasonalFilterPanel()),
             ),
-            ..._animeSlivers(anime: anime),
+            ..._animeSlivers(context: context, anime: anime),
           ],
         ),
       ),
     );
   }
 
-  List<Widget> _animeSlivers({required AsyncValue<List<Anime>> anime}) {
+  List<Widget> _animeSlivers({
+    required BuildContext context,
+    required AsyncValue<List<Anime>> anime,
+  }) {
     return anime.when(
       skipLoadingOnReload: true,
       data: (items) => [
@@ -64,7 +69,16 @@ class SeasonalPage extends ConsumerWidget {
             ),
           )
         else
-          AnimeGrid(items: items),
+          AnimeGrid(
+            items: items,
+            onAnimeSelected: (anime) {
+              context.goNamed(
+                AppRoute.animeDetails.name,
+                pathParameters: {'animeId': anime.malId.toString()},
+                extra: anime,
+              );
+            },
+          ),
       ],
       loading: () => const [
         SliverFillRemaining(

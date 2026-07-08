@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:jikan_api/jikan_api.dart';
 
 class AnimeGrid extends StatelessWidget {
-  const AnimeGrid({required this.items, super.key});
+  const AnimeGrid({required this.items, this.onAnimeSelected, super.key});
 
   final List<Anime> items;
+  final ValueChanged<Anime>? onAnimeSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,10 @@ class AnimeGrid extends StatelessWidget {
               childAspectRatio: 0.58,
             ),
             itemBuilder: (context, index) {
-              return _AnimeCard(anime: items[index]);
+              return _AnimeCard(
+                anime: items[index],
+                onSelected: onAnimeSelected,
+              );
             },
           );
         },
@@ -34,9 +38,10 @@ class AnimeGrid extends StatelessWidget {
 }
 
 class _AnimeCard extends StatelessWidget {
-  const _AnimeCard({required this.anime});
+  const _AnimeCard({required this.anime, required this.onSelected});
 
   final Anime anime;
+  final ValueChanged<Anime>? onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -48,56 +53,59 @@ class _AnimeCard extends StatelessWidget {
 
     return Card(
       clipBehavior: Clip.antiAlias,
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.network(
-                      anime.imageUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return ColoredBox(
-                          color: colorScheme.surfaceContainerHighest,
-                          child: Icon(
-                            Icons.image_not_supported_outlined,
-                            color: colorScheme.onSurfaceVariant,
-                            size: 36,
-                          ),
-                        );
-                      },
-                    ),
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: _AnimeRatingBadge(anime: anime),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 38,
-              child: Center(
-                child: Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
+      child: InkWell(
+        onTap: onSelected == null ? null : () => onSelected!(anime),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.network(
+                        anime.imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return ColoredBox(
+                            color: colorScheme.surfaceContainerHighest,
+                            child: Icon(
+                              Icons.image_not_supported_outlined,
+                              color: colorScheme.onSurfaceVariant,
+                              size: 36,
+                            ),
+                          );
+                        },
+                      ),
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: _AnimeRatingBadge(anime: anime),
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              SizedBox(
+                height: 38,
+                child: Center(
+                  child: Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

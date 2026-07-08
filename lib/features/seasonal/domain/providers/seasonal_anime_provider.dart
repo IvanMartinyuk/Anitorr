@@ -12,23 +12,26 @@ final seasonalAnimeProvider = FutureProvider<List<Anime>>((ref) async {
   final sort = ref.watch(seasonalSortProvider);
   final filters = ref.watch(seasonalFiltersProvider);
   final page = ref.watch(seasonalPageProvider);
-  ref.watch(seasonalCacheGenerationProvider);
   final repository = ref.watch(seasonalAnimeRepositoryProvider);
   final hasCachedFilters = filters.hasActiveCachedFilters || typeFilter != null;
   final apiPage = hasCachedFilters ? 1 : page;
   final anime = await repository.getCurrentSeasonAnime(page: apiPage);
-  syncSeasonalPaginationCacheState(
-    ref: ref,
-    repository: repository,
-    type: null,
-  );
+  runAfterBuildIfNeeded(ref, () {
+    syncSeasonalPaginationCacheState(
+      ref: ref,
+      repository: repository,
+      type: null,
+    );
+  });
 
   if (anime.isEmpty) {
     final lastPage = apiPage <= 1 ? 1 : apiPage - 1;
-    ref.read(seasonalLastPageProvider.notifier).rememberLastPage(lastPage);
-    if (!hasCachedFilters) {
-      ref.read(seasonalPageProvider.notifier).goToPage(lastPage);
-    }
+    runAfterBuildIfNeeded(ref, () {
+      ref.read(seasonalLastPageProvider.notifier).rememberLastPage(lastPage);
+      if (!hasCachedFilters) {
+        ref.read(seasonalPageProvider.notifier).goToPage(lastPage);
+      }
+    });
     return [];
   }
 

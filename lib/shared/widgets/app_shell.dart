@@ -70,7 +70,7 @@ class _SidebarNavigation extends StatelessWidget {
                       for (final item in _navigationItems)
                         _SidebarDestination(
                           item: item,
-                          selected: item.route.path == location,
+                          selected: _isRouteSelected(item.route, location),
                         ),
                     ],
                   ),
@@ -124,7 +124,7 @@ class _BottomNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedIndex = _navigationItems.indexWhere(
-      (item) => item.route.path == location,
+      (item) => _isRouteSelected(item.route, location),
     );
 
     return NavigationBar(
@@ -156,3 +156,11 @@ const _navigationItems = [
   _NavigationItem(route: AppRoute.browse, icon: Icons.explore_outlined),
   _NavigationItem(route: AppRoute.settings, icon: Icons.settings_outlined),
 ];
+
+bool _isRouteSelected(AppRoute route, String location) {
+  if (route.path == location) {
+    return true;
+  }
+
+  return route == AppRoute.seasonal && location.startsWith('/anime/');
+}
