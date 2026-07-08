@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jikan_api/jikan_api.dart';
 
 import '../data/seasonal_anime_repository.dart';
+import 'models/seasonal_filters.dart';
+import 'services/seasonal_anime_filtering.dart';
 
 const visibleSeasonalPageCount = 5;
 
@@ -87,9 +89,11 @@ final seasonalAnimeProvider = FutureProvider<List<Anime>>((ref) async {
       ? repository.getCachedAnime()
       : repository.getCachedAnimeUpToPage(page);
 
-  return _sortAnime(
-    _filterAnime(_distinctByTitle(sourceAnime), filters, typeFilter),
-    sort,
+  return prepareSeasonalAnime(
+    anime: sourceAnime,
+    filters: filters,
+    sort: sort,
+    typeFilter: typeFilter,
   );
 });
 
@@ -102,7 +106,7 @@ final seasonalAvailableGenresProvider = Provider<List<String>>((ref) {
   final genres = <String>{};
 
   for (final item in [...repository.getCachedAnime(), ...anime]) {
-    if (!_matchesType(item, typeFilter)) {
+    if (!matchesSeasonalAnimeType(item, typeFilter)) {
       continue;
     }
 
@@ -334,216 +338,6 @@ class SeasonalFullCacheLoadingNotifier extends Notifier<bool> {
   }
 }
 
-enum SeasonalSort {
-  apiOrder('Jikan order'),
-  titleAsc('Title'),
-  scoreDesc('Rating'),
-  popularityAsc('Popularity'),
-  membersDesc('Members');
-
-  const SeasonalSort(this.label);
-
-  final String label;
-}
-
-enum AnimeContentRating {
-  g('G - All Ages'),
-  pg('PG - Children'),
-  pg13('PG-13 - Teens 13 or older'),
-  r17('R - 17+ (violence & profanity)'),
-  rPlus('R+ - Mild Nudity'),
-  rx('Rx - Hentai');
-
-  const AnimeContentRating(this.label);
-
-  final String label;
-}
-
-final class SeasonalFilters {
-  const SeasonalFilters({
-    required this.query,
-    required this.ratings,
-    required this.airing,
-    required this.minScore,
-    required this.maxScore,
-    required this.genres,
-  });
-
-  factory SeasonalFilters.empty() {
-    return const SeasonalFilters(
-      query: '',
-      ratings: {},
-      airing: null,
-      minScore: 0,
-      maxScore: 10,
-      genres: {},
-    );
-  }
-
-  final String query;
-  final Set<AnimeContentRating> ratings;
-  final bool? airing;
-  final double minScore;
-  final double maxScore;
-  final Set<String> genres;
-
-  bool get hasActiveCachedFilters {
-    return query.trim().isNotEmpty ||
-        ratings.isNotEmpty ||
-        airing != null ||
-        minScore > 0 ||
-        maxScore < 10 ||
-        genres.isNotEmpty;
-  }
-
-  SeasonalFilters copyWith({
-    String? query,
-    Set<AnimeContentRating>? ratings,
-    bool? airing,
-    bool clearAiring = false,
-    double? minScore,
-    double? maxScore,
-    Set<String>? genres,
-  }) {
-    return SeasonalFilters(
-      query: query ?? this.query,
-      ratings: ratings ?? this.ratings,
-      airing: clearAiring ? null : airing ?? this.airing,
-      minScore: minScore ?? this.minScore,
-      maxScore: maxScore ?? this.maxScore,
-      genres: genres ?? this.genres,
-    );
-  }
-}
-
-List<Anime> _sortAnime(List<Anime> anime, SeasonalSort sort) {
-  final sorted = List<Anime>.of(anime);
-
-  switch (sort) {
-    case SeasonalSort.apiOrder:
-      return sorted;
-    case SeasonalSort.titleAsc:
-      sorted.sort((a, b) => a.title.compareTo(b.title));
-    case SeasonalSort.scoreDesc:
-      sorted.sort((a, b) => _compareNullableDesc(a.score, b.score));
-    case SeasonalSort.popularityAsc:
-      sorted.sort((a, b) => _compareNullableAsc(a.popularity, b.popularity));
-    case SeasonalSort.membersDesc:
-      sorted.sort((a, b) => _compareNullableDesc(a.members, b.members));
-  }
-
-  return sorted;
-}
-
-List<Anime> _filterAnime(
-  List<Anime> anime,
-  SeasonalFilters filters,
-  AnimeType? typeFilter,
-) {
-  if (!filters.hasActiveCachedFilters && typeFilter == null) {
-    return anime;
-  }
-
-  final normalizedQuery = filters.query.trim().toLowerCase();
-
-  return [
-    for (final item in anime)
-      if (_matchesType(item, typeFilter) &&
-          _matchesTitle(item, normalizedQuery) &&
-          _matchesAiring(item, filters.airing) &&
-          _matchesRating(item, filters.ratings) &&
-          _matchesScore(item, filters.minScore, filters.maxScore) &&
-          _matchesGenres(item, filters.genres))
-        item,
-  ];
-}
-
-bool _matchesType(Anime anime, AnimeType? typeFilter) {
-  if (typeFilter == null) {
-    return true;
-  }
-
-  final type = anime.type;
-  if (type == null) {
-    return false;
-  }
-
-  return _normalizedType(type) == _normalizedType(typeFilter.name);
-}
-
-String _normalizedType(String type) {
-  return type.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
-}
-
-bool _matchesTitle(Anime anime, String query) {
-  if (query.isEmpty) {
-    return true;
-  }
-
-  final titles = [
-    anime.title,
-    if (anime.titleEnglish != null) anime.titleEnglish!,
-    if (anime.titleJapanese != null) anime.titleJapanese!,
-    ...anime.titleSynonyms,
-  ];
-
-  return titles.any((title) => title.toLowerCase().contains(query));
-}
-
-bool _matchesAiring(Anime anime, bool? airing) {
-  return airing == null || anime.airing == airing;
-}
-
-bool _matchesRating(Anime anime, Set<AnimeContentRating> ratings) {
-  if (ratings.isEmpty) {
-    return true;
-  }
-
-  final rating = anime.rating?.trim();
-  return rating != null &&
-      ratings.any((selectedRating) => selectedRating.label == rating);
-}
-
-bool _matchesScore(Anime anime, double minScore, double maxScore) {
-  if (minScore <= 0 && maxScore >= 10) {
-    return true;
-  }
-
-  final score = anime.score;
-  return score != null && score >= minScore && score <= maxScore;
-}
-
-bool _matchesGenres(Anime anime, Set<String> genres) {
-  if (genres.isEmpty) {
-    return true;
-  }
-
-  final animeGenres = anime.genres.map((genre) => genre.name).toSet();
-  return genres.every(animeGenres.contains);
-}
-
-List<Anime> _distinctByTitle(List<Anime> anime) {
-  final seenTitles = <String>{};
-  final result = <Anime>[];
-
-  for (final item in anime) {
-    final title = _normalizedTitle(item);
-    if (seenTitles.add(title)) {
-      result.add(item);
-    }
-  }
-
-  return result;
-}
-
-String _normalizedTitle(Anime anime) {
-  final title = anime.titleEnglish?.trim().isNotEmpty ?? false
-      ? anime.titleEnglish!
-      : anime.title;
-
-  return title.trim().toLowerCase();
-}
-
 Future<void> _cacheRemainingPages({
   required Ref ref,
   required SeasonalAnimeRepository repository,
@@ -601,22 +395,4 @@ void _syncPaginationCacheState({
   ref
       .read(seasonalMaxLoadedPageProvider.notifier)
       .rememberMaxLoadedPage(maxLoadedPage);
-}
-
-int _compareNullableAsc(num? a, num? b) {
-  if (a == null && b == null) {
-    return 0;
-  }
-  if (a == null) {
-    return 1;
-  }
-  if (b == null) {
-    return -1;
-  }
-
-  return a.compareTo(b);
-}
-
-int _compareNullableDesc(num? a, num? b) {
-  return _compareNullableAsc(b, a);
 }
