@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:jikan_api/jikan_api.dart';
+
+import '../../models/app_anime.dart';
 
 class AnimeGrid extends StatelessWidget {
   const AnimeGrid({required this.items, this.onAnimeSelected, super.key});
 
-  final List<Anime> items;
-  final ValueChanged<Anime>? onAnimeSelected;
+  final List<AppAnime> items;
+  final ValueChanged<AppAnime>? onAnimeSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +41,8 @@ class AnimeGrid extends StatelessWidget {
 class _AnimeCard extends StatelessWidget {
   const _AnimeCard({required this.anime, required this.onSelected});
 
-  final Anime anime;
-  final ValueChanged<Anime>? onSelected;
+  final AppAnime anime;
+  final ValueChanged<AppAnime>? onSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +116,7 @@ class _AnimeCard extends StatelessWidget {
 class _AnimeRatingBadge extends StatelessWidget {
   const _AnimeRatingBadge({required this.anime});
 
-  final Anime anime;
+  final AppAnime anime;
 
   @override
   Widget build(BuildContext context) {

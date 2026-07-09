@@ -1,55 +1,66 @@
-import 'package:jikan_api/jikan_api.dart';
+import 'package:jikan_moe/jikan_moe.dart';
+
+import '../../../shared/models/anime_api_filters.dart';
+import '../../../shared/models/app_anime.dart';
+import '../../../shared/services/rate_limited_jikan_client.dart';
 
 final class SeasonalAnimeRepository {
-  SeasonalAnimeRepository({Jikan? jikan}) : _jikan = jikan ?? Jikan();
+  SeasonalAnimeRepository({RateLimitedJikanClient? jikan})
+    : _jikan = jikan ?? RateLimitedJikanClient.instance;
 
-  final Jikan _jikan;
+  final RateLimitedJikanClient _jikan;
   final Map<String, _SeasonCache> _seasonCaches = {};
-  List<Genre>? _animeGenres;
+  List<AnimeGenreData>? _animeGenres;
 
-  Future<List<Anime>> getCurrentSeasonAnime({AnimeType? type, int page = 1}) {
+  Future<List<AppAnime>> getCurrentSeasonAnime({
+    AppAnimeType? type,
+    int page = 1,
+  }) {
     final cache = _cacheFor(type);
     final cachedAnime = cache.pages[page];
     if (cachedAnime != null) {
       return Future.value(cachedAnime);
     }
 
-    return _jikan.getSeason(type: type, page: page).then((anime) {
-      cache.pages[page] = anime;
-      if (anime.isEmpty) {
-        cache.rememberLastPage(page - 1);
-      } else if (page > cache.maxContiguousLoadedPage) {
-        cache.maxContiguousLoadedPage = _contiguousLoadedPage(cache);
-      }
-      return anime;
-    });
+    return _jikan
+        .getSeasonNow(filter: type?.apiValue, page: page)
+        .then((response) => response.data.map(AppAnime.fromAnimeData).toList())
+        .then((anime) {
+          cache.pages[page] = anime;
+          if (anime.isEmpty) {
+            cache.rememberLastPage(page - 1);
+          } else if (page > cache.maxContiguousLoadedPage) {
+            cache.maxContiguousLoadedPage = _contiguousLoadedPage(cache);
+          }
+          return anime;
+        });
   }
 
-  int? getKnownLastPage({AnimeType? type}) {
+  int? getKnownLastPage({AppAnimeType? type}) {
     return _cacheFor(type).lastPage;
   }
 
-  int getMaxContiguousLoadedPage({AnimeType? type}) {
+  int getMaxContiguousLoadedPage({AppAnimeType? type}) {
     return _cacheFor(type).maxContiguousLoadedPage;
   }
 
-  bool isVisiblePageCacheStarted({AnimeType? type}) {
+  bool isVisiblePageCacheStarted({AppAnimeType? type}) {
     return _cacheFor(type).visiblePageCacheStarted;
   }
 
-  void markVisiblePageCacheStarted({AnimeType? type}) {
+  void markVisiblePageCacheStarted({AppAnimeType? type}) {
     _cacheFor(type).visiblePageCacheStarted = true;
   }
 
-  bool isFullCacheStarted({AnimeType? type}) {
+  bool isFullCacheStarted({AppAnimeType? type}) {
     return _cacheFor(type).fullCacheStarted;
   }
 
-  void markFullCacheStarted({AnimeType? type}) {
+  void markFullCacheStarted({AppAnimeType? type}) {
     _cacheFor(type).fullCacheStarted = true;
   }
 
-  List<Anime> getCachedAnime({AnimeType? type}) {
+  List<AppAnime> getCachedAnime({AppAnimeType? type}) {
     final cache = _cacheFor(type);
     final pages = cache.pages.keys.toList()..sort();
 
@@ -59,7 +70,7 @@ final class SeasonalAnimeRepository {
     ];
   }
 
-  List<Anime> getCachedAnimeUpToPage(int page, {AnimeType? type}) {
+  List<AppAnime> getCachedAnimeUpToPage(int page, {AppAnimeType? type}) {
     final cache = _cacheFor(type);
     final normalizedPage = page < 1 ? 1 : page;
     final pages =
@@ -75,7 +86,7 @@ final class SeasonalAnimeRepository {
     ];
   }
 
-  Future<List<Genre>> getAnimeGenres() async {
+  Future<List<AnimeGenreData>> getAnimeGenres() async {
     final cachedGenres = _animeGenres;
     if (cachedGenres != null) {
       return cachedGenres;
@@ -86,8 +97,8 @@ final class SeasonalAnimeRepository {
     return genres;
   }
 
-  _SeasonCache _cacheFor(AnimeType? type) {
-    return _seasonCaches.putIfAbsent(type?.name ?? 'all', _SeasonCache.new);
+  _SeasonCache _cacheFor(AppAnimeType? type) {
+    return _seasonCaches.putIfAbsent(type?.apiValue ?? 'all', _SeasonCache.new);
   }
 
   int _contiguousLoadedPage(_SeasonCache cache) {
@@ -101,7 +112,7 @@ final class SeasonalAnimeRepository {
 }
 
 final class _SeasonCache {
-  final Map<int, List<Anime>> pages = {};
+  final Map<int, List<AppAnime>> pages = {};
   int maxContiguousLoadedPage = 0;
   int? lastPage;
   bool visiblePageCacheStarted = false;

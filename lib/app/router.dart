@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:jikan_api/jikan_api.dart';
 
 import '../features/anime_details/presentation/anime_details_page.dart';
 import '../features/browse/presentation/browse_page.dart';
 import '../features/my_list/presentation/my_list_page.dart';
 import '../features/seasonal/presentation/seasonal_page.dart';
 import '../features/settings/presentation/settings_page.dart';
+import '../shared/models/app_anime.dart';
 import '../shared/widgets/app_shell.dart';
 import '../shared/widgets/empty_page.dart';
 
@@ -50,8 +50,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               return NoTransitionPage<void>(
                 child: AnimeDetailsPage(
                   animeId: animeId,
-                  initialAnime: state.extra is Anime
-                      ? state.extra as Anime
+                  initialAnime: state.extra is AppAnime
+                      ? state.extra as AppAnime
                       : null,
                 ),
               );

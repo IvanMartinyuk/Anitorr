@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jikan_api/jikan_api.dart';
 
+import '../../../../shared/models/app_anime.dart';
 import '../services/seasonal_anime_filtering.dart';
 import 'seasonal_cache_controller.dart';
 import 'seasonal_filter_providers.dart';
 import 'seasonal_pagination_providers.dart';
 import 'seasonal_repository_provider.dart';
 
-final seasonalAnimeProvider = FutureProvider<List<Anime>>((ref) async {
+final seasonalAnimeProvider = FutureProvider<List<AppAnime>>((ref) async {
   final typeFilter = ref.watch(seasonalTypeFilterProvider);
   final sort = ref.watch(seasonalSortProvider);
   final filters = ref.watch(seasonalFiltersProvider);

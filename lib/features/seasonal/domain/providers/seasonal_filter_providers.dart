@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jikan_api/jikan_api.dart';
 
+import '../../../../shared/models/anime_api_filters.dart';
 import '../models/seasonal_filters.dart';
 import 'seasonal_pagination_providers.dart';
 
 final seasonalTypeFilterProvider =
-    NotifierProvider<SeasonalTypeFilterNotifier, AnimeType?>(
+    NotifierProvider<SeasonalTypeFilterNotifier, AppAnimeType?>(
       SeasonalTypeFilterNotifier.new,
     );
 
@@ -19,13 +19,13 @@ final seasonalFiltersProvider =
       SeasonalFiltersNotifier.new,
     );
 
-class SeasonalTypeFilterNotifier extends Notifier<AnimeType?> {
+class SeasonalTypeFilterNotifier extends Notifier<AppAnimeType?> {
   @override
-  AnimeType? build() {
+  AppAnimeType? build() {
     return null;
   }
 
-  void setType(AnimeType? type) {
+  void setType(AppAnimeType? type) {
     state = type;
   }
 }

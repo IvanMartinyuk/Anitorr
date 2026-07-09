@@ -1,12 +1,12 @@
-import 'package:jikan_api/jikan_api.dart';
-
+import '../../../../shared/models/anime_api_filters.dart';
+import '../../../../shared/models/app_anime.dart';
 import '../models/seasonal_filters.dart';
 
-List<Anime> prepareSeasonalAnime({
-  required List<Anime> anime,
+List<AppAnime> prepareSeasonalAnime({
+  required List<AppAnime> anime,
   required SeasonalFilters filters,
   required SeasonalSort sort,
-  AnimeType? typeFilter,
+  AppAnimeType? typeFilter,
 }) {
   final distinctAnime = distinctAnimeByPreferredTitle(anime);
   final filteredAnime = filterSeasonalAnime(
@@ -18,8 +18,8 @@ List<Anime> prepareSeasonalAnime({
   return sortSeasonalAnime(filteredAnime, sort);
 }
 
-List<Anime> sortSeasonalAnime(List<Anime> anime, SeasonalSort sort) {
-  final sorted = List<Anime>.of(anime);
+List<AppAnime> sortSeasonalAnime(List<AppAnime> anime, SeasonalSort sort) {
+  final sorted = List<AppAnime>.of(anime);
 
   switch (sort) {
     case SeasonalSort.apiOrder:
@@ -37,10 +37,10 @@ List<Anime> sortSeasonalAnime(List<Anime> anime, SeasonalSort sort) {
   return sorted;
 }
 
-List<Anime> filterSeasonalAnime(
-  List<Anime> anime, {
+List<AppAnime> filterSeasonalAnime(
+  List<AppAnime> anime, {
   required SeasonalFilters filters,
-  AnimeType? typeFilter,
+  AppAnimeType? typeFilter,
 }) {
   if (!filters.hasActiveCachedFilters && typeFilter == null) {
     return anime;
@@ -60,9 +60,9 @@ List<Anime> filterSeasonalAnime(
   ];
 }
 
-List<Anime> distinctAnimeByPreferredTitle(List<Anime> anime) {
+List<AppAnime> distinctAnimeByPreferredTitle(List<AppAnime> anime) {
   final seenTitles = <String>{};
-  final result = <Anime>[];
+  final result = <AppAnime>[];
 
   for (final item in anime) {
     final title = _normalizedPreferredTitle(item);
@@ -74,7 +74,7 @@ List<Anime> distinctAnimeByPreferredTitle(List<Anime> anime) {
   return result;
 }
 
-bool matchesSeasonalAnimeType(Anime anime, AnimeType? typeFilter) {
+bool matchesSeasonalAnimeType(AppAnime anime, AppAnimeType? typeFilter) {
   if (typeFilter == null) {
     return true;
   }
@@ -86,14 +86,14 @@ bool matchesSeasonalAnimeType(Anime anime, AnimeType? typeFilter) {
 
   // Jikan returns labels like "TV Special", while the package enum uses
   // names like "tv_special"; normalize both before comparing.
-  return _normalizedType(type) == _normalizedType(typeFilter.name);
+  return _normalizedType(type) == _normalizedType(typeFilter.apiValue);
 }
 
 String _normalizedType(String type) {
   return type.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
 }
 
-bool _matchesTitle(Anime anime, String query) {
+bool _matchesTitle(AppAnime anime, String query) {
   if (query.isEmpty) {
     return true;
   }
@@ -108,11 +108,11 @@ bool _matchesTitle(Anime anime, String query) {
   return titles.any((title) => title.toLowerCase().contains(query));
 }
 
-bool _matchesAiring(Anime anime, bool? airing) {
+bool _matchesAiring(AppAnime anime, bool? airing) {
   return airing == null || anime.airing == airing;
 }
 
-bool _matchesRating(Anime anime, Set<AnimeContentRating> ratings) {
+bool _matchesRating(AppAnime anime, Set<AnimeContentRating> ratings) {
   if (ratings.isEmpty) {
     return true;
   }
@@ -122,7 +122,7 @@ bool _matchesRating(Anime anime, Set<AnimeContentRating> ratings) {
       ratings.any((selectedRating) => selectedRating.label == rating);
 }
 
-bool _matchesScore(Anime anime, double minScore, double maxScore) {
+bool _matchesScore(AppAnime anime, double minScore, double maxScore) {
   if (minScore <= 0 && maxScore >= 10) {
     return true;
   }
@@ -131,7 +131,7 @@ bool _matchesScore(Anime anime, double minScore, double maxScore) {
   return score != null && score >= minScore && score <= maxScore;
 }
 
-bool _matchesGenres(Anime anime, Set<String> genres) {
+bool _matchesGenres(AppAnime anime, Set<String> genres) {
   if (genres.isEmpty) {
     return true;
   }
@@ -140,7 +140,7 @@ bool _matchesGenres(Anime anime, Set<String> genres) {
   return genres.every(animeGenres.contains);
 }
 
-String _normalizedPreferredTitle(Anime anime) {
+String _normalizedPreferredTitle(AppAnime anime) {
   final title = anime.titleEnglish?.trim().isNotEmpty ?? false
       ? anime.titleEnglish!
       : anime.title;

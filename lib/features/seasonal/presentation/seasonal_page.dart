@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:jikan_api/jikan_api.dart';
 
 import '../../../app/router.dart';
+import '../../../shared/models/app_anime.dart';
 import '../../../shared/widgets/anime/anime_grid.dart';
 import '../../../shared/widgets/navigable_list/navigable_list_widgets.dart';
 import '../domain/seasonal_anime_providers.dart';
@@ -55,7 +55,7 @@ class SeasonalPage extends ConsumerWidget {
 
   List<Widget> _animeSlivers({
     required BuildContext context,
-    required AsyncValue<List<Anime>> anime,
+    required AsyncValue<List<AppAnime>> anime,
   }) {
     return anime.when(
       skipLoadingOnReload: true,
