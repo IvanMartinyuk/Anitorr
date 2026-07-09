@@ -24,13 +24,17 @@ class DropdownFilter<T> extends StatelessWidget {
       width: width,
       child: DropdownButtonFormField<T>(
         initialValue: value,
+        isExpanded: true,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
           contentPadding: EdgeInsets.symmetric(horizontal: 16),
         ).copyWith(labelText: label),
         items: [
           for (final option in options)
-            DropdownMenuItem<T>(value: option.value, child: Text(option.label)),
+            DropdownMenuItem<T>(
+              value: option.value,
+              child: Text(option.label, overflow: TextOverflow.ellipsis),
+            ),
         ],
         onChanged: onChanged,
       ),
