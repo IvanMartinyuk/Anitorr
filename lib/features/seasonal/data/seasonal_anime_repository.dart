@@ -5,6 +5,7 @@ final class SeasonalAnimeRepository {
 
   final Jikan _jikan;
   final Map<String, _SeasonCache> _seasonCaches = {};
+  List<Genre>? _animeGenres;
 
   Future<List<Anime>> getCurrentSeasonAnime({AnimeType? type, int page = 1}) {
     final cache = _cacheFor(type);
@@ -72,6 +73,17 @@ final class SeasonalAnimeRepository {
         if (cache.pages[cachedPage]?.isNotEmpty ?? false)
           ...cache.pages[cachedPage]!,
     ];
+  }
+
+  Future<List<Genre>> getAnimeGenres() async {
+    final cachedGenres = _animeGenres;
+    if (cachedGenres != null) {
+      return cachedGenres;
+    }
+
+    final genres = await _jikan.getAnimeGenres();
+    _animeGenres = genres;
+    return genres;
   }
 
   _SeasonCache _cacheFor(AnimeType? type) {

@@ -22,7 +22,9 @@ class _SeasonalFilterPanelState extends ConsumerState<SeasonalFilterPanel> {
     final type = ref.watch(seasonalTypeFilterProvider);
     final sort = ref.watch(seasonalSortProvider);
     final filters = ref.watch(seasonalFiltersProvider);
-    final genres = ref.watch(seasonalAvailableGenresProvider);
+    final genres = ref
+        .watch(seasonalAvailableGenresProvider)
+        .maybeWhen(data: (items) => items, orElse: () => const <String>[]);
     final header = FilterBar<SeasonalSort>(
       expanded: _expanded,
       searchLabel: 'Title',
