@@ -1,7 +1,8 @@
 import 'package:anitorr/features/seasonal/domain/models/seasonal_filters.dart';
 import 'package:anitorr/features/seasonal/domain/services/seasonal_anime_filtering.dart';
+import 'package:anitorr/shared/models/anime_api_filters.dart';
+import 'package:anitorr/shared/models/app_anime.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:jikan_api/jikan_api.dart';
 
 void main() {
   group('filterSeasonalAnime', () {
@@ -27,7 +28,7 @@ void main() {
 
       final result = filterSeasonalAnime(
         [actionTv, romanceMovie],
-        typeFilter: AnimeType.tv,
+        typeFilter: AppAnimeType.tv,
         filters: SeasonalFilters.empty().copyWith(
           query: 'masked',
           ratings: {AnimeContentRating.pg13},
@@ -43,7 +44,7 @@ void main() {
     test('normalizes API type labels before comparing them', () {
       final special = _anime(title: 'Special', type: 'TV Special');
 
-      expect(matchesSeasonalAnimeType(special, AnimeType.tv_special), isTrue);
+      expect(matchesSeasonalAnimeType(special, AppAnimeType.tvSpecial), isTrue);
     });
   });
 
@@ -72,7 +73,7 @@ void main() {
   });
 }
 
-Anime _anime({
+AppAnime _anime({
   required String title,
   String? englishTitle,
   List<String> synonyms = const [],
@@ -84,35 +85,33 @@ Anime _anime({
   bool airing = true,
   List<String> genres = const [],
 }) {
-  return Anime(
-    (builder) => builder
-      ..malId = title.hashCode
-      ..url = 'https://example.test/$title'
-      ..imageUrl = 'https://example.test/$title.jpg'
-      ..title = title
-      ..titleEnglish = englishTitle
-      ..titleSynonyms.addAll(synonyms)
-      ..type = type
-      ..rating = rating
-      ..score = score
-      ..popularity = popularity
-      ..members = members
-      ..airing = airing
-      ..genres.addAll([
-        for (final genre in genres)
-          Meta(
-            (builder) => builder
-              ..malId = genre.hashCode
-              ..type = 'anime'
-              ..name = genre
-              ..url = 'https://example.test/genres/$genre',
-          ),
-      ])
-      ..producers
-      ..licensors
-      ..studios
-      ..explicitGenres
-      ..themes
-      ..demographics,
+  return AppAnime(
+    malId: title.hashCode,
+    url: 'https://example.test/$title',
+    imageUrl: 'https://example.test/$title.jpg',
+    title: title,
+    titleEnglish: englishTitle,
+    titleSynonyms: synonyms,
+    type: type,
+    rating: rating,
+    score: score,
+    popularity: popularity,
+    members: members,
+    airing: airing,
+    genres: [
+      for (final genre in genres)
+        AppAnimeMeta(
+          malId: genre.hashCode,
+          type: 'anime',
+          name: genre,
+          url: 'https://example.test/genres/$genre',
+        ),
+    ],
+    producers: const [],
+    licensors: const [],
+    studios: const [],
+    explicitGenres: const [],
+    themes: const [],
+    demographics: const [],
   );
 }

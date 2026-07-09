@@ -3,16 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:jikan_api/jikan_api.dart';
 
 import '../../../app/router.dart';
+import '../../../shared/models/app_anime.dart';
 import '../domain/providers/anime_details_provider.dart';
 
 class AnimeDetailsPage extends ConsumerWidget {
   const AnimeDetailsPage({required this.animeId, this.initialAnime, super.key});
 
   final int animeId;
-  final Anime? initialAnime;
+  final AppAnime? initialAnime;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,7 +34,7 @@ class AnimeDetailsPage extends ConsumerWidget {
 class _AnimeDetailsView extends StatelessWidget {
   const _AnimeDetailsView({required this.anime});
 
-  final Anime anime;
+  final AppAnime anime;
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +121,7 @@ class _AnimeDetailsView extends StatelessWidget {
 class _Header extends StatelessWidget {
   const _Header({required this.anime});
 
-  final Anime anime;
+  final AppAnime anime;
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +177,7 @@ class _Header extends StatelessWidget {
 class _Poster extends StatelessWidget {
   const _Poster({required this.anime});
 
-  final Anime anime;
+  final AppAnime anime;
 
   @override
   Widget build(BuildContext context) {
@@ -209,7 +209,7 @@ class _Poster extends StatelessWidget {
 class _StatsGrid extends StatelessWidget {
   const _StatsGrid({required this.anime});
 
-  final Anime anime;
+  final AppAnime anime;
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +239,7 @@ class _StatsGrid extends StatelessWidget {
 class _DetailSections extends StatelessWidget {
   const _DetailSections({required this.anime});
 
-  final Anime anime;
+  final AppAnime anime;
 
   @override
   Widget build(BuildContext context) {
@@ -589,7 +589,7 @@ class _DetailItem {
   final bool copyable;
 }
 
-List<_DetailItem> _headerTitleItems(Anime anime) {
+List<_DetailItem> _headerTitleItems(AppAnime anime) {
   return [
     if (_hasText(anime.titleEnglish))
       _DetailItem('English', anime.titleEnglish, copyable: true),
@@ -598,7 +598,7 @@ List<_DetailItem> _headerTitleItems(Anime anime) {
   ];
 }
 
-List<_DetailItem> _detailTitleItems(Anime anime) {
+List<_DetailItem> _detailTitleItems(AppAnime anime) {
   return [
     _DetailItem('Default', anime.title, copyable: true),
     if (_hasText(anime.titleEnglish))
@@ -608,12 +608,12 @@ List<_DetailItem> _detailTitleItems(Anime anime) {
   ];
 }
 
-String _scoreLabel(Anime anime) {
+String _scoreLabel(AppAnime anime) {
   final score = anime.score;
   return score == null ? 'N/A score' : '${score.toStringAsFixed(1)} score';
 }
 
-String? _seasonLabel(Anime anime) {
+String? _seasonLabel(AppAnime anime) {
   final season = anime.season;
   final year = anime.year;
   if (!_hasText(season) && year == null) {
@@ -626,7 +626,7 @@ String? _seasonLabel(Anime anime) {
   ].join(' ');
 }
 
-String? _joinMeta(Iterable<Meta> items) {
+String? _joinMeta(Iterable<AppAnimeMeta> items) {
   final names = [
     for (final item in items)
       if (_hasText(item.name)) item.name,

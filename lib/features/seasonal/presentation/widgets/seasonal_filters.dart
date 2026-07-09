@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jikan_api/jikan_api.dart';
 
+import '../../../../shared/models/anime_api_filters.dart';
 import '../../../../shared/widgets/filters/filters.dart';
 import '../../domain/models/seasonal_filters.dart';
 import '../../domain/seasonal_anime_providers.dart';
@@ -61,16 +61,16 @@ class _SeasonalFilterPanelState extends ConsumerState<SeasonalFilterPanel> {
         FilterWidgetModule(header),
         FilterRowModule(
           children: [
-            DropdownFilter<AnimeType?>(
+            DropdownFilter<AppAnimeType?>(
               label: 'Type',
               value: type,
               options: const [
                 FilterOption(value: null, label: 'All types'),
-                FilterOption(value: AnimeType.tv, label: 'TV'),
-                FilterOption(value: AnimeType.movie, label: 'Movie'),
-                FilterOption(value: AnimeType.ova, label: 'OVA'),
-                FilterOption(value: AnimeType.ona, label: 'ONA'),
-                FilterOption(value: AnimeType.special, label: 'Special'),
+                FilterOption(value: AppAnimeType.tv, label: 'TV'),
+                FilterOption(value: AppAnimeType.movie, label: 'Movie'),
+                FilterOption(value: AppAnimeType.ova, label: 'OVA'),
+                FilterOption(value: AppAnimeType.ona, label: 'ONA'),
+                FilterOption(value: AppAnimeType.special, label: 'Special'),
               ],
               onChanged: (value) {
                 ref.read(seasonalTypeFilterProvider.notifier).setType(value);
@@ -153,7 +153,7 @@ class _SeasonalFilterPanelState extends ConsumerState<SeasonalFilterPanel> {
   }
 
   int _activeAdvancedFilterCount({
-    required AnimeType? type,
+    required AppAnimeType? type,
     required SeasonalFilters filters,
   }) {
     var count = 0;

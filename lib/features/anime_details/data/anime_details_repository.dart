@@ -1,18 +1,20 @@
-import 'package:jikan_api/jikan_api.dart';
+import '../../../shared/models/app_anime.dart';
+import '../../../shared/services/rate_limited_jikan_client.dart';
 
 final class AnimeDetailsRepository {
-  AnimeDetailsRepository({Jikan? jikan}) : _jikan = jikan ?? Jikan();
+  AnimeDetailsRepository({RateLimitedJikanClient? jikan})
+    : _jikan = jikan ?? RateLimitedJikanClient.instance;
 
-  final Jikan _jikan;
-  final Map<int, Anime> _cache = {};
+  final RateLimitedJikanClient _jikan;
+  final Map<int, AppAnime> _cache = {};
 
-  Future<Anime> getAnime(int id) async {
+  Future<AppAnime> getAnime(int id) async {
     final cachedAnime = _cache[id];
     if (cachedAnime != null) {
       return cachedAnime;
     }
 
-    final anime = await _jikan.getAnime(id);
+    final anime = AppAnime.fromAnimeFullData(await _jikan.getAnimeFullById(id));
     _cache[id] = anime;
     return anime;
   }
