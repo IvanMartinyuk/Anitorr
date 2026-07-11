@@ -75,16 +75,6 @@ class SeasonalFiltersNotifier extends Notifier<SeasonalFilters> {
     ref.read(seasonalPageProvider.notifier).reset();
   }
 
-  void toggleRating(AnimeContentRating rating) {
-    final ratings = Set<AnimeContentRating>.of(state.ratings);
-    if (!ratings.add(rating)) {
-      ratings.remove(rating);
-    }
-
-    state = state.copyWith(ratings: ratings);
-    ref.read(seasonalPageProvider.notifier).reset();
-  }
-
   void setScoreRange(double minScore, double maxScore) {
     state = state.copyWith(minScore: minScore, maxScore: maxScore);
     ref.read(seasonalPageProvider.notifier).reset();

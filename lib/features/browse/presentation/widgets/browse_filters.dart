@@ -155,58 +155,58 @@ class _BrowseFilterPanelState extends ConsumerState<BrowseFilterPanel> {
         ),
         if (genres.isNotEmpty)
           FilterWidgetModule(
-            LabeledMultiChoiceFilter<String>(
-              label: 'Genres',
-              options: [
-                for (final genre in genres)
-                  FilterOption(value: genre, label: genre),
-              ],
-              selectedValues: filters.genres,
-              onToggle: (genre) {
-                ref.read(browseFiltersProvider.notifier).toggleGenre(genre);
-              },
-            ),
-          ),
-        if (genres.isNotEmpty)
-          FilterWidgetModule(
-            LabeledMultiChoiceFilter<String>(
-              label: 'Exclude genres',
-              options: [
-                for (final genre in genres)
-                  FilterOption(value: genre, label: genre),
-              ],
-              selectedValues: filters.excludedGenres,
-              onToggle: (genre) {
-                ref
-                    .read(browseFiltersProvider.notifier)
-                    .toggleExcludedGenre(genre);
-              },
-            ),
-          ),
-        if (tags.isNotEmpty)
-          FilterWidgetModule(
-            LabeledMultiChoiceFilter<String>(
-              label: 'Tags',
-              options: [
-                for (final tag in tags) FilterOption(value: tag, label: tag),
-              ],
-              selectedValues: filters.tags,
-              onToggle: (tag) {
-                ref.read(browseFiltersProvider.notifier).toggleTag(tag);
-              },
+            _FilterPairRow(
+              left: LabeledMultiChoiceFilter<String>(
+                label: 'Genres',
+                options: [
+                  for (final genre in genres)
+                    FilterOption(value: genre, label: genre),
+                ],
+                selectedValues: filters.genres,
+                onToggle: (genre) {
+                  ref.read(browseFiltersProvider.notifier).toggleGenre(genre);
+                },
+              ),
+              right: LabeledMultiChoiceFilter<String>(
+                label: 'Exclude genres',
+                options: [
+                  for (final genre in genres)
+                    FilterOption(value: genre, label: genre),
+                ],
+                selectedValues: filters.excludedGenres,
+                onToggle: (genre) {
+                  ref
+                      .read(browseFiltersProvider.notifier)
+                      .toggleExcludedGenre(genre);
+                },
+              ),
             ),
           ),
         if (tags.isNotEmpty)
           FilterWidgetModule(
-            LabeledMultiChoiceFilter<String>(
-              label: 'Exclude tags',
-              options: [
-                for (final tag in tags) FilterOption(value: tag, label: tag),
-              ],
-              selectedValues: filters.excludedTags,
-              onToggle: (tag) {
-                ref.read(browseFiltersProvider.notifier).toggleExcludedTag(tag);
-              },
+            _FilterPairRow(
+              left: LabeledMultiChoiceFilter<String>(
+                label: 'Tags',
+                options: [
+                  for (final tag in tags) FilterOption(value: tag, label: tag),
+                ],
+                selectedValues: filters.tags,
+                onToggle: (tag) {
+                  ref.read(browseFiltersProvider.notifier).toggleTag(tag);
+                },
+              ),
+              right: LabeledMultiChoiceFilter<String>(
+                label: 'Exclude tags',
+                options: [
+                  for (final tag in tags) FilterOption(value: tag, label: tag),
+                ],
+                selectedValues: filters.excludedTags,
+                onToggle: (tag) {
+                  ref
+                      .read(browseFiltersProvider.notifier)
+                      .toggleExcludedTag(tag);
+                },
+              ),
             ),
           ),
         if (filters.hasActiveFilters)
@@ -258,5 +258,35 @@ class _BrowseFilterPanelState extends ConsumerState<BrowseFilterPanel> {
     }
 
     return count;
+  }
+}
+
+class _FilterPairRow extends StatelessWidget {
+  const _FilterPairRow({required this.left, required this.right});
+
+  final Widget left;
+  final Widget right;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth < 720) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [left, const SizedBox(height: 16), right],
+          );
+        }
+
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: left),
+            const SizedBox(width: 16),
+            Expanded(child: right),
+          ],
+        );
+      },
+    );
   }
 }

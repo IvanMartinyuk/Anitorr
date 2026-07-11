@@ -113,19 +113,6 @@ class _SeasonalFilterPanelState extends ConsumerState<SeasonalFilterPanel> {
             },
           ),
         ),
-        FilterWidgetModule(
-          LabeledMultiChoiceFilter<AnimeContentRating>(
-            label: 'Rating',
-            options: [
-              for (final rating in AnimeContentRating.values)
-                FilterOption(value: rating, label: rating.label),
-            ],
-            selectedValues: filters.ratings,
-            onToggle: (rating) {
-              ref.read(seasonalFiltersProvider.notifier).toggleRating(rating);
-            },
-          ),
-        ),
         if (genres.isNotEmpty) ...[
           FilterWidgetModule(
             LabeledMultiChoiceFilter<String>(
@@ -189,9 +176,6 @@ class _SeasonalFilterPanelState extends ConsumerState<SeasonalFilterPanel> {
       count += 1;
     }
 
-    return count +
-        filters.ratings.length +
-        filters.genres.length +
-        filters.tags.length;
+    return count + filters.genres.length + filters.tags.length;
   }
 }
