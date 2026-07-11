@@ -61,7 +61,6 @@ List<AppAnime> filterSeasonalAnime(
       if (matchesSeasonalAnimeType(item, typeFilter) &&
           _matchesTitle(item, normalizedQuery) &&
           _matchesAiring(item, filters.airing) &&
-          _matchesRating(item, filters.ratings) &&
           _matchesScore(item, filters.minScore, filters.maxScore) &&
           _matchesGenres(item, filters.genres) &&
           _matchesTags(item, filters.tags))
@@ -119,16 +118,6 @@ bool _matchesTitle(AppAnime anime, String query) {
 
 bool _matchesAiring(AppAnime anime, bool? airing) {
   return airing == null || anime.airing == airing;
-}
-
-bool _matchesRating(AppAnime anime, Set<AnimeContentRating> ratings) {
-  if (ratings.isEmpty) {
-    return true;
-  }
-
-  final rating = anime.rating?.trim();
-  return rating != null &&
-      ratings.any((selectedRating) => selectedRating.label == rating);
 }
 
 bool _matchesScore(AppAnime anime, double minScore, double maxScore) {

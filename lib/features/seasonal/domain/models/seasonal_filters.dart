@@ -1,7 +1,7 @@
 enum SeasonalSort {
   apiOrder('API order'),
   titleAsc('Title'),
-  scoreDesc('Rating'),
+  scoreDesc('Score'),
   popularityAsc('Popularity'),
   membersDesc('Members');
 
@@ -10,23 +10,9 @@ enum SeasonalSort {
   final String label;
 }
 
-enum AnimeContentRating {
-  g('G - All Ages'),
-  pg('PG - Children'),
-  pg13('PG-13 - Teens 13 or older'),
-  r17('R - 17+ (violence & profanity)'),
-  rPlus('R+ - Mild Nudity'),
-  rx('Rx - Hentai');
-
-  const AnimeContentRating(this.label);
-
-  final String label;
-}
-
 final class SeasonalFilters {
   const SeasonalFilters({
     required this.query,
-    required this.ratings,
     required this.airing,
     required this.minScore,
     required this.maxScore,
@@ -37,7 +23,6 @@ final class SeasonalFilters {
   factory SeasonalFilters.empty() {
     return const SeasonalFilters(
       query: '',
-      ratings: {},
       airing: null,
       minScore: 0,
       maxScore: 10,
@@ -47,7 +32,6 @@ final class SeasonalFilters {
   }
 
   final String query;
-  final Set<AnimeContentRating> ratings;
   final bool? airing;
   final double minScore;
   final double maxScore;
@@ -56,7 +40,6 @@ final class SeasonalFilters {
 
   bool get hasActiveCachedFilters {
     return query.trim().isNotEmpty ||
-        ratings.isNotEmpty ||
         airing != null ||
         minScore > 0 ||
         maxScore < 10 ||
@@ -66,7 +49,6 @@ final class SeasonalFilters {
 
   SeasonalFilters copyWith({
     String? query,
-    Set<AnimeContentRating>? ratings,
     bool? airing,
     bool clearAiring = false,
     double? minScore,
@@ -76,7 +58,6 @@ final class SeasonalFilters {
   }) {
     return SeasonalFilters(
       query: query ?? this.query,
-      ratings: ratings ?? this.ratings,
       airing: clearAiring ? null : airing ?? this.airing,
       minScore: minScore ?? this.minScore,
       maxScore: maxScore ?? this.maxScore,
