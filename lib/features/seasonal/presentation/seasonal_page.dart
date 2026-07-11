@@ -72,10 +72,13 @@ class SeasonalPage extends ConsumerWidget {
           AnimeGrid(
             items: items,
             onAnimeSelected: (anime) {
-              context.goNamed(
+              context.pushNamed(
                 AppRoute.animeDetails.name,
                 pathParameters: {'animeId': anime.id.toString()},
-                extra: anime,
+                extra: AnimeDetailsRouteExtra(
+                  anime: anime,
+                  sourceRoute: AppRoute.seasonal,
+                ),
               );
             },
           ),

@@ -9,31 +9,39 @@ import '../../../shared/models/app_anime.dart';
 import '../domain/providers/anime_details_provider.dart';
 
 class AnimeDetailsPage extends ConsumerWidget {
-  const AnimeDetailsPage({required this.animeId, this.initialAnime, super.key});
+  const AnimeDetailsPage({
+    required this.animeId,
+    this.initialAnime,
+    this.sourceRoute,
+    super.key,
+  });
 
   final int animeId;
   final AppAnime? initialAnime;
+  final AppRoute? sourceRoute;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final loadedAnime = ref.watch(animeDetailsProvider(animeId));
 
     return loadedAnime.when(
-      data: (anime) => _AnimeDetailsView(anime: anime),
+      data: (anime) =>
+          _AnimeDetailsView(anime: anime, sourceRoute: sourceRoute),
       loading: () => initialAnime == null
           ? const Center(child: CircularProgressIndicator())
-          : _AnimeDetailsView(anime: initialAnime!),
+          : _AnimeDetailsView(anime: initialAnime!, sourceRoute: sourceRoute),
       error: (error, stackTrace) => initialAnime == null
-          ? _AnimeDetailsError(error: error)
-          : _AnimeDetailsView(anime: initialAnime!),
+          ? _AnimeDetailsError(error: error, sourceRoute: sourceRoute)
+          : _AnimeDetailsView(anime: initialAnime!, sourceRoute: sourceRoute),
     );
   }
 }
 
 class _AnimeDetailsView extends StatelessWidget {
-  const _AnimeDetailsView({required this.anime});
+  const _AnimeDetailsView({required this.anime, required this.sourceRoute});
 
   final AppAnime anime;
+  final AppRoute? sourceRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +61,7 @@ class _AnimeDetailsView extends StatelessWidget {
                   children: [
                     IconButton.filledTonal(
                       tooltip: 'Back',
-                      onPressed: () => context.go(AppRoute.seasonal.path),
+                      onPressed: () => _goBack(context, sourceRoute),
                       icon: const Icon(Icons.arrow_back_rounded),
                     ),
                     const SizedBox(height: 20),
@@ -555,9 +563,10 @@ class _InfoChip extends StatelessWidget {
 }
 
 class _AnimeDetailsError extends StatelessWidget {
-  const _AnimeDetailsError({required this.error});
+  const _AnimeDetailsError({required this.error, required this.sourceRoute});
 
   final Object error;
+  final AppRoute? sourceRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -572,7 +581,7 @@ class _AnimeDetailsError extends StatelessWidget {
           children: [
             IconButton.filledTonal(
               tooltip: 'Back',
-              onPressed: () => context.go(AppRoute.seasonal.path),
+              onPressed: () => _goBack(context, sourceRoute),
               icon: const Icon(Icons.arrow_back_rounded),
             ),
             const SizedBox(height: 24),
@@ -686,4 +695,13 @@ String _fallback(String? value, String fallback) {
 
 bool _hasText(String? value) {
   return value?.trim().isNotEmpty ?? false;
+}
+
+void _goBack(BuildContext context, AppRoute? sourceRoute) {
+  if (context.canPop()) {
+    context.pop();
+    return;
+  }
+
+  context.go((sourceRoute ?? AppRoute.browse).path);
 }

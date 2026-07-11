@@ -47,12 +47,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                 );
               }
 
+              final extra = state.extra;
+              final initialAnime = switch (extra) {
+                AnimeDetailsRouteExtra(:final anime) => anime,
+                AppAnime anime => anime,
+                _ => null,
+              };
+              final sourceRoute = switch (extra) {
+                AnimeDetailsRouteExtra(:final sourceRoute) => sourceRoute,
+                _ => null,
+              };
+
               return NoTransitionPage<void>(
                 child: AnimeDetailsPage(
                   animeId: animeId,
-                  initialAnime: state.extra is AppAnime
-                      ? state.extra as AppAnime
-                      : null,
+                  initialAnime: initialAnime,
+                  sourceRoute: sourceRoute,
                 ),
               );
             },
@@ -89,4 +99,14 @@ enum AppRoute {
   final String path;
   final String name;
   final String label;
+}
+
+final class AnimeDetailsRouteExtra {
+  const AnimeDetailsRouteExtra({
+    required this.anime,
+    required this.sourceRoute,
+  });
+
+  final AppAnime anime;
+  final AppRoute sourceRoute;
 }
