@@ -14,12 +14,13 @@ class AppShell extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final useSidebar = constraints.maxWidth >= 720;
+        final selectedRoute = _selectedNavigationRoute(context, location);
 
         if (useSidebar) {
           return Scaffold(
             body: Row(
               children: [
-                _SidebarNavigation(location: location),
+                _SidebarNavigation(selectedRoute: selectedRoute),
                 Expanded(child: child),
               ],
             ),
@@ -28,7 +29,7 @@ class AppShell extends StatelessWidget {
 
         return Scaffold(
           body: child,
-          bottomNavigationBar: _BottomNavigation(location: location),
+          bottomNavigationBar: _BottomNavigation(selectedRoute: selectedRoute),
         );
       },
     );
@@ -36,9 +37,9 @@ class AppShell extends StatelessWidget {
 }
 
 class _SidebarNavigation extends StatelessWidget {
-  const _SidebarNavigation({required this.location});
+  const _SidebarNavigation({required this.selectedRoute});
 
-  final String location;
+  final AppRoute selectedRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +71,7 @@ class _SidebarNavigation extends StatelessWidget {
                       for (final item in _navigationItems)
                         _SidebarDestination(
                           item: item,
-                          selected: _isRouteSelected(item.route, location),
+                          selected: item.route == selectedRoute,
                         ),
                     ],
                   ),
@@ -117,14 +118,14 @@ class _SidebarDestination extends StatelessWidget {
 }
 
 class _BottomNavigation extends StatelessWidget {
-  const _BottomNavigation({required this.location});
+  const _BottomNavigation({required this.selectedRoute});
 
-  final String location;
+  final AppRoute selectedRoute;
 
   @override
   Widget build(BuildContext context) {
     final selectedIndex = _navigationItems.indexWhere(
-      (item) => _isRouteSelected(item.route, location),
+      (item) => item.route == selectedRoute,
     );
 
     return NavigationBar(
@@ -157,10 +158,20 @@ const _navigationItems = [
   _NavigationItem(route: AppRoute.settings, icon: Icons.settings_outlined),
 ];
 
-bool _isRouteSelected(AppRoute route, String location) {
-  if (route.path == location) {
-    return true;
+AppRoute _selectedNavigationRoute(BuildContext context, String location) {
+  if (location.startsWith('/anime/')) {
+    final extra = GoRouterState.of(context).extra;
+    if (extra is AnimeDetailsRouteExtra) {
+      return extra.sourceRoute;
+    }
+    return AppRoute.browse;
   }
 
-  return route == AppRoute.seasonal && location.startsWith('/anime/');
+  for (final item in _navigationItems) {
+    if (item.route.path == location) {
+      return item.route;
+    }
+  }
+
+  return AppRoute.myList;
 }
