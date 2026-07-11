@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jikan_moe/jikan_moe.dart';
 
 import '../../../../shared/models/anime_api_filters.dart';
 import '../../../../shared/widgets/filters/filters.dart';
@@ -21,18 +20,20 @@ class _BrowseFilterPanelState extends ConsumerState<BrowseFilterPanel> {
   Widget build(BuildContext context) {
     final filters = ref.watch(browseFiltersProvider);
     final sort = ref.watch(browseSortProvider);
+    final sortDirection = ref.watch(browseSortDirectionProvider);
     final genres = ref
         .watch(browseGenresProvider)
-        .maybeWhen(
-          data: (items) => items,
-          orElse: () => const <AnimeGenreData>[],
-        );
+        .maybeWhen(data: (items) => items, orElse: () => const <String>[]);
+    final tags = ref
+        .watch(browseTagsProvider)
+        .maybeWhen(data: (items) => items, orElse: () => const <String>[]);
     final header = FilterBar<BrowseSort>(
       expanded: _expanded,
       searchLabel: 'Title',
       searchValue: filters.query,
       searchHintText: 'English, Japanese, synonym',
       sortValue: sort,
+      sortDirection: sortDirection,
       sortOptions: [
         for (final option in BrowseSort.values)
           FilterSortOption(value: option, label: option.label),
@@ -43,6 +44,9 @@ class _BrowseFilterPanelState extends ConsumerState<BrowseFilterPanel> {
       },
       onSortSelected: (value) {
         ref.read(browseSortProvider.notifier).setSort(value);
+      },
+      onSortDirectionToggle: () {
+        ref.read(browseSortDirectionProvider.notifier).toggle();
       },
       onToggleFilters: () {
         setState(() {
@@ -151,31 +155,57 @@ class _BrowseFilterPanelState extends ConsumerState<BrowseFilterPanel> {
         ),
         if (genres.isNotEmpty)
           FilterWidgetModule(
-            LabeledMultiChoiceFilter<int>(
+            LabeledMultiChoiceFilter<String>(
               label: 'Genres',
               options: [
                 for (final genre in genres)
-                  FilterOption(value: genre.malId, label: genre.name),
+                  FilterOption(value: genre, label: genre),
               ],
               selectedValues: filters.genres,
-              onToggle: (genreId) {
-                ref.read(browseFiltersProvider.notifier).toggleGenre(genreId);
+              onToggle: (genre) {
+                ref.read(browseFiltersProvider.notifier).toggleGenre(genre);
               },
             ),
           ),
         if (genres.isNotEmpty)
           FilterWidgetModule(
-            LabeledMultiChoiceFilter<int>(
+            LabeledMultiChoiceFilter<String>(
               label: 'Exclude genres',
               options: [
                 for (final genre in genres)
-                  FilterOption(value: genre.malId, label: genre.name),
+                  FilterOption(value: genre, label: genre),
               ],
               selectedValues: filters.excludedGenres,
-              onToggle: (genreId) {
+              onToggle: (genre) {
                 ref
                     .read(browseFiltersProvider.notifier)
-                    .toggleExcludedGenre(genreId);
+                    .toggleExcludedGenre(genre);
+              },
+            ),
+          ),
+        if (tags.isNotEmpty)
+          FilterWidgetModule(
+            LabeledMultiChoiceFilter<String>(
+              label: 'Tags',
+              options: [
+                for (final tag in tags) FilterOption(value: tag, label: tag),
+              ],
+              selectedValues: filters.tags,
+              onToggle: (tag) {
+                ref.read(browseFiltersProvider.notifier).toggleTag(tag);
+              },
+            ),
+          ),
+        if (tags.isNotEmpty)
+          FilterWidgetModule(
+            LabeledMultiChoiceFilter<String>(
+              label: 'Exclude tags',
+              options: [
+                for (final tag in tags) FilterOption(value: tag, label: tag),
+              ],
+              selectedValues: filters.excludedTags,
+              onToggle: (tag) {
+                ref.read(browseFiltersProvider.notifier).toggleExcludedTag(tag);
               },
             ),
           ),
@@ -197,7 +227,11 @@ class _BrowseFilterPanelState extends ConsumerState<BrowseFilterPanel> {
   }
 
   int _activeFilterCount(BrowseFilters filters) {
-    var count = filters.genres.length + filters.excludedGenres.length;
+    var count =
+        filters.genres.length +
+        filters.excludedGenres.length +
+        filters.tags.length +
+        filters.excludedTags.length;
     if (filters.normalizedQuery != null) {
       count += 1;
     }

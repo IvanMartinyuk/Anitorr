@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../shared/models/anime_api_filters.dart';
+import '../../../../shared/models/sort_direction.dart';
 import '../models/browse_filters.dart';
 import 'browse_pagination_providers.dart';
 
@@ -12,6 +13,11 @@ final browseFiltersProvider =
 final browseSortProvider = NotifierProvider<BrowseSortNotifier, BrowseSort>(
   BrowseSortNotifier.new,
 );
+
+final browseSortDirectionProvider =
+    NotifierProvider<BrowseSortDirectionNotifier, SortDirection>(
+      BrowseSortDirectionNotifier.new,
+    );
 
 class BrowseFiltersNotifier extends Notifier<BrowseFilters> {
   @override
@@ -49,25 +55,47 @@ class BrowseFiltersNotifier extends Notifier<BrowseFilters> {
     _resetPagination();
   }
 
-  void toggleGenre(int genreId) {
-    final genres = Set<int>.of(state.genres);
-    if (!genres.add(genreId)) {
-      genres.remove(genreId);
+  void toggleGenre(String genre) {
+    final genres = Set<String>.of(state.genres);
+    if (!genres.add(genre)) {
+      genres.remove(genre);
     }
 
-    final excludedGenres = Set<int>.of(state.excludedGenres)..remove(genreId);
+    final excludedGenres = Set<String>.of(state.excludedGenres)..remove(genre);
     state = state.copyWith(genres: genres, excludedGenres: excludedGenres);
     _resetPagination();
   }
 
-  void toggleExcludedGenre(int genreId) {
-    final excludedGenres = Set<int>.of(state.excludedGenres);
-    if (!excludedGenres.add(genreId)) {
-      excludedGenres.remove(genreId);
+  void toggleExcludedGenre(String genre) {
+    final excludedGenres = Set<String>.of(state.excludedGenres);
+    if (!excludedGenres.add(genre)) {
+      excludedGenres.remove(genre);
     }
 
-    final genres = Set<int>.of(state.genres)..remove(genreId);
+    final genres = Set<String>.of(state.genres)..remove(genre);
     state = state.copyWith(genres: genres, excludedGenres: excludedGenres);
+    _resetPagination();
+  }
+
+  void toggleTag(String tag) {
+    final tags = Set<String>.of(state.tags);
+    if (!tags.add(tag)) {
+      tags.remove(tag);
+    }
+
+    final excludedTags = Set<String>.of(state.excludedTags)..remove(tag);
+    state = state.copyWith(tags: tags, excludedTags: excludedTags);
+    _resetPagination();
+  }
+
+  void toggleExcludedTag(String tag) {
+    final excludedTags = Set<String>.of(state.excludedTags);
+    if (!excludedTags.add(tag)) {
+      excludedTags.remove(tag);
+    }
+
+    final tags = Set<String>.of(state.tags)..remove(tag);
+    state = state.copyWith(tags: tags, excludedTags: excludedTags);
     _resetPagination();
   }
 
@@ -101,6 +129,20 @@ class BrowseSortNotifier extends Notifier<BrowseSort> {
 
   void setSort(BrowseSort sort) {
     state = sort;
+    ref.read(browseLastPageProvider.notifier).reset();
+    ref.read(browseMaxLoadedPageProvider.notifier).reset();
+    ref.read(browsePageProvider.notifier).reset();
+  }
+}
+
+class BrowseSortDirectionNotifier extends Notifier<SortDirection> {
+  @override
+  SortDirection build() {
+    return SortDirection.descending;
+  }
+
+  void toggle() {
+    state = state.toggled;
     ref.read(browseLastPageProvider.notifier).reset();
     ref.read(browseMaxLoadedPageProvider.notifier).reset();
     ref.read(browsePageProvider.notifier).reset();

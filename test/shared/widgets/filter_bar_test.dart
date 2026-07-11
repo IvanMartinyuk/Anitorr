@@ -1,4 +1,5 @@
 import 'package:anitorr/shared/widgets/filters/filters.dart';
+import 'package:anitorr/shared/models/sort_direction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -65,6 +66,40 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(selected, _SortValue.score);
+  });
+
+  testWidgets('FilterBar reports sort direction toggle', (tester) async {
+    var toggled = false;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: FilterBar<_SortValue>(
+            expanded: true,
+            searchLabel: 'Title',
+            searchValue: '',
+            sortValue: _SortValue.title,
+            sortDirection: SortDirection.descending,
+            sortOptions: const [
+              FilterSortOption(value: _SortValue.title, label: 'Title'),
+              FilterSortOption(value: _SortValue.score, label: 'Score'),
+            ],
+            activeFilterCount: 0,
+            onSearchChanged: (_) {},
+            onSortSelected: (_) {},
+            onSortDirectionToggle: () {
+              toggled = true;
+            },
+            onToggleFilters: () {},
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.byIcon(Icons.south_rounded));
+    await tester.pumpAndSettle();
+
+    expect(toggled, isTrue);
   });
 }
 

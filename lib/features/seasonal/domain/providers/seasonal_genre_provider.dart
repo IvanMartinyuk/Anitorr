@@ -10,11 +10,16 @@ final seasonalAvailableGenresProvider = FutureProvider<List<String>>((
   final genreNames = <String>{};
 
   for (final genre in genres) {
-    final name = genre.name.trim();
+    final name = genre.trim();
     if (name.isNotEmpty) {
       genreNames.add(name);
     }
   }
 
   return genreNames.toList()..sort();
+});
+
+final seasonalAvailableTagsProvider = FutureProvider<List<String>>((ref) async {
+  final repository = ref.watch(seasonalAnimeRepositoryProvider);
+  return repository.getAnimeTags();
 });

@@ -1,11 +1,13 @@
 import '../../../../shared/models/anime_api_filters.dart';
 import '../../../../shared/models/app_anime.dart';
+import '../../../../shared/models/sort_direction.dart';
 import '../models/seasonal_filters.dart';
 
 List<AppAnime> prepareSeasonalAnime({
   required List<AppAnime> anime,
   required SeasonalFilters filters,
   required SeasonalSort sort,
+  required SortDirection sortDirection,
   AppAnimeType? typeFilter,
 }) {
   final distinctAnime = distinctAnimeByPreferredTitle(anime);
@@ -15,23 +17,29 @@ List<AppAnime> prepareSeasonalAnime({
     typeFilter: typeFilter,
   );
 
-  return sortSeasonalAnime(filteredAnime, sort);
+  return sortSeasonalAnime(filteredAnime, sort, sortDirection);
 }
 
-List<AppAnime> sortSeasonalAnime(List<AppAnime> anime, SeasonalSort sort) {
+List<AppAnime> sortSeasonalAnime(
+  List<AppAnime> anime,
+  SeasonalSort sort,
+  SortDirection direction,
+) {
   final sorted = List<AppAnime>.of(anime);
 
   switch (sort) {
     case SeasonalSort.apiOrder:
       return sorted;
     case SeasonalSort.titleAsc:
-      sorted.sort((a, b) => a.title.compareTo(b.title));
+      sorted.sort((a, b) => _compareByDirection(a.title, b.title, direction));
     case SeasonalSort.scoreDesc:
-      sorted.sort((a, b) => _compareNullableDesc(a.score, b.score));
+      sorted.sort((a, b) => _compareNullable(a.score, b.score, direction));
     case SeasonalSort.popularityAsc:
-      sorted.sort((a, b) => _compareNullableAsc(a.popularity, b.popularity));
+      sorted.sort(
+        (a, b) => _compareNullable(a.popularity, b.popularity, direction),
+      );
     case SeasonalSort.membersDesc:
-      sorted.sort((a, b) => _compareNullableDesc(a.members, b.members));
+      sorted.sort((a, b) => _compareNullable(a.members, b.members, direction));
   }
 
   return sorted;
@@ -55,7 +63,8 @@ List<AppAnime> filterSeasonalAnime(
           _matchesAiring(item, filters.airing) &&
           _matchesRating(item, filters.ratings) &&
           _matchesScore(item, filters.minScore, filters.maxScore) &&
-          _matchesGenres(item, filters.genres))
+          _matchesGenres(item, filters.genres) &&
+          _matchesTags(item, filters.tags))
         item,
   ];
 }
@@ -84,8 +93,8 @@ bool matchesSeasonalAnimeType(AppAnime anime, AppAnimeType? typeFilter) {
     return false;
   }
 
-  // Jikan returns labels like "TV Special", while the package enum uses
-  // names like "tv_special"; normalize both before comparing.
+  // API clients may return labels like "TV Special", while the app enum uses
+  // values like "tv_special"; normalize both before comparing.
   return _normalizedType(type) == _normalizedType(typeFilter.apiValue);
 }
 
@@ -140,6 +149,15 @@ bool _matchesGenres(AppAnime anime, Set<String> genres) {
   return genres.every(animeGenres.contains);
 }
 
+bool _matchesTags(AppAnime anime, Set<String> tags) {
+  if (tags.isEmpty) {
+    return true;
+  }
+
+  final animeTags = anime.tags.map((tag) => tag.name).toSet();
+  return tags.every(animeTags.contains);
+}
+
 String _normalizedPreferredTitle(AppAnime anime) {
   final title = anime.titleEnglish?.trim().isNotEmpty ?? false
       ? anime.titleEnglish!
@@ -164,4 +182,14 @@ int _compareNullableAsc(num? a, num? b) {
 
 int _compareNullableDesc(num? a, num? b) {
   return _compareNullableAsc(b, a);
+}
+
+int _compareNullable(num? a, num? b, SortDirection direction) {
+  return direction.isDescending
+      ? _compareNullableDesc(a, b)
+      : _compareNullableAsc(a, b);
+}
+
+int _compareByDirection(String a, String b, SortDirection direction) {
+  return direction.isDescending ? b.compareTo(a) : a.compareTo(b);
 }

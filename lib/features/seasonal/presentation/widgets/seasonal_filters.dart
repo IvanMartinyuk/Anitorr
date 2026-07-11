@@ -21,9 +21,13 @@ class _SeasonalFilterPanelState extends ConsumerState<SeasonalFilterPanel> {
   Widget build(BuildContext context) {
     final type = ref.watch(seasonalTypeFilterProvider);
     final sort = ref.watch(seasonalSortProvider);
+    final sortDirection = ref.watch(seasonalSortDirectionProvider);
     final filters = ref.watch(seasonalFiltersProvider);
     final genres = ref
         .watch(seasonalAvailableGenresProvider)
+        .maybeWhen(data: (items) => items, orElse: () => const <String>[]);
+    final tags = ref
+        .watch(seasonalAvailableTagsProvider)
         .maybeWhen(data: (items) => items, orElse: () => const <String>[]);
     final header = FilterBar<SeasonalSort>(
       expanded: _expanded,
@@ -31,6 +35,7 @@ class _SeasonalFilterPanelState extends ConsumerState<SeasonalFilterPanel> {
       searchValue: filters.query,
       searchHintText: 'English, Japanese, synonym',
       sortValue: sort,
+      sortDirection: sortDirection,
       sortOptions: [
         for (final option in SeasonalSort.values)
           FilterSortOption(value: option, label: option.label),
@@ -44,6 +49,9 @@ class _SeasonalFilterPanelState extends ConsumerState<SeasonalFilterPanel> {
       },
       onSortSelected: (value) {
         ref.read(seasonalSortProvider.notifier).setSort(value);
+      },
+      onSortDirectionToggle: () {
+        ref.read(seasonalSortDirectionProvider.notifier).toggle();
       },
       onToggleFilters: () {
         setState(() {
@@ -133,6 +141,20 @@ class _SeasonalFilterPanelState extends ConsumerState<SeasonalFilterPanel> {
             ),
           ),
         ],
+        if (tags.isNotEmpty) ...[
+          FilterWidgetModule(
+            LabeledMultiChoiceFilter<String>(
+              label: 'Tags',
+              options: [
+                for (final tag in tags) FilterOption(value: tag, label: tag),
+              ],
+              selectedValues: filters.tags,
+              onToggle: (tag) {
+                ref.read(seasonalFiltersProvider.notifier).toggleTag(tag);
+              },
+            ),
+          ),
+        ],
         if (type != null || filters.hasActiveCachedFilters) ...[
           FilterWidgetModule(
             Align(
@@ -167,6 +189,9 @@ class _SeasonalFilterPanelState extends ConsumerState<SeasonalFilterPanel> {
       count += 1;
     }
 
-    return count + filters.ratings.length + filters.genres.length;
+    return count +
+        filters.ratings.length +
+        filters.genres.length +
+        filters.tags.length;
   }
 }

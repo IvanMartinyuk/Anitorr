@@ -79,7 +79,7 @@ class BrowsePage extends ConsumerWidget {
             onAnimeSelected: (anime) {
               context.goNamed(
                 AppRoute.animeDetails.name,
-                pathParameters: {'animeId': anime.malId.toString()},
+                pathParameters: {'animeId': anime.id.toString()},
                 extra: anime,
               );
             },

@@ -1,11 +1,11 @@
 import '../../../shared/models/app_anime.dart';
-import '../../../shared/services/rate_limited_jikan_client.dart';
+import '../../../shared/services/rate_limited_anilist_client.dart';
 
 final class AnimeDetailsRepository {
-  AnimeDetailsRepository({RateLimitedJikanClient? jikan})
-    : _jikan = jikan ?? RateLimitedJikanClient.instance;
+  AnimeDetailsRepository({RateLimitedAniListClient? anilist})
+    : _anilist = anilist ?? RateLimitedAniListClient.instance;
 
-  final RateLimitedJikanClient _jikan;
+  final RateLimitedAniListClient _anilist;
   final Map<int, AppAnime> _cache = {};
 
   Future<AppAnime> getAnime(int id) async {
@@ -14,7 +14,9 @@ final class AnimeDetailsRepository {
       return cachedAnime;
     }
 
-    final anime = AppAnime.fromAnimeFullData(await _jikan.getAnimeFullById(id));
+    final anime = AppAnime.fromAnimeFullData(
+      await _anilist.getAnimeFullById(id),
+    );
     _cache[id] = anime;
     return anime;
   }

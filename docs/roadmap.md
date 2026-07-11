@@ -7,7 +7,7 @@ MVP Anime Tracker
 - Search anime
 - Anime details
 - Progress tracking
-- Use jikan_api as a starting point to get anime info
+- Use AniList as a starting point to get anime info
 - PC layout based on the current light/dark mobile UI mockups
 
 ---
