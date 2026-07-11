@@ -2,44 +2,50 @@ import 'package:anitorr/features/seasonal/domain/models/seasonal_filters.dart';
 import 'package:anitorr/features/seasonal/domain/services/seasonal_anime_filtering.dart';
 import 'package:anitorr/shared/models/anime_api_filters.dart';
 import 'package:anitorr/shared/models/app_anime.dart';
+import 'package:anitorr/shared/models/sort_direction.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('filterSeasonalAnime', () {
-    test('matches title aliases, type, rating, score, airing, and genres', () {
-      final actionTv = _anime(
-        title: 'Original',
-        englishTitle: 'Hero Show',
-        synonyms: ['Masked Legend'],
-        type: 'TV',
-        rating: AnimeContentRating.pg13.label,
-        score: 8.2,
-        airing: true,
-        genres: ['Action', 'Adventure'],
-      );
-      final romanceMovie = _anime(
-        title: 'Quiet Film',
-        type: 'Movie',
-        rating: AnimeContentRating.pg.label,
-        score: 7.1,
-        airing: false,
-        genres: ['Romance'],
-      );
-
-      final result = filterSeasonalAnime(
-        [actionTv, romanceMovie],
-        typeFilter: AppAnimeType.tv,
-        filters: SeasonalFilters.empty().copyWith(
-          query: 'masked',
-          ratings: {AnimeContentRating.pg13},
+    test(
+      'matches title aliases, type, rating, score, airing, genres, and tags',
+      () {
+        final actionTv = _anime(
+          title: 'Original',
+          englishTitle: 'Hero Show',
+          synonyms: ['Masked Legend'],
+          type: 'TV',
+          rating: AnimeContentRating.pg13.label,
+          score: 8.2,
           airing: true,
-          minScore: 8,
-          genres: {'Action'},
-        ),
-      );
+          genres: ['Action', 'Adventure'],
+          tags: ['Time Manipulation'],
+        );
+        final romanceMovie = _anime(
+          title: 'Quiet Film',
+          type: 'Movie',
+          rating: AnimeContentRating.pg.label,
+          score: 7.1,
+          airing: false,
+          genres: ['Romance'],
+        );
 
-      expect(result, [actionTv]);
-    });
+        final result = filterSeasonalAnime(
+          [actionTv, romanceMovie],
+          typeFilter: AppAnimeType.tv,
+          filters: SeasonalFilters.empty().copyWith(
+            query: 'masked',
+            ratings: {AnimeContentRating.pg13},
+            airing: true,
+            minScore: 8,
+            genres: {'Action'},
+            tags: {'Time Manipulation'},
+          ),
+        );
+
+        expect(result, [actionTv]);
+      },
+    );
 
     test('normalizes API type labels before comparing them', () {
       final special = _anime(title: 'Special', type: 'TV Special');
@@ -66,6 +72,7 @@ void main() {
         anime: [first, duplicate, other],
         filters: SeasonalFilters.empty(),
         sort: SeasonalSort.scoreDesc,
+        sortDirection: SortDirection.descending,
       );
 
       expect(result, [other, first]);
@@ -84,9 +91,10 @@ AppAnime _anime({
   int? members,
   bool airing = true,
   List<String> genres = const [],
+  List<String> tags = const [],
 }) {
   return AppAnime(
-    malId: title.hashCode,
+    id: title.hashCode,
     url: 'https://example.test/$title',
     imageUrl: 'https://example.test/$title.jpg',
     title: title,
@@ -101,17 +109,19 @@ AppAnime _anime({
     genres: [
       for (final genre in genres)
         AppAnimeMeta(
-          malId: genre.hashCode,
+          id: genre.hashCode,
           type: 'anime',
           name: genre,
           url: 'https://example.test/genres/$genre',
         ),
     ],
-    producers: const [],
-    licensors: const [],
-    studios: const [],
-    explicitGenres: const [],
-    themes: const [],
-    demographics: const [],
+    tags: [
+      for (final tag in tags)
+        AppAnimeTag(id: tag.hashCode, name: tag, category: 'Theme', rank: 80),
+    ],
+    rankings: const [],
+    externalLinks: const [],
+    streamingEpisodes: const [],
+    relations: const [],
   );
 }

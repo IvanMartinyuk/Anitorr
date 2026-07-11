@@ -9,11 +9,13 @@ import 'browse_repository_provider.dart';
 final browseAnimeProvider = FutureProvider<List<AppAnime>>((ref) async {
   final filters = ref.watch(browseFiltersProvider);
   final sort = ref.watch(browseSortProvider);
+  final sortDirection = ref.watch(browseSortDirectionProvider);
   final page = ref.watch(browsePageProvider);
   final repository = ref.watch(browseAnimeRepositoryProvider);
   final animePage = await repository.searchAnime(
     filters: filters,
     sort: sort,
+    sortDirection: sortDirection,
     page: page,
   );
   final anime = animePage.items;

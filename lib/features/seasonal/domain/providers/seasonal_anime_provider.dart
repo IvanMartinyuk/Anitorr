@@ -10,6 +10,7 @@ import 'seasonal_repository_provider.dart';
 final seasonalAnimeProvider = FutureProvider<List<AppAnime>>((ref) async {
   final typeFilter = ref.watch(seasonalTypeFilterProvider);
   final sort = ref.watch(seasonalSortProvider);
+  final sortDirection = ref.watch(seasonalSortDirectionProvider);
   final filters = ref.watch(seasonalFiltersProvider);
   final page = ref.watch(seasonalPageProvider);
   final repository = ref.watch(seasonalAnimeRepositoryProvider);
@@ -47,6 +48,7 @@ final seasonalAnimeProvider = FutureProvider<List<AppAnime>>((ref) async {
     anime: sourceAnime,
     filters: filters,
     sort: sort,
+    sortDirection: sortDirection,
     typeFilter: typeFilter,
   );
 });

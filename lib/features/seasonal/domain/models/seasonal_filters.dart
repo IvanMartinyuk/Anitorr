@@ -1,5 +1,5 @@
 enum SeasonalSort {
-  apiOrder('Jikan order'),
+  apiOrder('API order'),
   titleAsc('Title'),
   scoreDesc('Rating'),
   popularityAsc('Popularity'),
@@ -31,6 +31,7 @@ final class SeasonalFilters {
     required this.minScore,
     required this.maxScore,
     required this.genres,
+    required this.tags,
   });
 
   factory SeasonalFilters.empty() {
@@ -41,6 +42,7 @@ final class SeasonalFilters {
       minScore: 0,
       maxScore: 10,
       genres: {},
+      tags: {},
     );
   }
 
@@ -50,6 +52,7 @@ final class SeasonalFilters {
   final double minScore;
   final double maxScore;
   final Set<String> genres;
+  final Set<String> tags;
 
   bool get hasActiveCachedFilters {
     return query.trim().isNotEmpty ||
@@ -57,7 +60,8 @@ final class SeasonalFilters {
         airing != null ||
         minScore > 0 ||
         maxScore < 10 ||
-        genres.isNotEmpty;
+        genres.isNotEmpty ||
+        tags.isNotEmpty;
   }
 
   SeasonalFilters copyWith({
@@ -68,6 +72,7 @@ final class SeasonalFilters {
     double? minScore,
     double? maxScore,
     Set<String>? genres,
+    Set<String>? tags,
   }) {
     return SeasonalFilters(
       query: query ?? this.query,
@@ -76,6 +81,7 @@ final class SeasonalFilters {
       minScore: minScore ?? this.minScore,
       maxScore: maxScore ?? this.maxScore,
       genres: genres ?? this.genres,
+      tags: tags ?? this.tags,
     );
   }
 }

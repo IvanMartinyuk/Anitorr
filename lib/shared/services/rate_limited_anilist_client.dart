@@ -2,25 +2,25 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:math';
 
-import 'package:jikan_moe/jikan_moe.dart';
+import 'package:anilist_api/anilist_api.dart';
 
-final class RateLimitedJikanClient {
-  RateLimitedJikanClient({
-    JikanClient? client,
+final class RateLimitedAniListClient {
+  RateLimitedAniListClient({
+    AniListClient? client,
     this.perSecondLimit = 3,
     this.perMinuteLimit = 60,
     this.maxRetries = 3,
     this.retryDelay = const Duration(seconds: 2),
-  }) : _client = client ?? JikanClient();
+  }) : _client = client ?? AniListClient();
 
-  static final instance = RateLimitedJikanClient();
+  static final instance = RateLimitedAniListClient();
 
-  final JikanClient _client;
+  final AniListClient _client;
   final int perSecondLimit;
   final int perMinuteLimit;
   final int maxRetries;
   final Duration retryDelay;
-  final Queue<_QueuedJikanRequest<dynamic>> _queue = Queue();
+  final Queue<_QueuedAniListRequest<dynamic>> _queue = Queue();
   final List<DateTime> _requestStarts = [];
   bool _isProcessing = false;
 
@@ -29,77 +29,70 @@ final class RateLimitedJikanClient {
   }
 
   Future<AnimeSearchResponse> getAnimeSearch({
-    bool unapproved = false,
-    int? page = 1,
-    int? limit = 25,
+    int page = 1,
+    int perPage = 25,
     String? q,
-    String? type,
-    double? score,
-    double? minScore,
-    double? maxScore,
-    String? status,
-    String? rating,
-    bool? sfw = true,
-    String? genres,
-    String? genresExclude,
-    String? orderBy,
-    String? sort,
-    String? letter,
-    String? producers,
-    String? startDate,
-    String? endDate,
+    MediaFormat? format,
+    MediaStatus? status,
+    List<String>? genres,
+    List<String>? genresNotIn,
+    List<String>? tags,
+    List<String>? tagsNotIn,
+    List<MediaSort>? sort,
+    bool? isAdult,
   }) {
     return execute(
       (client) => client.getAnimeSearch(
-        unapproved: unapproved,
         page: page,
-        limit: limit,
+        perPage: perPage,
         q: q,
-        type: type,
-        score: score,
-        minScore: minScore,
-        maxScore: maxScore,
+        format: format,
         status: status,
-        rating: rating,
-        sfw: sfw,
         genres: genres,
-        genresExclude: genresExclude,
-        orderBy: orderBy,
+        genresNotIn: genresNotIn,
+        tags: tags,
+        tagsNotIn: tagsNotIn,
         sort: sort,
-        letter: letter,
-        producers: producers,
-        startDate: startDate,
-        endDate: endDate,
+        isAdult: isAdult,
       ),
     );
   }
 
-  Future<SeasonNowResponse> getSeasonNow({
-    String? filter,
-    bool? sfw,
-    bool? unapproved,
-    bool? continuing,
+  Future<SeasonAnimeResponse> getSeasonNow({
     int page = 1,
-    int limit = 25,
+    int perPage = 25,
+    MediaFormat? format,
+    List<MediaSort>? sort,
+    bool? isAdult,
   }) {
-    return execute(
-      (client) => client.getSeasonNow(
-        filter: filter,
-        sfw: sfw,
-        unapproved: unapproved,
-        continuing: continuing,
+    final now = DateTime.now();
+    return execute((client) async {
+      final response = await client.getAnimeSearch(
+        seasonYear: now.year,
+        season: _seasonForMonth(now.month),
+        format: format,
         page: page,
-        limit: limit,
-      ),
-    );
+        perPage: perPage,
+        sort: sort ?? const [MediaSort.popularityDesc],
+        isAdult: isAdult,
+      );
+      return SeasonAnimeResponse(
+        pageInfo: response.pageInfo,
+        data: response.data,
+      );
+    });
   }
 
-  Future<List<AnimeGenreData>> getAnimeGenres({String? filter}) {
-    return execute((client) => client.getAnimeGenres(filter: filter));
+  Future<List<String>> getGenres() {
+    return execute((client) => client.getGenres());
   }
 
-  Future<T> execute<T>(Future<T> Function(JikanClient client) request) {
-    final task = _QueuedJikanRequest<T>(request);
+  Future<List<MediaTag>> getMediaTags() {
+    return execute((client) => client.getMediaTags());
+  }
+
+  Future<T> execute<T>(Future<T> Function(AniListClient client) request) {
+    final task = _QueuedAniListRequest<T>(request);
     _queue.add(task);
     unawaited(_processQueue());
     return task.completer.future;
@@ -130,7 +123,7 @@ final class RateLimitedJikanClient {
   }
 
   Future<T> _executeWithRetries<T>(
-    Future<T> Function(JikanClient client) request,
+    Future<T> Function(AniListClient client) request,
   ) async {
     var retryCount = 0;
 
@@ -216,21 +209,26 @@ final class RateLimitedJikanClient {
   }
 
   bool _isRateLimitError(Object error) {
-    if (error is! JikanException) {
-      return false;
-    }
+    return error is AniListRateLimitException;
+  }
 
-    final message = error.message.toLowerCase();
-    return message.contains('"status": "429"') ||
-        message.contains('"status":"429"') ||
-        message.contains('ratelimitexception') ||
-        message.contains('rate-limited');
+  MediaSeason _seasonForMonth(int month) {
+    if (month <= 3) {
+      return MediaSeason.winter;
+    }
+    if (month <= 6) {
+      return MediaSeason.spring;
+    }
+    if (month <= 9) {
+      return MediaSeason.summer;
+    }
+    return MediaSeason.fall;
   }
 }
 
-final class _QueuedJikanRequest<T> {
-  _QueuedJikanRequest(this.request);
+final class _QueuedAniListRequest<T> {
+  _QueuedAniListRequest(this.request);
 
-  final Future<T> Function(JikanClient client) request;
+  final Future<T> Function(AniListClient client) request;
   final Completer<T> completer = Completer<T>();
 }

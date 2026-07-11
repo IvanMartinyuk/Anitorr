@@ -14,6 +14,8 @@ class FilterSortMenu<T> extends StatelessWidget {
     required this.showLabel,
     required this.height,
     required this.onSelected,
+    this.embedded = false,
+    this.borderRadius,
     super.key,
   });
 
@@ -22,6 +24,8 @@ class FilterSortMenu<T> extends StatelessWidget {
   final bool showLabel;
   final double height;
   final ValueChanged<T> onSelected;
+  final bool embedded;
+  final BorderRadius? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +52,8 @@ class FilterSortMenu<T> extends StatelessWidget {
           label: selectedOption.label,
           showLabel: showLabel,
           height: height,
+          embedded: embedded,
+          borderRadius: borderRadius,
           onPressed: () {
             if (controller.isOpen) {
               controller.close();
@@ -66,58 +72,66 @@ class _FilterSortTrigger extends StatelessWidget {
     required this.label,
     required this.showLabel,
     required this.height,
+    required this.embedded,
+    this.borderRadius,
     required this.onPressed,
   });
 
   final String label;
   final bool showLabel;
   final double height;
+  final bool embedded;
+  final BorderRadius? borderRadius;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final radius = BorderRadius.circular(showLabel ? 8 : height / 2);
+    final radius =
+        borderRadius ?? BorderRadius.circular(showLabel ? 8 : height / 2);
+    final child = InkWell(
+      borderRadius: radius,
+      onTap: onPressed,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: showLabel ? 12 : 0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.sort_rounded,
+              size: 20,
+              color: colorScheme.onSurfaceVariant,
+            ),
+            if (showLabel) ...[
+              const SizedBox(width: 8),
+              Text(
+                label,
+                style: textTheme.labelLarge?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
 
     return Tooltip(
       message: 'Sort',
       child: SizedBox(
         height: height,
         width: showLabel ? null : height,
-        child: Material(
-          color: colorScheme.surfaceContainer,
-          borderRadius: radius,
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            borderRadius: radius,
-            onTap: onPressed,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: showLabel ? 12 : 0),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.sort_rounded,
-                    size: 20,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                  if (showLabel) ...[
-                    const SizedBox(width: 8),
-                    Text(
-                      label,
-                      style: textTheme.labelLarge?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ],
+        child: embedded
+            ? child
+            : Material(
+                color: colorScheme.surfaceContainer,
+                borderRadius: radius,
+                clipBehavior: Clip.antiAlias,
+                child: child,
               ),
-            ),
-          ),
-        ),
       ),
     );
   }

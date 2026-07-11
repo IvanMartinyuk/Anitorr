@@ -16,17 +16,16 @@ class AnimeDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final anime = initialAnime;
-    if (anime != null) {
-      return _AnimeDetailsView(anime: anime);
-    }
-
     final loadedAnime = ref.watch(animeDetailsProvider(animeId));
 
     return loadedAnime.when(
       data: (anime) => _AnimeDetailsView(anime: anime),
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stackTrace) => _AnimeDetailsError(error: error),
+      loading: () => initialAnime == null
+          ? const Center(child: CircularProgressIndicator())
+          : _AnimeDetailsView(anime: initialAnime!),
+      error: (error, stackTrace) => initialAnime == null
+          ? _AnimeDetailsError(error: error)
+          : _AnimeDetailsView(anime: initialAnime!),
     );
   }
 }
@@ -219,10 +218,14 @@ class _StatsGrid extends StatelessWidget {
         'Popularity',
         anime.popularity == null ? null : '#${anime.popularity}',
       ),
+      _DetailItem(
+        'Trending',
+        anime.trending == null ? null : '#${anime.trending}',
+      ),
       _DetailItem('Members', _compactNumber(anime.members)),
       _DetailItem('Favorites', _compactNumber(anime.favorites)),
       _DetailItem('Scored by', _compactNumber(anime.scoredBy)),
-      _DetailItem('MAL ID', anime.malId.toString()),
+      _DetailItem('AniList ID', anime.id.toString()),
     ];
 
     return Wrap(
@@ -253,6 +256,24 @@ class _DetailSections extends StatelessWidget {
           _DetailItem('Duration', anime.duration),
           _DetailItem('Rating', anime.rating),
           _DetailItem('Source', anime.source),
+          _DetailItem('Country', anime.countryOfOrigin),
+          _DetailItem('Hashtag', anime.hashtag),
+          _DetailItem('Next airing', anime.nextAiringEpisode),
+        ],
+      ),
+      _DetailSectionData(
+        title: 'Scores',
+        items: [
+          _DetailItem('Average score', _scoreValue(anime.score)),
+          _DetailItem('Mean score', _scoreValue(anime.meanScore)),
+          _DetailItem('Scored by', _compactNumber(anime.scoredBy)),
+        ],
+      ),
+      _DetailSectionData(
+        title: 'Rankings',
+        items: [
+          for (final ranking in anime.rankings)
+            _DetailItem(ranking.label, '#${ranking.rank}'),
         ],
       ),
       _DetailSectionData(title: 'Titles', items: _detailTitleItems(anime)),
@@ -260,31 +281,33 @@ class _DetailSections extends StatelessWidget {
         title: 'Tags',
         items: [
           _DetailItem('Genres', _joinMeta(anime.genres)),
-          _DetailItem('Explicit genres', _joinMeta(anime.explicitGenres)),
-          _DetailItem('Themes', _joinMeta(anime.themes)),
-          _DetailItem('Demographics', _joinMeta(anime.demographics)),
+          _DetailItem('Tags', _joinTags(anime.tags)),
         ],
       ),
       _DetailSectionData(
-        title: 'Production',
+        title: 'Relations',
         items: [
-          _DetailItem('Studios', _joinMeta(anime.studios)),
-          _DetailItem('Producers', _joinMeta(anime.producers)),
-          _DetailItem('Licensors', _joinMeta(anime.licensors)),
+          for (final relation in anime.relations)
+            _DetailItem(relation.relationType ?? 'Related', relation.title),
         ],
       ),
       _DetailSectionData(
         title: 'Links',
         items: [
-          _DetailItem('MyAnimeList', anime.url),
+          _DetailItem('AniList', anime.url),
           _DetailItem('Trailer', anime.trailerUrl),
+          for (final link in anime.externalLinks)
+            _DetailItem(link.label, link.url),
         ],
       ),
       _DetailSectionData(
-        title: 'Themes',
+        title: 'Streaming',
         items: [
-          _DetailItem('Openings', _joinStrings(anime.openingThemes)),
-          _DetailItem('Endings', _joinStrings(anime.endingThemes)),
+          for (final episode in anime.streamingEpisodes.take(5))
+            _DetailItem(
+              episode.site ?? 'Episode',
+              [episode.title, episode.url].whereType<String>().join('\n'),
+            ),
         ],
       ),
     ];
@@ -613,6 +636,10 @@ String _scoreLabel(AppAnime anime) {
   return score == null ? 'N/A score' : '${score.toStringAsFixed(1)} score';
 }
 
+String? _scoreValue(double? score) {
+  return score?.toStringAsFixed(1);
+}
+
 String? _seasonLabel(AppAnime anime) {
   final season = anime.season;
   final year = anime.year;
@@ -635,13 +662,14 @@ String? _joinMeta(Iterable<AppAnimeMeta> items) {
   return names.isEmpty ? null : names.join(', ');
 }
 
-String? _joinStrings(Iterable<String>? items) {
-  if (items == null) {
-    return null;
-  }
+String? _joinTags(Iterable<AppAnimeTag> items) {
+  final labels = [
+    for (final item in items)
+      if (_hasText(item.name))
+        item.rank == null ? item.name : '${item.name} (${item.rank}%)',
+  ];
 
-  final values = items.where(_hasText).toList();
-  return values.isEmpty ? null : values.join('\n');
+  return labels.isEmpty ? null : labels.join(', ');
 }
 
 String? _compactNumber(int? value) {

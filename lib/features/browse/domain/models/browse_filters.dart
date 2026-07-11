@@ -25,6 +25,8 @@ final class BrowseFilters {
     required this.maxScore,
     required this.genres,
     required this.excludedGenres,
+    required this.tags,
+    required this.excludedTags,
     required this.startDate,
     required this.endDate,
   });
@@ -40,6 +42,8 @@ final class BrowseFilters {
       maxScore: 10,
       genres: {},
       excludedGenres: {},
+      tags: {},
+      excludedTags: {},
       startDate: '',
       endDate: '',
     );
@@ -52,8 +56,10 @@ final class BrowseFilters {
   final bool sfw;
   final double minScore;
   final double maxScore;
-  final Set<int> genres;
-  final Set<int> excludedGenres;
+  final Set<String> genres;
+  final Set<String> excludedGenres;
+  final Set<String> tags;
+  final Set<String> excludedTags;
   final String startDate;
   final String endDate;
 
@@ -72,6 +78,8 @@ final class BrowseFilters {
         maxScore < 10 ||
         genres.isNotEmpty ||
         excludedGenres.isNotEmpty ||
+        tags.isNotEmpty ||
+        excludedTags.isNotEmpty ||
         startDate.trim().isNotEmpty ||
         endDate.trim().isNotEmpty;
   }
@@ -87,8 +95,10 @@ final class BrowseFilters {
     bool? sfw,
     double? minScore,
     double? maxScore,
-    Set<int>? genres,
-    Set<int>? excludedGenres,
+    Set<String>? genres,
+    Set<String>? excludedGenres,
+    Set<String>? tags,
+    Set<String>? excludedTags,
     String? startDate,
     String? endDate,
   }) {
@@ -102,6 +112,8 @@ final class BrowseFilters {
       maxScore: maxScore ?? this.maxScore,
       genres: genres ?? this.genres,
       excludedGenres: excludedGenres ?? this.excludedGenres,
+      tags: tags ?? this.tags,
+      excludedTags: excludedTags ?? this.excludedTags,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
     );

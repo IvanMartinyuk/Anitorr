@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../shared/models/anime_api_filters.dart';
+import '../../../../shared/models/sort_direction.dart';
 import '../models/seasonal_filters.dart';
 import 'seasonal_pagination_providers.dart';
 
@@ -12,6 +13,11 @@ final seasonalTypeFilterProvider =
 final seasonalSortProvider =
     NotifierProvider<SeasonalSortNotifier, SeasonalSort>(
       SeasonalSortNotifier.new,
+    );
+
+final seasonalSortDirectionProvider =
+    NotifierProvider<SeasonalSortDirectionNotifier, SortDirection>(
+      SeasonalSortDirectionNotifier.new,
     );
 
 final seasonalFiltersProvider =
@@ -38,6 +44,18 @@ class SeasonalSortNotifier extends Notifier<SeasonalSort> {
 
   void setSort(SeasonalSort sort) {
     state = sort;
+  }
+}
+
+class SeasonalSortDirectionNotifier extends Notifier<SortDirection> {
+  @override
+  SortDirection build() {
+    return SortDirection.descending;
+  }
+
+  void toggle() {
+    state = state.toggled;
+    ref.read(seasonalPageProvider.notifier).reset();
   }
 }
 
@@ -79,6 +97,16 @@ class SeasonalFiltersNotifier extends Notifier<SeasonalFilters> {
     }
 
     state = state.copyWith(genres: genres);
+    ref.read(seasonalPageProvider.notifier).reset();
+  }
+
+  void toggleTag(String tag) {
+    final tags = Set<String>.of(state.tags);
+    if (!tags.add(tag)) {
+      tags.remove(tag);
+    }
+
+    state = state.copyWith(tags: tags);
     ref.read(seasonalPageProvider.notifier).reset();
   }
 

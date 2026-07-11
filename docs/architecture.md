@@ -73,7 +73,7 @@ Example:
 
 Contains API clients, repositories, local storage, and DTOs.
 
-External APIs like Jikan should be hidden behind repositories.
+External APIs like AniList should be hidden behind repositories.
 
 ## State management
 
@@ -104,7 +104,7 @@ Phase 1 should use mock data or local storage.
 
 Later, add:
 
-- Jikan API
+- AniList API
 - local database
 - media library scanner
 - optional download automation

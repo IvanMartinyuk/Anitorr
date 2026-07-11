@@ -1,16 +1,17 @@
-import 'package:jikan_moe/jikan_moe.dart';
+import 'package:anilist_api/anilist_api.dart';
 
 import '../../../shared/models/anime_api_filters.dart';
 import '../../../shared/models/app_anime.dart';
-import '../../../shared/services/rate_limited_jikan_client.dart';
+import '../../../shared/services/rate_limited_anilist_client.dart';
 
 final class SeasonalAnimeRepository {
-  SeasonalAnimeRepository({RateLimitedJikanClient? jikan})
-    : _jikan = jikan ?? RateLimitedJikanClient.instance;
+  SeasonalAnimeRepository({RateLimitedAniListClient? anilist})
+    : _anilist = anilist ?? RateLimitedAniListClient.instance;
 
-  final RateLimitedJikanClient _jikan;
+  final RateLimitedAniListClient _anilist;
   final Map<String, _SeasonCache> _seasonCaches = {};
-  List<AnimeGenreData>? _animeGenres;
+  List<String>? _animeGenres;
+  List<String>? _animeTags;
 
   Future<List<AppAnime>> getCurrentSeasonAnime({
     AppAnimeType? type,
@@ -22,8 +23,8 @@ final class SeasonalAnimeRepository {
       return Future.value(cachedAnime);
     }
 
-    return _jikan
-        .getSeasonNow(filter: type?.apiValue, page: page)
+    return _anilist
+        .getSeasonNow(format: _format(type), page: page)
         .then((response) => response.data.map(AppAnime.fromAnimeData).toList())
         .then((anime) {
           cache.pages[page] = anime;
@@ -86,15 +87,30 @@ final class SeasonalAnimeRepository {
     ];
   }
 
-  Future<List<AnimeGenreData>> getAnimeGenres() async {
+  Future<List<String>> getAnimeGenres() async {
     final cachedGenres = _animeGenres;
     if (cachedGenres != null) {
       return cachedGenres;
     }
 
-    final genres = await _jikan.getAnimeGenres();
+    final genres = await _anilist.getGenres();
     _animeGenres = genres;
     return genres;
+  }
+
+  Future<List<String>> getAnimeTags() async {
+    final cachedTags = _animeTags;
+    if (cachedTags != null) {
+      return cachedTags;
+    }
+
+    final tags = await _anilist.getMediaTags();
+    final names = {
+      for (final tag in tags)
+        if (tag.isAdult != true && tag.name.trim().isNotEmpty) tag.name,
+    }.toList()..sort();
+    _animeTags = names;
+    return names;
   }
 
   _SeasonCache _cacheFor(AppAnimeType? type) {
@@ -108,6 +124,18 @@ final class SeasonalAnimeRepository {
     }
 
     return page - 1;
+  }
+
+  MediaFormat? _format(AppAnimeType? type) {
+    return switch (type) {
+      AppAnimeType.tv => MediaFormat.tv,
+      AppAnimeType.movie => MediaFormat.movie,
+      AppAnimeType.ova => MediaFormat.ova,
+      AppAnimeType.ona => MediaFormat.ona,
+      AppAnimeType.special || AppAnimeType.tvSpecial => MediaFormat.special,
+      AppAnimeType.music => MediaFormat.music,
+      AppAnimeType.cm || AppAnimeType.pv || null => null,
+    };
   }
 }
 
