@@ -1,4 +1,5 @@
 export 'dropdown_filter.dart';
+export 'date_picker_filter.dart';
 export 'filter_bar.dart';
 export 'filter_layout.dart';
 export 'filter_option.dart';

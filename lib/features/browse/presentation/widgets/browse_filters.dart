@@ -135,21 +135,21 @@ class _BrowseFilterPanelState extends ConsumerState<BrowseFilterPanel> {
         ),
         FilterRowModule(
           children: [
-            TextSearchFilter(
+            DatePickerFilter(
               label: 'Start date',
               value: filters.startDate,
-              hintText: 'YYYY-MM-DD',
               onChanged: (value) {
                 ref.read(browseFiltersProvider.notifier).setStartDate(value);
               },
+              lastDate: filters.endDate,
             ),
-            TextSearchFilter(
+            DatePickerFilter(
               label: 'End date',
               value: filters.endDate,
-              hintText: 'YYYY-MM-DD',
               onChanged: (value) {
                 ref.read(browseFiltersProvider.notifier).setEndDate(value);
               },
+              firstDate: filters.startDate,
             ),
           ],
         ),
@@ -250,10 +250,10 @@ class _BrowseFilterPanelState extends ConsumerState<BrowseFilterPanel> {
     if (filters.minScore > 0 || filters.maxScore < 10) {
       count += 1;
     }
-    if (filters.startDate.trim().isNotEmpty) {
+    if (filters.startDate != null) {
       count += 1;
     }
-    if (filters.endDate.trim().isNotEmpty) {
+    if (filters.endDate != null) {
       count += 1;
     }
 

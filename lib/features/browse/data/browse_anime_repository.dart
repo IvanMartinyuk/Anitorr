@@ -24,6 +24,10 @@ final class BrowseAnimeRepository {
       q: filters.normalizedQuery,
       format: _format(filters.type),
       status: _status(filters.status),
+      averageScoreGreater: _minimumScore(filters.minScore),
+      averageScoreLesser: _maximumScore(filters.maxScore),
+      startDateGreater: _inclusiveStartDate(filters.startDate),
+      startDateLesser: _inclusiveEndDate(filters.endDate),
       genres: _genres(filters.genres),
       genresNotIn: _genres(filters.excludedGenres),
       tags: _tags(filters.tags),
@@ -131,20 +135,7 @@ final class BrowseAnimeRepository {
   }
 
   bool _matchesUnsupportedFilters(AppAnime anime, BrowseFilters filters) {
-    return _matchesScore(anime, filters) &&
-        _matchesRating(anime, filters.rating) &&
-        _matchesDate(anime.year, filters.startDate, filters.endDate);
-  }
-
-  bool _matchesScore(AppAnime anime, BrowseFilters filters) {
-    if (filters.minScore <= 0 && filters.maxScore >= 10) {
-      return true;
-    }
-
-    final score = anime.score;
-    return score != null &&
-        score >= filters.minScore &&
-        score <= filters.maxScore;
+    return _matchesRating(anime, filters.rating);
   }
 
   bool _matchesRating(AppAnime anime, AnimeSearchRating? rating) {
@@ -155,18 +146,36 @@ final class BrowseAnimeRepository {
     return anime.rating == rating.label;
   }
 
-  bool _matchesDate(int? year, String startDate, String endDate) {
-    if (startDate.trim().isEmpty && endDate.trim().isEmpty) {
-      return true;
-    }
-    if (year == null) {
-      return false;
+  int? _minimumScore(double score) {
+    if (score <= 0) {
+      return null;
     }
 
-    final startYear = int.tryParse(startDate.trim().split('-').first);
-    final endYear = int.tryParse(endDate.trim().split('-').first);
-    return (startYear == null || year >= startYear) &&
-        (endYear == null || year <= endYear);
+    return (score * 10).round() - 1;
+  }
+
+  int? _maximumScore(double score) {
+    if (score >= 10) {
+      return null;
+    }
+
+    return (score * 10).round() + 1;
+  }
+
+  int? _inclusiveStartDate(DateTime? date) {
+    return date == null
+        ? null
+        : _fuzzyDateInt(date.subtract(const Duration(days: 1)));
+  }
+
+  int? _inclusiveEndDate(DateTime? date) {
+    return date == null
+        ? null
+        : _fuzzyDateInt(date.add(const Duration(days: 1)));
+  }
+
+  int _fuzzyDateInt(DateTime date) {
+    return date.year * 10000 + date.month * 100 + date.day;
   }
 }
 

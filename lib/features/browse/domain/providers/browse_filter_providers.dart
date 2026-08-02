@@ -99,13 +99,16 @@ class BrowseFiltersNotifier extends Notifier<BrowseFilters> {
     _resetPagination();
   }
 
-  void setStartDate(String startDate) {
-    state = state.copyWith(startDate: startDate);
+  void setStartDate(DateTime? startDate) {
+    state = state.copyWith(
+      startDate: startDate,
+      clearStartDate: startDate == null,
+    );
     _resetPagination();
   }
 
-  void setEndDate(String endDate) {
-    state = state.copyWith(endDate: endDate);
+  void setEndDate(DateTime? endDate) {
+    state = state.copyWith(endDate: endDate, clearEndDate: endDate == null);
     _resetPagination();
   }
 

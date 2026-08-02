@@ -44,8 +44,8 @@ final class BrowseFilters {
       excludedGenres: {},
       tags: {},
       excludedTags: {},
-      startDate: '',
-      endDate: '',
+      startDate: null,
+      endDate: null,
     );
   }
 
@@ -60,8 +60,8 @@ final class BrowseFilters {
   final Set<String> excludedGenres;
   final Set<String> tags;
   final Set<String> excludedTags;
-  final String startDate;
-  final String endDate;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
   String? get normalizedQuery {
     final value = query.trim();
@@ -80,8 +80,8 @@ final class BrowseFilters {
         excludedGenres.isNotEmpty ||
         tags.isNotEmpty ||
         excludedTags.isNotEmpty ||
-        startDate.trim().isNotEmpty ||
-        endDate.trim().isNotEmpty;
+        startDate != null ||
+        endDate != null;
   }
 
   BrowseFilters copyWith({
@@ -99,8 +99,10 @@ final class BrowseFilters {
     Set<String>? excludedGenres,
     Set<String>? tags,
     Set<String>? excludedTags,
-    String? startDate,
-    String? endDate,
+    DateTime? startDate,
+    bool clearStartDate = false,
+    DateTime? endDate,
+    bool clearEndDate = false,
   }) {
     return BrowseFilters(
       query: query ?? this.query,
@@ -114,8 +116,8 @@ final class BrowseFilters {
       excludedGenres: excludedGenres ?? this.excludedGenres,
       tags: tags ?? this.tags,
       excludedTags: excludedTags ?? this.excludedTags,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
+      startDate: clearStartDate ? null : startDate ?? this.startDate,
+      endDate: clearEndDate ? null : endDate ?? this.endDate,
     );
   }
 }
