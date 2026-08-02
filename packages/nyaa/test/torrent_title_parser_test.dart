@@ -33,4 +33,28 @@ void main() {
     expect(parsed.season, 2);
     expect(parsed.episodes, {4});
   });
+
+  test('parses standalone season and dash episode notation', () {
+    final parsed = TorrentTitleParser.parse(
+      '[SubsPlease] Mushoku Tensei S3 - 06 (1080p) [FB09F4CC].mkv',
+    );
+
+    expect(parsed.publisher, 'SubsPlease');
+    expect(parsed.animeName, 'Mushoku Tensei');
+    expect(parsed.season, 3);
+    expect(parsed.episodes, {6});
+    expect(parsed.resolution, '1080p');
+  });
+
+  test('parses Erai-raws roman-season release notation', () {
+    final parsed = TorrentTitleParser.parse(
+      '[Erai-raws] Mushoku Tensei III: Isekai Ittara Honki Dasu - 06 '
+      '[480p CR WEB-DL AVC AAC][MultiSub][E392088A]',
+    );
+
+    expect(parsed.publisher, 'Erai-raws');
+    expect(parsed.season, 3);
+    expect(parsed.episodes, {6});
+    expect(parsed.resolution, '480p');
+  });
 }

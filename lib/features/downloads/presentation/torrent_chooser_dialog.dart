@@ -48,6 +48,7 @@ final class TorrentChoice {
       seeders: torrent.seeders,
       leechers: torrent.leechers,
       category: category.code,
+      season: parsed.season,
     );
   }
 }
@@ -77,6 +78,7 @@ class _TorrentChooserDialogState extends ConsumerState<TorrentChooserDialog> {
   String? _quality;
   bool _expandedSearch = false;
   late Future<NyaaSearchPage> _results;
+  late final int _requestedSeason;
   final _publisherController = TextEditingController();
 
   @override
@@ -84,7 +86,12 @@ class _TorrentChooserDialogState extends ConsumerState<TorrentChooserDialog> {
     super.initState();
     _publisher = widget.initialPublisher;
     _quality = widget.initialQuality;
-    _results = _search();
+    _requestedSeason =
+        TorrentTitleParser.parse(
+          widget.anime.titleEnglish ?? widget.anime.title,
+        ).season ??
+        1;
+    _results = _search(publisher: _publisher);
   }
 
   @override
@@ -93,19 +100,40 @@ class _TorrentChooserDialogState extends ConsumerState<TorrentChooserDialog> {
     super.dispose();
   }
 
-  Future<NyaaSearchPage> _search() {
+  Future<NyaaSearchPage> _search({String? publisher}) {
     final title = widget.anime.titleEnglish ?? widget.anime.title;
+    final seriesTitle = TorrentTitleParser.parse(title).animeName;
+    final publisherQuery = publisher?.trim();
     final query = [
-      title,
-      if (_expandedSearch && _publisherController.text.trim().isNotEmpty)
-        _publisherController.text.trim(),
+      seriesTitle,
+      if (publisherQuery?.isNotEmpty == true) publisherQuery,
+      if (widget.episode != null) '${widget.episode}',
     ].join(' ');
     return ref
         .read(nyaaClientProvider)
         .search(NyaaSearchRequest(query: query, category: _category));
   }
 
-  void _refresh() => setState(() => _results = _search());
+  void _refresh() {
+    final results = _search(publisher: _publisher);
+    setState(() {
+      _results = results;
+    });
+  }
+
+  void _selectPublisher(String? publisher) {
+    final results = _search(publisher: publisher);
+    setState(() {
+      _publisher = publisher;
+      _quality = null;
+      _results = results;
+    });
+  }
+
+  void _applyCustomPublisher() {
+    final value = _publisherController.text.trim();
+    _selectPublisher(value.isEmpty ? null : value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,9 +171,8 @@ class _TorrentChooserDialogState extends ConsumerState<TorrentChooserDialog> {
                     FilterChip(
                       label: Text(publisher),
                       selected: _publisher == publisher,
-                      onSelected: (selected) => setState(
-                        () => _publisher = selected ? publisher : null,
-                      ),
+                      onSelected: (selected) =>
+                          _selectPublisher(selected ? publisher : null),
                     ),
                   TextButton.icon(
                     onPressed: () =>
@@ -166,7 +193,7 @@ class _TorrentChooserDialogState extends ConsumerState<TorrentChooserDialog> {
                           labelText: 'Publisher',
                           border: OutlineInputBorder(),
                         ),
-                        onSubmitted: (_) => _refresh(),
+                        onSubmitted: (_) => _applyCustomPublisher(),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -189,7 +216,7 @@ class _TorrentChooserDialogState extends ConsumerState<TorrentChooserDialog> {
                     const SizedBox(width: 12),
                     IconButton.filled(
                       tooltip: 'Search',
-                      onPressed: _refresh,
+                      onPressed: _applyCustomPublisher,
                       icon: const Icon(Icons.search),
                     ),
                   ],
@@ -217,7 +244,9 @@ class _TorrentChooserDialogState extends ConsumerState<TorrentChooserDialog> {
                     ];
                     final parsed = parsedResults.where((item) {
                       final episode = widget.episode;
-                      return episode == null ||
+                      if (episode == null) return true;
+                      final releaseSeason = item.title.season ?? 1;
+                      return releaseSeason == _requestedSeason &&
                           item.title.episodes.contains(episode);
                     }).toList();
                     final publishers = parsed
@@ -233,8 +262,10 @@ class _TorrentChooserDialogState extends ConsumerState<TorrentChooserDialog> {
                           ..sort();
                     final visible = parsed.where((item) {
                       return (_publisher == null ||
-                              item.title.publisher?.toLowerCase() ==
-                                  _publisher!.toLowerCase()) &&
+                              _publisherMatches(
+                                item.title.publisher,
+                                _publisher!,
+                              )) &&
                           (_quality == null ||
                               item.title.resolution == _quality);
                     }).toList();
@@ -379,4 +410,14 @@ String _formatBytes(int bytes) {
     unit++;
   }
   return '${value.toStringAsFixed(unit == 0 ? 0 : 1)} ${units[unit]}';
+}
+
+bool _publisherMatches(String? candidate, String query) {
+  if (candidate == null) return false;
+  String normalize(String value) =>
+      value.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '');
+  final normalizedCandidate = normalize(candidate);
+  final normalizedQuery = normalize(query);
+  return normalizedQuery.isNotEmpty &&
+      normalizedCandidate.contains(normalizedQuery);
 }

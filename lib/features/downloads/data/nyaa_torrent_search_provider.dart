@@ -10,9 +10,16 @@ final class NyaaTorrentSearchProvider implements TorrentSearchProvider {
   @override
   Future<List<TorrentCandidate>> search(TorrentSearchRequest request) async {
     final title = request.anime.titleEnglish ?? request.anime.title;
+    final seriesTitle = TorrentTitleParser.parse(title).animeName;
+    final query = [
+      seriesTitle,
+      if (request.intent.releaseGroup?.trim().isNotEmpty == true)
+        request.intent.releaseGroup!.trim(),
+      if (request.episode != null) '${request.episode}',
+    ].join(' ');
     final page = await _client.search(
       NyaaSearchRequest(
-        query: title,
+        query: query,
         category: NyaaCategory.fromCode(request.intent.category),
       ),
     );
@@ -35,6 +42,7 @@ final class NyaaTorrentSearchProvider implements TorrentSearchProvider {
       seeders: item.seeders,
       leechers: item.leechers,
       category: item.category.code,
+      season: parsed.season,
     );
   }
 }

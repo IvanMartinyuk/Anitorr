@@ -1889,6 +1889,16 @@ class $DownloadIntentsTable extends DownloadIntents
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _preferredSizeBytesMeta =
+      const VerificationMeta('preferredSizeBytes');
+  @override
+  late final GeneratedColumn<int> preferredSizeBytes = GeneratedColumn<int>(
+    'preferred_size_bytes',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _alternativeFirstSeenAtMeta =
       const VerificationMeta('alternativeFirstSeenAt');
   @override
@@ -1938,6 +1948,7 @@ class $DownloadIntentsTable extends DownloadIntents
     category,
     season,
     seriesTitle,
+    preferredSizeBytes,
     alternativeFirstSeenAt,
     createdAt,
     updatedAt,
@@ -2064,6 +2075,15 @@ class $DownloadIntentsTable extends DownloadIntents
         ),
       );
     }
+    if (data.containsKey('preferred_size_bytes')) {
+      context.handle(
+        _preferredSizeBytesMeta,
+        preferredSizeBytes.isAcceptableOrUnknown(
+          data['preferred_size_bytes']!,
+          _preferredSizeBytesMeta,
+        ),
+      );
+    }
     if (data.containsKey('alternative_first_seen_at')) {
       context.handle(
         _alternativeFirstSeenAtMeta,
@@ -2154,6 +2174,10 @@ class $DownloadIntentsTable extends DownloadIntents
         DriftSqlType.string,
         data['${effectivePrefix}series_title'],
       ),
+      preferredSizeBytes: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}preferred_size_bytes'],
+      ),
       alternativeFirstSeenAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}alternative_first_seen_at'],
@@ -2190,6 +2214,7 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
   final String category;
   final int? season;
   final String? seriesTitle;
+  final int? preferredSizeBytes;
   final DateTime? alternativeFirstSeenAt;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -2208,6 +2233,7 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
     required this.category,
     this.season,
     this.seriesTitle,
+    this.preferredSizeBytes,
     this.alternativeFirstSeenAt,
     required this.createdAt,
     required this.updatedAt,
@@ -2242,6 +2268,9 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
     }
     if (!nullToAbsent || seriesTitle != null) {
       map['series_title'] = Variable<String>(seriesTitle);
+    }
+    if (!nullToAbsent || preferredSizeBytes != null) {
+      map['preferred_size_bytes'] = Variable<int>(preferredSizeBytes);
     }
     if (!nullToAbsent || alternativeFirstSeenAt != null) {
       map['alternative_first_seen_at'] = Variable<DateTime>(
@@ -2283,6 +2312,9 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
       seriesTitle: seriesTitle == null && nullToAbsent
           ? const Value.absent()
           : Value(seriesTitle),
+      preferredSizeBytes: preferredSizeBytes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(preferredSizeBytes),
       alternativeFirstSeenAt: alternativeFirstSeenAt == null && nullToAbsent
           ? const Value.absent()
           : Value(alternativeFirstSeenAt),
@@ -2317,6 +2349,7 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
       category: serializer.fromJson<String>(json['category']),
       season: serializer.fromJson<int?>(json['season']),
       seriesTitle: serializer.fromJson<String?>(json['seriesTitle']),
+      preferredSizeBytes: serializer.fromJson<int?>(json['preferredSizeBytes']),
       alternativeFirstSeenAt: serializer.fromJson<DateTime?>(
         json['alternativeFirstSeenAt'],
       ),
@@ -2342,6 +2375,7 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
       'category': serializer.toJson<String>(category),
       'season': serializer.toJson<int?>(season),
       'seriesTitle': serializer.toJson<String?>(seriesTitle),
+      'preferredSizeBytes': serializer.toJson<int?>(preferredSizeBytes),
       'alternativeFirstSeenAt': serializer.toJson<DateTime?>(
         alternativeFirstSeenAt,
       ),
@@ -2365,6 +2399,7 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
     String? category,
     Value<int?> season = const Value.absent(),
     Value<String?> seriesTitle = const Value.absent(),
+    Value<int?> preferredSizeBytes = const Value.absent(),
     Value<DateTime?> alternativeFirstSeenAt = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -2387,6 +2422,9 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
     category: category ?? this.category,
     season: season.present ? season.value : this.season,
     seriesTitle: seriesTitle.present ? seriesTitle.value : this.seriesTitle,
+    preferredSizeBytes: preferredSizeBytes.present
+        ? preferredSizeBytes.value
+        : this.preferredSizeBytes,
     alternativeFirstSeenAt: alternativeFirstSeenAt.present
         ? alternativeFirstSeenAt.value
         : this.alternativeFirstSeenAt,
@@ -2425,6 +2463,9 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
       seriesTitle: data.seriesTitle.present
           ? data.seriesTitle.value
           : this.seriesTitle,
+      preferredSizeBytes: data.preferredSizeBytes.present
+          ? data.preferredSizeBytes.value
+          : this.preferredSizeBytes,
       alternativeFirstSeenAt: data.alternativeFirstSeenAt.present
           ? data.alternativeFirstSeenAt.value
           : this.alternativeFirstSeenAt,
@@ -2450,6 +2491,7 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
           ..write('category: $category, ')
           ..write('season: $season, ')
           ..write('seriesTitle: $seriesTitle, ')
+          ..write('preferredSizeBytes: $preferredSizeBytes, ')
           ..write('alternativeFirstSeenAt: $alternativeFirstSeenAt, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
@@ -2473,6 +2515,7 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
     category,
     season,
     seriesTitle,
+    preferredSizeBytes,
     alternativeFirstSeenAt,
     createdAt,
     updatedAt,
@@ -2495,6 +2538,7 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
           other.category == this.category &&
           other.season == this.season &&
           other.seriesTitle == this.seriesTitle &&
+          other.preferredSizeBytes == this.preferredSizeBytes &&
           other.alternativeFirstSeenAt == this.alternativeFirstSeenAt &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
@@ -2515,6 +2559,7 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
   final Value<String> category;
   final Value<int?> season;
   final Value<String?> seriesTitle;
+  final Value<int?> preferredSizeBytes;
   final Value<DateTime?> alternativeFirstSeenAt;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
@@ -2533,6 +2578,7 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
     this.category = const Value.absent(),
     this.season = const Value.absent(),
     this.seriesTitle = const Value.absent(),
+    this.preferredSizeBytes = const Value.absent(),
     this.alternativeFirstSeenAt = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -2552,6 +2598,7 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
     this.category = const Value.absent(),
     this.season = const Value.absent(),
     this.seriesTitle = const Value.absent(),
+    this.preferredSizeBytes = const Value.absent(),
     this.alternativeFirstSeenAt = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
@@ -2573,6 +2620,7 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
     Expression<String>? category,
     Expression<int>? season,
     Expression<String>? seriesTitle,
+    Expression<int>? preferredSizeBytes,
     Expression<DateTime>? alternativeFirstSeenAt,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
@@ -2596,6 +2644,8 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
       if (category != null) 'category': category,
       if (season != null) 'season': season,
       if (seriesTitle != null) 'series_title': seriesTitle,
+      if (preferredSizeBytes != null)
+        'preferred_size_bytes': preferredSizeBytes,
       if (alternativeFirstSeenAt != null)
         'alternative_first_seen_at': alternativeFirstSeenAt,
       if (createdAt != null) 'created_at': createdAt,
@@ -2618,6 +2668,7 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
     Value<String>? category,
     Value<int?>? season,
     Value<String?>? seriesTitle,
+    Value<int?>? preferredSizeBytes,
     Value<DateTime?>? alternativeFirstSeenAt,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
@@ -2637,6 +2688,7 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
       category: category ?? this.category,
       season: season ?? this.season,
       seriesTitle: seriesTitle ?? this.seriesTitle,
+      preferredSizeBytes: preferredSizeBytes ?? this.preferredSizeBytes,
       alternativeFirstSeenAt:
           alternativeFirstSeenAt ?? this.alternativeFirstSeenAt,
       createdAt: createdAt ?? this.createdAt,
@@ -2693,6 +2745,9 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
     if (seriesTitle.present) {
       map['series_title'] = Variable<String>(seriesTitle.value);
     }
+    if (preferredSizeBytes.present) {
+      map['preferred_size_bytes'] = Variable<int>(preferredSizeBytes.value);
+    }
     if (alternativeFirstSeenAt.present) {
       map['alternative_first_seen_at'] = Variable<DateTime>(
         alternativeFirstSeenAt.value,
@@ -2724,6 +2779,7 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
           ..write('category: $category, ')
           ..write('season: $season, ')
           ..write('seriesTitle: $seriesTitle, ')
+          ..write('preferredSizeBytes: $preferredSizeBytes, ')
           ..write('alternativeFirstSeenAt: $alternativeFirstSeenAt, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
@@ -5837,6 +5893,7 @@ typedef $$DownloadIntentsTableCreateCompanionBuilder =
       Value<String> category,
       Value<int?> season,
       Value<String?> seriesTitle,
+      Value<int?> preferredSizeBytes,
       Value<DateTime?> alternativeFirstSeenAt,
       required DateTime createdAt,
       required DateTime updatedAt,
@@ -5857,6 +5914,7 @@ typedef $$DownloadIntentsTableUpdateCompanionBuilder =
       Value<String> category,
       Value<int?> season,
       Value<String?> seriesTitle,
+      Value<int?> preferredSizeBytes,
       Value<DateTime?> alternativeFirstSeenAt,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
@@ -5962,6 +6020,11 @@ class $$DownloadIntentsTableFilterComposer
 
   ColumnFilters<String> get seriesTitle => $composableBuilder(
     column: $table.seriesTitle,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get preferredSizeBytes => $composableBuilder(
+    column: $table.preferredSizeBytes,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -6078,6 +6141,11 @@ class $$DownloadIntentsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get preferredSizeBytes => $composableBuilder(
+    column: $table.preferredSizeBytes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get alternativeFirstSeenAt => $composableBuilder(
     column: $table.alternativeFirstSeenAt,
     builder: (column) => ColumnOrderings(column),
@@ -6181,6 +6249,11 @@ class $$DownloadIntentsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get preferredSizeBytes => $composableBuilder(
+    column: $table.preferredSizeBytes,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get alternativeFirstSeenAt => $composableBuilder(
     column: $table.alternativeFirstSeenAt,
     builder: (column) => column,
@@ -6260,6 +6333,7 @@ class $$DownloadIntentsTableTableManager
                 Value<String> category = const Value.absent(),
                 Value<int?> season = const Value.absent(),
                 Value<String?> seriesTitle = const Value.absent(),
+                Value<int?> preferredSizeBytes = const Value.absent(),
                 Value<DateTime?> alternativeFirstSeenAt = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
@@ -6278,6 +6352,7 @@ class $$DownloadIntentsTableTableManager
                 category: category,
                 season: season,
                 seriesTitle: seriesTitle,
+                preferredSizeBytes: preferredSizeBytes,
                 alternativeFirstSeenAt: alternativeFirstSeenAt,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
@@ -6298,6 +6373,7 @@ class $$DownloadIntentsTableTableManager
                 Value<String> category = const Value.absent(),
                 Value<int?> season = const Value.absent(),
                 Value<String?> seriesTitle = const Value.absent(),
+                Value<int?> preferredSizeBytes = const Value.absent(),
                 Value<DateTime?> alternativeFirstSeenAt = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
@@ -6316,6 +6392,7 @@ class $$DownloadIntentsTableTableManager
                 category: category,
                 season: season,
                 seriesTitle: seriesTitle,
+                preferredSizeBytes: preferredSizeBytes,
                 alternativeFirstSeenAt: alternativeFirstSeenAt,
                 createdAt: createdAt,
                 updatedAt: updatedAt,

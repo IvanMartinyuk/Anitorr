@@ -44,6 +44,7 @@ void main() {
       category: '1_2',
       season: 2,
       seriesTitle: 'Test Anime',
+      preferredSizeBytes: 1400000000,
     );
 
     var item = (await repository.watchLibrary().first).single;
@@ -55,6 +56,7 @@ void main() {
     expect(item.download?.quality, '1080p');
     expect(item.download?.season, 2);
     expect(item.download?.seriesTitle, 'Test Anime');
+    expect(item.download?.preferredSizeBytes, 1400000000);
 
     await repository.removeStatus(_anime.id);
     item = (await repository.watchLibrary().first).single;

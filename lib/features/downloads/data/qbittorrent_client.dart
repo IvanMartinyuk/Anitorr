@@ -62,6 +62,27 @@ final class QBittorrentClient implements DownloadClient {
     }
   }
 
+  @override
+  Future<bool> hasTorrent(String infoHash) async {
+    final uri = _endpoint
+        .resolve('api/v2/torrents/info')
+        .replace(queryParameters: {'hashes': infoHash});
+    final response = await _httpClient.get(uri, headers: _headers);
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw QBittorrentException(
+        'Could not inspect qBittorrent (${response.statusCode}).',
+      );
+    }
+    final body = response.body.trim();
+    return body.isNotEmpty && body != '[]';
+  }
+
+  @override
+  Future<void> recheckAndStart(String infoHash) async {
+    await _postTorrentAction('api/v2/torrents/recheck', infoHash);
+    await _postTorrentAction('api/v2/torrents/start', infoHash);
+  }
+
   Map<String, String> get _headers => {
     'Authorization': 'Bearer $_apiKey',
     'Accept': 'application/json',
@@ -78,6 +99,22 @@ final class QBittorrentClient implements DownloadClient {
       );
     }
     return response;
+  }
+
+  Future<void> _postTorrentAction(String path, String infoHash) async {
+    final response = await _httpClient.post(
+      _endpoint.resolve(path),
+      headers: {
+        ..._headers,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: {'hashes': infoHash},
+    );
+    if (response.statusCode < 200 || response.statusCode >= 300) {
+      throw QBittorrentException(
+        'qBittorrent could not restart the torrent (${response.statusCode}).',
+      );
+    }
   }
 
   bool _isSupportedVersion(String value) {

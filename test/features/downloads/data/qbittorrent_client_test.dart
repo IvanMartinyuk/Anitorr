@@ -2,6 +2,7 @@ import 'package:anitorr/features/downloads/data/qbittorrent_client.dart';
 import 'package:anitorr/features/downloads/domain/models/download_models.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 
 void main() {
   test('sends magnet sources through the urls field', () async {
@@ -44,6 +45,33 @@ void main() {
     final captured = httpClient.request! as http.MultipartRequest;
     expect(captured.fields.containsKey('urls'), isFalse);
     expect(captured.files.single.filename, 'show.torrent');
+  });
+
+  test('finds, rechecks, and starts an existing torrent', () async {
+    final requests = <http.Request>[];
+    final client = QBittorrentClient(
+      endpoint: 'http://localhost:8080',
+      apiKey: 'secret',
+      httpClient: MockClient((request) async {
+        requests.add(request);
+        return http.Response(
+          request.url.path.endsWith('/info') ? '[{"hash":"abc"}]' : '',
+          200,
+        );
+      }),
+    );
+
+    expect(await client.hasTorrent('abc'), isTrue);
+    await client.recheckAndStart('abc');
+
+    expect(requests.map((request) => request.url.path), [
+      '/api/v2/torrents/info',
+      '/api/v2/torrents/recheck',
+      '/api/v2/torrents/start',
+    ]);
+    expect(requests.first.url.queryParameters['hashes'], 'abc');
+    expect(requests[1].bodyFields['hashes'], 'abc');
+    expect(requests[2].bodyFields['hashes'], 'abc');
   });
 }
 

@@ -35,6 +35,14 @@ abstract final class TorrentTitleParser {
       r'\bSeason\s+(\d{1,2})\b',
       caseSensitive: false,
     ).firstMatch(body);
+    final standaloneSeason = RegExp(
+      r'\bS(\d{1,2})(?=\s*-\s*\d)',
+      caseSensitive: false,
+    ).firstMatch(body);
+    final romanSeason = RegExp(
+      r'\b(V|IV|III|II)\b',
+      caseSensitive: false,
+    ).firstMatch(body);
     final episodeWord = RegExp(
       r'\b(?:Episode|Ep)\s*(\d{1,4})(?:\s*[-~+]\s*(\d{1,4}))?',
       caseSensitive: false,
@@ -61,6 +69,8 @@ abstract final class TorrentTitleParser {
     final indexes = [
       seasonEpisode?.start,
       seasonWord?.start,
+      standaloneSeason?.start,
+      romanSeason?.start,
       episodeWord?.start,
       dashEpisode?.start,
       resolutionMatch?.start,
@@ -88,13 +98,28 @@ abstract final class TorrentTitleParser {
       original: input,
       animeName: animeName,
       publisher: publisher,
-      season: int.tryParse(
-        seasonEpisode?.group(1) ?? seasonWord?.group(1) ?? '',
-      ),
+      season:
+          int.tryParse(
+            seasonEpisode?.group(1) ??
+                seasonWord?.group(1) ??
+                standaloneSeason?.group(1) ??
+                '',
+          ) ??
+          _romanNumber(romanSeason?.group(1)),
       episodes: episodes,
       resolution: resolutionMatch == null
           ? null
           : '${resolutionMatch.group(1)}p',
     );
+  }
+
+  static int? _romanNumber(String? value) {
+    return switch (value?.toUpperCase()) {
+      'II' => 2,
+      'III' => 3,
+      'IV' => 4,
+      'V' => 5,
+      _ => null,
+    };
   }
 }

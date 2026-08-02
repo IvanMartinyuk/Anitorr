@@ -200,6 +200,7 @@ final class MyListController {
     String category = '1_2',
     int? season,
     String? seriesTitle,
+    int? preferredSizeBytes,
   }) {
     return _repository.saveDownloadIntent(
       anime: anime,
@@ -211,6 +212,7 @@ final class MyListController {
       category: category,
       season: season,
       seriesTitle: seriesTitle,
+      preferredSizeBytes: preferredSizeBytes,
     );
   }
 

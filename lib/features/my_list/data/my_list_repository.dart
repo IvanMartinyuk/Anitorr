@@ -228,6 +228,7 @@ final class MyListRepository {
     String category = '1_2',
     int? season,
     String? seriesTitle,
+    int? preferredSizeBytes,
   }) async {
     await _database.transaction(() async {
       await _upsertAnime(anime);
@@ -254,6 +255,9 @@ final class MyListRepository {
               category: Value(category),
               season: Value(season ?? existing?.season),
               seriesTitle: Value(seriesTitle ?? existing?.seriesTitle),
+              preferredSizeBytes: Value(
+                preferredSizeBytes ?? existing?.preferredSizeBytes,
+              ),
               alternativeFirstSeenAt: Value(existing?.alternativeFirstSeenAt),
               createdAt: existing?.createdAt ?? now,
               updatedAt: now,
@@ -362,6 +366,45 @@ final class MyListRepository {
         null;
   }
 
+  Future<Set<int>> downloadJobEpisodeCoverage(int animeId) async {
+    final jobs = await (_database.select(
+      _database.downloadJobs,
+    )..where((table) => table.animeId.equals(animeId))).get();
+    return {
+      for (final job in jobs)
+        for (final episode
+            in (jsonDecode(job.episodeCoverageJson) as List<dynamic>))
+          if (episode is int) episode,
+    };
+  }
+
+  Future<List<models.DownloadJobRecord>> loadDownloadJobs(int animeId) async {
+    final jobs = await (_database.select(
+      _database.downloadJobs,
+    )..where((table) => table.animeId.equals(animeId))).get();
+    return [
+      for (final job in jobs)
+        models.DownloadJobRecord(
+          id: job.id,
+          animeId: job.animeId,
+          sourceId: job.sourceId,
+          source: Uri.parse(job.sourceUri),
+          episodes: (jsonDecode(job.episodeCoverageJson) as List<dynamic>)
+              .whereType<num>()
+              .map((value) => value.toInt())
+              .toSet(),
+          destination: job.destination,
+          torrentHash: job.torrentHash,
+        ),
+    ];
+  }
+
+  Future<void> deleteDownloadJob(int id) async {
+    await (_database.delete(
+      _database.downloadJobs,
+    )..where((table) => table.id.equals(id))).go();
+  }
+
   Future<void> saveDownloadJob({
     required int animeId,
     required String sourceId,
@@ -467,6 +510,7 @@ final class MyListRepository {
       category: item.category,
       season: item.season,
       seriesTitle: item.seriesTitle,
+      preferredSizeBytes: item.preferredSizeBytes,
       alternativeFirstSeenAt: item.alternativeFirstSeenAt,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,

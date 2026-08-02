@@ -75,6 +75,7 @@ class DownloadIntents extends Table {
   TextColumn get category => text().withDefault(const Constant('1_2'))();
   IntColumn get season => integer().nullable()();
   TextColumn get seriesTitle => text().nullable()();
+  IntColumn get preferredSizeBytes => integer().nullable()();
   DateTimeColumn get alternativeFirstSeenAt => dateTime().nullable()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
@@ -142,7 +143,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -161,6 +162,12 @@ class AppDatabase extends _$AppDatabase {
           downloadIntents.alternativeFirstSeenAt,
         );
         await migrator.createTable(downloadAlerts);
+      }
+      if (from < 3) {
+        await migrator.addColumn(
+          downloadIntents,
+          downloadIntents.preferredSizeBytes,
+        );
       }
     },
     beforeOpen: (details) async {

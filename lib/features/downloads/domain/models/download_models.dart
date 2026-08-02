@@ -51,6 +51,7 @@ final class TorrentCandidate {
     this.seeders = 0,
     this.leechers = 0,
     this.category = '0_0',
+    this.season,
   });
 
   final String id;
@@ -66,6 +67,7 @@ final class TorrentCandidate {
   final int seeders;
   final int leechers;
   final String category;
+  final int? season;
 }
 
 abstract interface class TorrentSearchProvider {
@@ -126,4 +128,8 @@ abstract interface class DownloadClient {
   Future<QBittorrentConnectionInfo> testConnection();
 
   Future<void> addTorrent(AddTorrentRequest request);
+
+  Future<bool> hasTorrent(String infoHash);
+
+  Future<void> recheckAndStart(String infoHash);
 }

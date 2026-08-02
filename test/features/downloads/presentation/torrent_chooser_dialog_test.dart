@@ -71,6 +71,40 @@ void main() {
     );
     expect(find.byType(DataTable), findsNothing);
   });
+
+  testWidgets('publisher chips issue a narrowed Nyaa search', (tester) async {
+    final html = File('packages/nyaa/examples/search.txt').readAsStringSync();
+    final queries = <String>[];
+    final client = NyaaClient(
+      httpClient: MockClient((request) async {
+        queries.add(request.url.queryParameters['q'] ?? '');
+        return http.Response.bytes(
+          utf8.encode(html),
+          200,
+          headers: {'content-type': 'text/html; charset=utf-8'},
+        );
+      }),
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [nyaaClientProvider.overrideWithValue(client)],
+        child: const MaterialApp(
+          home: Scaffold(body: TorrentChooserDialog(anime: _anime, episode: 4)),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('ToonsHub'));
+    await tester.pumpAndSettle();
+
+    expect(queries, hasLength(2));
+    expect(queries.first, contains('4'));
+    expect(queries.last, contains('ToonsHub'));
+    expect(queries.last, contains('4'));
+    expect(tester.takeException(), isNull);
+    expect(find.textContaining('[ToonsHub]'), findsWidgets);
+  });
 }
 
 const _anime = AppAnime(

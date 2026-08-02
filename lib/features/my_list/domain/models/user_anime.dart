@@ -146,6 +146,7 @@ final class DownloadIntent {
     this.category = '1_2',
     this.season,
     this.seriesTitle,
+    this.preferredSizeBytes,
     this.alternativeFirstSeenAt,
   });
 
@@ -163,6 +164,7 @@ final class DownloadIntent {
   final String category;
   final int? season;
   final String? seriesTitle;
+  final int? preferredSizeBytes;
   final DateTime? alternativeFirstSeenAt;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -182,6 +184,26 @@ final class DownloadAlert {
   final int? episode;
   final String message;
   final DateTime createdAt;
+}
+
+final class DownloadJobRecord {
+  const DownloadJobRecord({
+    required this.id,
+    required this.animeId,
+    required this.sourceId,
+    required this.source,
+    required this.episodes,
+    required this.destination,
+    this.torrentHash,
+  });
+
+  final int id;
+  final int animeId;
+  final String sourceId;
+  final Uri source;
+  final Set<int> episodes;
+  final String destination;
+  final String? torrentHash;
 }
 
 final class LibraryAnime {

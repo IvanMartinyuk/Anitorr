@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nyaa/nyaa.dart';
 
 import '../../../../shared/models/app_anime.dart';
+import '../../../downloads/domain/models/download_models.dart';
 import '../../../downloads/domain/providers/download_providers.dart';
 import '../../../downloads/presentation/torrent_chooser_dialog.dart';
 import '../../domain/models/user_anime.dart';
@@ -504,6 +506,7 @@ class _DownloadButton extends ConsumerWidget {
         quality: choice.quality,
         category: choice.category.code,
         seriesTitle: choice.seriesTitle,
+        preferredSizeBytes: choice.torrent.sizeBytes,
       );
       try {
         await ref
@@ -544,6 +547,8 @@ class _DownloadButton extends ConsumerWidget {
         anime: anime,
         availableEpisodeCount: availableEpisodes,
         existing: intent,
+        currentPublisher: preferredPublisher,
+        currentQuality: preferredQuality,
       ),
     );
     if (selection == null) {
@@ -554,40 +559,89 @@ class _DownloadButton extends ConsumerWidget {
     final firstEpisode = selection.episodes.isEmpty
         ? null
         : (selection.episodes.toList()..sort()).first;
-    final choice = await showDialog<TorrentChoice>(
-      context: context,
-      builder: (context) => TorrentChooserDialog(
-        anime: anime,
-        episode: firstEpisode,
-        initialPublisher: preferredPublisher,
-        initialQuality: preferredQuality,
-      ),
-    );
-    if (choice == null) return;
+    if (firstEpisode == null) return;
+
+    final coordinator = ref.read(downloadCoordinatorProvider);
+    final preference = intent ?? inheritedPreference;
+    final season =
+        TorrentTitleParser.parse(anime.titleEnglish ?? anime.title).season ?? 1;
+    TorrentCandidate? candidate;
+    if (!selection.changePublisher &&
+        preference?.releaseGroup != null &&
+        preference?.quality != null) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text('Looking for $preferredPublisher $preferredQuality…'),
+          duration: const Duration(seconds: 30),
+        ),
+      );
+      try {
+        candidate = await coordinator.findPreferredCandidate(
+          anime: SavedAnime.fromAppAnime(anime),
+          preference: preference!,
+          episode: firstEpisode,
+          season: season,
+        );
+      } catch (_) {
+        // The chooser below displays the search error and allows retrying.
+      }
+      if (!context.mounted) return;
+      messenger.hideCurrentSnackBar();
+    }
+
+    TorrentChoice? choice;
+    if (candidate == null) {
+      choice = await showDialog<TorrentChoice>(
+        context: context,
+        builder: (context) => TorrentChooserDialog(
+          anime: anime,
+          episode: firstEpisode,
+          initialPublisher: selection.changePublisher
+              ? null
+              : preferredPublisher,
+          initialQuality: selection.changePublisher ? null : preferredQuality,
+        ),
+      );
+      if (choice == null) return;
+      candidate = choice.toCandidate();
+    }
+
+    final selectedPublisher = choice?.publisher ?? candidate.releaseGroup!;
+    final selectedQuality = choice?.quality ?? candidate.quality!;
+    final selectedCategory = choice?.category.code ?? candidate.category;
+    final selectedSeason = choice?.season ?? candidate.season ?? season;
+    final selectedSeriesTitle =
+        choice?.seriesTitle ??
+        preference?.seriesTitle ??
+        TorrentTitleParser.parse(anime.titleEnglish ?? anime.title).animeName;
 
     await controller.saveDownloadIntent(
       anime: anime,
       selectedEpisodes: selection.episodes,
       allAvailableEpisodes: selection.allAvailable,
       autoDownloadFuture: selection.autoFuture,
-      releaseGroup: choice.publisher,
-      quality: choice.quality,
-      category: choice.category.code,
-      season: choice.season,
-      seriesTitle: choice.seriesTitle,
+      releaseGroup: selectedPublisher,
+      quality: selectedQuality,
+      category: selectedCategory,
+      season: selectedSeason,
+      seriesTitle: selectedSeriesTitle,
+      preferredSizeBytes:
+          candidate.sizeBytes ~/
+          (candidate.episodeCoverage.isEmpty
+              ? 1
+              : candidate.episodeCoverage.length),
     );
     try {
-      await ref
-          .read(downloadCoordinatorProvider)
-          .queueSelected(
-            anime.id,
-            choice.toCandidate(),
-            requestedEpisode: firstEpisode,
-          );
+      await coordinator.reconcileSelectedEpisodes(anime.id);
+      await coordinator.queueSelected(
+        anime.id,
+        candidate,
+        requestedEpisode: firstEpisode,
+      );
+      await coordinator.queuePendingForAnime(anime.id, reconcile: false);
     } catch (error) {
       if (context.mounted) _showDownloadError(context, error);
     }
-    unawaited(ref.read(downloadCoordinatorProvider).checkNow());
     if (context.mounted) {
       _showDownloadSavedMessage(context);
     }
@@ -637,11 +691,15 @@ class _EpisodeSelectionDialog extends StatefulWidget {
     required this.anime,
     required this.availableEpisodeCount,
     this.existing,
+    this.currentPublisher,
+    this.currentQuality,
   });
 
   final AppAnime anime;
   final int availableEpisodeCount;
   final DownloadIntent? existing;
+  final String? currentPublisher;
+  final String? currentQuality;
 
   @override
   State<_EpisodeSelectionDialog> createState() =>
@@ -739,6 +797,17 @@ class _EpisodeSelectionDialogState extends State<_EpisodeSelectionDialog> {
                 ),
               ],
               const SizedBox(height: 12),
+              if (widget.currentPublisher != null) ...[
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(Icons.source_outlined),
+                  title: Text(widget.currentPublisher!),
+                  subtitle: widget.currentQuality == null
+                      ? null
+                      : Text(widget.currentQuality!),
+                ),
+                const SizedBox(height: 4),
+              ],
               CheckboxListTile(
                 contentPadding: EdgeInsets.zero,
                 value: _autoFuture,
@@ -759,6 +828,20 @@ class _EpisodeSelectionDialogState extends State<_EpisodeSelectionDialog> {
           onPressed: () => Navigator.of(context).pop(),
           child: const Text('Cancel'),
         ),
+        OutlinedButton.icon(
+          onPressed: _selected.isEmpty
+              ? null
+              : () => Navigator.of(context).pop(
+                  _EpisodeSelection(
+                    episodes: _selected,
+                    allAvailable: _allAvailable,
+                    autoFuture: _autoFuture,
+                    changePublisher: true,
+                  ),
+                ),
+          icon: const Icon(Icons.swap_horiz_rounded),
+          label: const Text('Change publisher'),
+        ),
         FilledButton(
           onPressed: _allAvailable || _selected.isNotEmpty
               ? () => Navigator.of(context).pop(
@@ -766,6 +849,7 @@ class _EpisodeSelectionDialogState extends State<_EpisodeSelectionDialog> {
                     episodes: _selected,
                     allAvailable: _allAvailable,
                     autoFuture: _autoFuture,
+                    changePublisher: false,
                   ),
                 )
               : null,
@@ -816,11 +900,13 @@ final class _EpisodeSelection {
     required this.episodes,
     required this.allAvailable,
     required this.autoFuture,
+    required this.changePublisher,
   });
 
   final Set<int> episodes;
   final bool allAvailable;
   final bool autoFuture;
+  final bool changePublisher;
 }
 
 final class _TrackingValue {
