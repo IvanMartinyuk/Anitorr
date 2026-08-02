@@ -1,0 +1,1307 @@
+Request: 
+fetch("https://nyaa.si/?f=0&c=0_0&q=sparks+of+tomorrow", {
+  "headers": {
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    "accept-language": "en,en-US;q=0.9,uk;q=0.8,ru;q=0.7",
+    "cache-control": "max-age=0",
+    "priority": "u=0, i",
+    "sec-ch-ua": "\"Google Chrome\";v=\"143\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Linux\"",
+    "sec-fetch-dest": "document",
+    "sec-fetch-mode": "navigate",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-user": "?1",
+    "upgrade-insecure-requests": "1"
+  },
+  "referrer": "https://nyaa.si/",
+  "body": null,
+  "method": "GET",
+  "mode": "cors",
+  "credentials": "include"
+});
+
+Response: 
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>sparks of tomorrow :: Nyaa</title>
+
+		<meta name="viewport" content="width=480px">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link rel="shortcut icon" type="image/png" href="/static/favicon.png">
+		<link rel="icon" type="image/png" href="/static/favicon.png">
+		<link rel="mask-icon" href="/static/pinned-tab.svg" color="#3582F7">
+		<link rel="alternate" type="application/rss+xml" href="https://nyaa.si/?page=rss&amp;q=sparks+of+tomorrow&amp;c=0_0&amp;f=0" />
+
+		<meta property="og:site_name" content="Nyaa">
+		<meta property="og:title" content="sparks of tomorrow :: Nyaa">
+		<meta property="og:image" content="/static/img/avatar/default.png">
+<meta property="og:description" content="Search for 'sparks of tomorrow'">
+
+		<!-- Bootstrap core CSS -->
+		<!--
+			Note: This has been customized at http://getbootstrap.com/customize/ to
+			set the column breakpoint to tablet mode, instead of mobile. This is to
+			make the navbar not look awful on tablets.
+		-->
+		<link href="/static/css/bootstrap.min.css?t=1608007388" rel="stylesheet" id="bsThemeLink">
+		<link href="/static/css/bootstrap-xl-mod.css?t=1608007388" rel="stylesheet">
+		<!--
+			This theme changer script needs to be inline and right under the above stylesheet link to prevent FOUC (Flash Of Unstyled Content)
+			Development version is commented out in static/js/main.js at the bottom of the file
+		-->
+		<script>function toggleDarkMode(){"dark"===localStorage.getItem("theme")?setThemeLight():setThemeDark()}function setThemeDark(){bsThemeLink.href="/static/css/bootstrap-dark.min.css?t=1608007388",localStorage.setItem("theme","dark"),document.body!==null&&document.body.classList.add('dark')}function setThemeLight(){bsThemeLink.href="/static/css/bootstrap.min.css?t=1608007388",localStorage.setItem("theme","light"),document.body!==null&&document.body.classList.remove('dark')}if("undefined"!=typeof Storage){var bsThemeLink=document.getElementById("bsThemeLink");"dark"===localStorage.getItem("theme")&&setThemeDark()}</script>
+		<script>window.markdown_proxy_images=true;</script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css" integrity="sha256-an4uqLnVJ2flr7w0U74xiF4PJjO2N5Df91R2CUmCLCA=" crossorigin="anonymous" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+
+		<!-- Custom styles for this template -->
+		<link href="/static/css/main.css?t=1683696976" rel="stylesheet">
+
+		<!-- Core JavaScript -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.3.1/markdown-it.min.js" integrity="sha256-3WZyZQOe+ql3pLo90lrkRtALrlniGdnf//gRpW0UQks=" crossorigin="anonymous"></script>
+		<!-- Modified to not apply border-radius to selectpickers and stuff so our navbar looks cool -->
+		<script src="/static/js/bootstrap-select.min.js?t=1623304983"></script>
+		<script src="/static/js/main.min.js?t=1683696976"></script>
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+		<link rel="search" type="application/opensearchdescription+xml" title="Nyaa.si" href="/static/search.xml">
+	</head>
+	<body>
+		<!-- Fixed navbar -->
+		<nav class="navbar navbar-default navbar-static-top navbar-inverse">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="/">Nyaa</a>
+				</div><!--/.navbar-header -->
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li ><a href="/upload">Upload</a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+								Info
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li ><a href="/rules">Rules</a></li>
+								<li ><a href="/help">Help</a></li>
+							</ul>
+						</li>
+						<li><a href="/?page=rss&amp;q=sparks+of+tomorrow&amp;c=0_0&amp;f=0">RSS</a></li>
+						<li><a href="https://twitter.com/NyaaV2">Twitter</a></li>
+						<li><a href="//sukebei.nyaa.si">Fap</a></li>
+					</ul>
+
+					<ul class="nav navbar-nav navbar-right">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle visible-lg visible-sm visible-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+								<i class="fa fa-user fa-fw"></i>
+								Guest
+								<span class="caret"></span>
+							</a>
+							<a href="#" class="dropdown-toggle hidden-lg hidden-sm hidden-xs" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+								<i class="fa fa-user fa-fw"></i>
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="/login">
+										<i class="fa fa-sign-in fa-fw"></i>
+										Login
+									</a>
+								</li>
+								<li>
+									<a href="/register">
+										<i class="fa fa-pencil fa-fw"></i>
+										Register
+									</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+
+
+
+					<div class="search-container visible-xs visible-sm">
+						<form class="navbar-form navbar-right form" action="/" method="get">
+
+							<input type="text" class="form-control" name="q" placeholder="Search..." value="sparks of tomorrow">
+							<br>
+
+							<select class="form-control" title="Filter" data-width="120px" name="f">
+								<option value="0" title="No filter" selected>No filter</option>
+								<option value="1" title="No remakes" >No remakes</option>
+								<option value="2" title="Trusted only" >Trusted only</option>
+							</select>
+
+							<br>
+
+							<select class="form-control" title="Category" data-width="200px" name="c">
+								<option value="0_0" title="All categories" selected>
+									All categories
+								</option>
+								<option value="1_0" title="Anime" >
+									Anime
+								</option>
+								<option value="1_1" title="Anime - AMV" >
+									- Anime Music Video
+								</option>
+								<option value="1_2" title="Anime - English" >
+									- English-translated
+								</option>
+								<option value="1_3" title="Anime - Non-English" >
+									- Non-English-translated
+								</option>
+								<option value="1_4" title="Anime - Raw" >
+									- Raw
+								</option>
+								<option value="2_0" title="Audio" >
+									Audio
+								</option>
+								<option value="2_1" title="Audio - Lossless" >
+									- Lossless
+								</option>
+								<option value="2_2" title="Audio - Lossy" >
+									- Lossy
+								</option>
+								<option value="3_0" title="Literature" >
+									Literature
+								</option>
+								<option value="3_1" title="Literature - English" >
+									- English-translated
+								</option>
+								<option value="3_2" title="Literature - Non-English" >
+									- Non-English-translated
+								</option>
+								<option value="3_3" title="Literature - Raw" >
+									- Raw
+								</option>
+								<option value="4_0" title="Live Action" >
+									Live Action
+								</option>
+								<option value="4_1" title="Live Action - English" >
+									- English-translated
+								</option>
+								<option value="4_2" title="Live Action - Idol/PV" >
+									- Idol/Promotional Video
+								</option>
+								<option value="4_3" title="Live Action - Non-English" >
+									- Non-English-translated
+								</option>
+								<option value="4_4" title="Live Action - Raw" >
+									- Raw
+								</option>
+								<option value="5_0" title="Pictures" >
+									Pictures
+								</option>
+								<option value="5_1" title="Pictures - Graphics" >
+									- Graphics
+								</option>
+								<option value="5_2" title="Pictures - Photos" >
+									- Photos
+								</option>
+								<option value="6_0" title="Software" >
+									Software
+								</option>
+								<option value="6_1" title="Software - Apps" >
+									- Applications
+								</option>
+								<option value="6_2" title="Software - Games" >
+									- Games
+								</option>
+							</select>
+
+							<br>
+
+							<button class="btn btn-primary form-control" type="submit">
+								<i class="fa fa-search fa-fw"></i> Search
+							</button>
+						</form>
+					</div><!--/.search-container -->
+
+					<form class="navbar-form navbar-right form" action="/" method="get">
+						<div class="input-group search-container hidden-xs hidden-sm">
+							<div class="input-group-btn nav-filter" id="navFilter-criteria">
+								<select class="selectpicker show-tick" title="Filter" data-width="120px" name="f">
+									<option value="0" title="No filter" selected>No filter</option>
+									<option value="1" title="No remakes" >No remakes</option>
+									<option value="2" title="Trusted only" >Trusted only</option>
+								</select>
+							</div>
+
+							<div class="input-group-btn nav-filter" id="navFilter-category">
+								<!--
+									On narrow viewports, there isn't enough room to fit the full stuff in the selectpicker, so we show a full-width one on wide viewports, but squish it on narrow ones.
+								-->
+								<select class="selectpicker show-tick" title="Category" data-width="130px" name="c">
+									<option value="0_0" title="All categories" selected>
+										All categories
+									</option>
+									<option value="1_0" title="Anime" >
+										Anime
+									</option>
+									<option value="1_1" title="Anime - AMV" >
+										- Anime Music Video
+									</option>
+									<option value="1_2" title="Anime - English" >
+										- English-translated
+									</option>
+									<option value="1_3" title="Anime - Non-English" >
+										- Non-English-translated
+									</option>
+									<option value="1_4" title="Anime - Raw" >
+										- Raw
+									</option>
+									<option value="2_0" title="Audio" >
+										Audio
+									</option>
+									<option value="2_1" title="Audio - Lossless" >
+										- Lossless
+									</option>
+									<option value="2_2" title="Audio - Lossy" >
+										- Lossy
+									</option>
+									<option value="3_0" title="Literature" >
+										Literature
+									</option>
+									<option value="3_1" title="Literature - English" >
+										- English-translated
+									</option>
+									<option value="3_2" title="Literature - Non-English" >
+										- Non-English-translated
+									</option>
+									<option value="3_3" title="Literature - Raw" >
+										- Raw
+									</option>
+									<option value="4_0" title="Live Action" >
+										Live Action
+									</option>
+									<option value="4_1" title="Live Action - English" >
+										- English-translated
+									</option>
+									<option value="4_2" title="Live Action - Idol/PV" >
+										- Idol/Promotional Video
+									</option>
+									<option value="4_3" title="Live Action - Non-English" >
+										- Non-English-translated
+									</option>
+									<option value="4_4" title="Live Action - Raw" >
+										- Raw
+									</option>
+									<option value="5_0" title="Pictures" >
+										Pictures
+									</option>
+									<option value="5_1" title="Pictures - Graphics" >
+										- Graphics
+									</option>
+									<option value="5_2" title="Pictures - Photos" >
+										- Photos
+									</option>
+									<option value="6_0" title="Software" >
+										Software
+									</option>
+									<option value="6_1" title="Software - Apps" >
+										- Applications
+									</option>
+									<option value="6_2" title="Software - Games" >
+										- Games
+									</option>
+								</select>
+							</div>
+							<input type="text" class="form-control search-bar" name="q" placeholder="Search..." value="sparks of tomorrow" />
+							<div class="input-group-btn search-btn">
+								<button class="btn btn-primary" type="submit">
+									<i class="fa fa-search fa-fw"></i>
+								</button>
+							</div>
+						</div>
+					</form>
+				</div><!--/.nav-collapse -->
+			</div><!--/.container -->
+		</nav>
+
+		<div class="container">
+
+
+
+
+<div class="alert alert-info">
+	<a href="/user/sparks?f=0&amp;c=0_0&amp;q=of+tomorrow">Click here to see only results uploaded by sparks</a>
+</div>
+
+<div class="table-responsive">
+	<table class="table table-bordered table-hover table-striped torrent-list">
+		<thead>
+			<tr>
+				<th class="hdr-category text-center" style="width:80px;">Category</th>
+				<th class="hdr-name" style="width:auto;">Name</th>
+				<th class="hdr-comments sorting text-center" title="Comments" style="width:50px;"><a href="/?f=0&amp;c=0_0&amp;q=sparks+of+tomorrow&amp;s=comments&amp;o=desc"></a><i class="fa fa-comments-o"></i></th>
+				<th class="hdr-link text-center" style="width:70px;">Link</th>
+				<th class="hdr-size sorting text-center" style="width:100px;"><a href="/?f=0&amp;c=0_0&amp;q=sparks+of+tomorrow&amp;s=size&amp;o=desc"></a>Size</th>
+				<th class="hdr-date sorting_desc text-center" title="In UTC" style="width:140px;"><a href="/?f=0&amp;c=0_0&amp;q=sparks+of+tomorrow&amp;s=id&amp;o=asc"></a>Date</th>
+
+				<th class="hdr-seeders sorting text-center" title="Seeders" style="width:50px;"><a href="/?f=0&amp;c=0_0&amp;q=sparks+of+tomorrow&amp;s=seeders&amp;o=desc"></a><i class="fa fa-arrow-up" aria-hidden="true"></i></th>
+				<th class="hdr-leechers sorting text-center" title="Leechers" style="width:50px;"><a href="/?f=0&amp;c=0_0&amp;q=sparks+of+tomorrow&amp;s=leechers&amp;o=desc"></a><i class="fa fa-arrow-down" aria-hidden="true"></i></th>
+				<th class="hdr-downloads sorting text-center" title="Completed downloads" style="width:50px;"><a href="/?f=0&amp;c=0_0&amp;q=sparks+of+tomorrow&amp;s=downloads&amp;o=desc"></a><i class="fa fa-check" aria-hidden="true"></i></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="danger">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2141054" title="[Trix] Sparks of Tomorrow S01E05 1080p NF WEB-DL AAC2.0 AV1 (Dual-Audio, Multi-Subs) (Nijusseiki Denki Mokuroku Eureka Evrika) (Weekly)">[Trix] Sparks of Tomorrow S01E05 1080p NF WEB-DL AAC2.0 AV1 (Dual-Audio, Multi-Subs) (Nijusseiki Denki Mokuroku Eureka Evrika) (Weekly)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2141054.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:5719a5c2f955b3c1090d407f6ea7ecb5d1e52e7c&amp;dn=%5BTrix%5D%20Sparks%20of%20Tomorrow%20S01E05%201080p%20NF%20WEB-DL%20AAC2.0%20AV1%20%28Dual-Audio%2C%20Multi-Subs%29%20%28Nijusseiki%20Denki%20Mokuroku%20Eureka%20Evrika%29%20%28Weekly%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">253.7 MiB</td>
+				<td class="text-center" data-timestamp="1785702229">2026-08-02 20:23</td>
+
+				<td class="text-center">133</td>
+				<td class="text-center">21</td>
+				<td class="text-center">210</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2141039" title="Sparks of Tomorrow S01E05 MULTi AD 1080p NF WEB-DL AAC2.0 x264-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)">Sparks of Tomorrow S01E05 MULTi AD 1080p NF WEB-DL AAC2.0 x264-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2141039.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:51c62910546b974d73fb10fac02e22877f6a8372&amp;dn=Sparks%20of%20Tomorrow%20S01E05%20MULTi%20AD%201080p%20NF%20WEB-DL%20AAC2.0%20x264-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijuuseiki%20Denki%20Mokuroku%2C%20Destellos%20del%20manana%2C%2020th%20Century%20Electricity%20Catalog%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">1.0 GiB</td>
+				<td class="text-center" data-timestamp="1785699259">2026-08-02 19:34</td>
+
+				<td class="text-center">107</td>
+				<td class="text-center">8</td>
+				<td class="text-center">208</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2141038" title="Sparks of Tomorrow S01E05 MULTi AD 1080p NF WEB-DL AAC2.0 H.265-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana)">Sparks of Tomorrow S01E05 MULTi AD 1080p NF WEB-DL AAC2.0 H.265-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2141038.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:754ad5ff3a99054617a5f1fd68e2c81f79abe494&amp;dn=Sparks%20of%20Tomorrow%20S01E05%20MULTi%20AD%201080p%20NF%20WEB-DL%20AAC2.0%20H.265-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijuuseiki%20Denki%20Mokuroku%2C%20Destellos%20del%20manana%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">610.4 MiB</td>
+				<td class="text-center" data-timestamp="1785699222">2026-08-02 19:33</td>
+
+				<td class="text-center">49</td>
+				<td class="text-center">4</td>
+				<td class="text-center">89</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2141037#comments" class="comments" title="1 comment">
+						<i class="fa fa-comments-o"></i>1</a>
+					<a href="/view/2141037" title="Sparks of Tomorrow S01E05 MULTi AD 1080p NF WEB-DL AAC2.0 AV1-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)">Sparks of Tomorrow S01E05 MULTi AD 1080p NF WEB-DL AAC2.0 AV1-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2141037.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:2b4539a0512bb18da653e415594a6785cd609080&amp;dn=Sparks%20of%20Tomorrow%20S01E05%20MULTi%20AD%201080p%20NF%20WEB-DL%20AAC2.0%20AV1-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijuuseiki%20Denki%20Mokuroku%2C%20Destellos%20del%20manana%2C%2020th%20Century%20Electricity%20Catalog%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">387.9 MiB</td>
+				<td class="text-center" data-timestamp="1785699202">2026-08-02 19:33</td>
+
+				<td class="text-center">95</td>
+				<td class="text-center">4</td>
+				<td class="text-center">170</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2140874" title="Sparks of Tomorrow S01E05 Proof of Love 1080p NF WEB-DL DUAL AAC2.0 H.264-VARYG (Nijusseiki Denki Mokuroku: Eureka Evrika, Dual-Audio, Multi-Subs)">Sparks of Tomorrow S01E05 Proof of Love 1080p NF WEB-DL DUAL AAC2.0 H.264-VARYG (Nijusseiki Denki Mokuroku: Eureka Evrika, Dual-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2140874.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:942ef7b45208ffaff3694c2513580f721131c5bc&amp;dn=Sparks%20of%20Tomorrow%20S01E05%20Proof%20of%20Love%201080p%20NF%20WEB-DL%20DUAL%20AAC2.0%20H.264-VARYG%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%20Evrika%2C%20Dual-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">909.2 MiB</td>
+				<td class="text-center" data-timestamp="1785682536">2026-08-02 14:55</td>
+
+				<td class="text-center">342</td>
+				<td class="text-center">23</td>
+				<td class="text-center">1336</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2140873#comments" class="comments" title="1 comment">
+						<i class="fa fa-comments-o"></i>1</a>
+					<a href="/view/2140873" title="Sparks of Tomorrow S01E05 Proof of Love 1080p NF WEB-DL MULTi AAC2.0 H.264-VARYG (Nijusseiki Denki Mokuroku: Eureka Evrika, Multi-Audio, Multi-Subs)">Sparks of Tomorrow S01E05 Proof of Love 1080p NF WEB-DL MULTi AAC2.0 H.264-VARYG (Nijusseiki Denki Mokuroku: Eureka Evrika, Multi-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2140873.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:763307da88e359fada90b9841fef0c3acd554d1c&amp;dn=Sparks%20of%20Tomorrow%20S01E05%20Proof%20of%20Love%201080p%20NF%20WEB-DL%20MULTi%20AAC2.0%20H.264-VARYG%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%20Evrika%2C%20Multi-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">1.2 GiB</td>
+				<td class="text-center" data-timestamp="1785682447">2026-08-02 14:54</td>
+
+				<td class="text-center">121</td>
+				<td class="text-center">12</td>
+				<td class="text-center">511</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2140868" title="Sparks.of.Tomorrow.2026.S01E05.Proof.of.Love.NF.1080p.WEB-DL.AAC2.0.AV1-ENK">Sparks.of.Tomorrow.2026.S01E05.Proof.of.Love.NF.1080p.WEB-DL.AAC2.0.AV1-ENK</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2140868.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:58ec396930bbdd13ed1d5231ae9e6c3070147273&amp;dn=Sparks.of.Tomorrow.2026.S01E05.Proof.of.Love.NF.1080p.WEB-DL.AAC2.0.AV1-ENK&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">230.0 MiB</td>
+				<td class="text-center" data-timestamp="1785682269">2026-08-02 14:51</td>
+
+				<td class="text-center">35</td>
+				<td class="text-center">3</td>
+				<td class="text-center">119</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2140845" title="[ToonsHub] Sparks of Tomorrow S01E05 1080p NF WEB-DL MULTi AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka Evrika, Multi-Audio, Multi-Subs)">[ToonsHub] Sparks of Tomorrow S01E05 1080p NF WEB-DL MULTi AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka Evrika, Multi-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2140845.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:e0d2103e982487eee54b2ee4b8a989c33c6b39e9&amp;dn=%5BToonsHub%5D%20Sparks%20of%20Tomorrow%20S01E05%201080p%20NF%20WEB-DL%20MULTi%20AAC2.0%20H.264%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%20Evrika%2C%20Multi-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">1.2 GiB</td>
+				<td class="text-center" data-timestamp="1785679699">2026-08-02 14:08</td>
+
+				<td class="text-center">168</td>
+				<td class="text-center">14</td>
+				<td class="text-center">610</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2140840" title="[ToonsHub] Sparks of Tomorrow S01E05 1080p NF WEB-DL DUAL AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka Evrika, Dual-Audio, Multi-Subs)">[ToonsHub] Sparks of Tomorrow S01E05 1080p NF WEB-DL DUAL AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka Evrika, Dual-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2140840.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:fbc29a251bcb7bee27bdcefe398c33e7b388e217&amp;dn=%5BToonsHub%5D%20Sparks%20of%20Tomorrow%20S01E05%201080p%20NF%20WEB-DL%20DUAL%20AAC2.0%20H.264%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%20Evrika%2C%20Dual-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">909.2 MiB</td>
+				<td class="text-center" data-timestamp="1785679402">2026-08-02 14:03</td>
+
+				<td class="text-center">1112</td>
+				<td class="text-center">43</td>
+				<td class="text-center">3709</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2138321" title="[CrappySubs] Sparks of Tomorrow (Nijuuseiki Denki Mokuroku) - S01E04 (NF WEB 1080p H.264 AAC) [Dual Audio] [446E1F40]">[CrappySubs] Sparks of Tomorrow (Nijuuseiki Denki Mokuroku) - S01E04 (NF WEB 1080p H.264 AAC) [Dual Audio] [446E1F40]</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2138321.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:9234a7ab9e2a4b7efe61f64da3b5b02b0219c40c&amp;dn=%5BCrappySubs%5D%20Sparks%20of%20Tomorrow%20%28Nijuuseiki%20Denki%20Mokuroku%29%20-%20S01E04%20%28NF%20WEB%201080p%20H.264%20AAC%29%20%5BDual%20Audio%5D%20%5B446E1F40%5D&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">914.1 MiB</td>
+				<td class="text-center" data-timestamp="1785175185">2026-07-27 17:59</td>
+
+				<td class="text-center">30</td>
+				<td class="text-center">3</td>
+				<td class="text-center">215</td>
+			</tr>
+			<tr class="danger">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2137888" title="[Trix] Sparks of Tomorrow S01E04 1080p NF WEB-DL AAC2.0 AV1 (Dual-Audio, Multi-Subs) (Nijusseiki Denki Mokuroku Eureka Evrika) (Weekly)">[Trix] Sparks of Tomorrow S01E04 1080p NF WEB-DL AAC2.0 AV1 (Dual-Audio, Multi-Subs) (Nijusseiki Denki Mokuroku Eureka Evrika) (Weekly)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2137888.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:b099647f53d316a0f4f80388d46e171938d59078&amp;dn=%5BTrix%5D%20Sparks%20of%20Tomorrow%20S01E04%201080p%20NF%20WEB-DL%20AAC2.0%20AV1%20%28Dual-Audio%2C%20Multi-Subs%29%20%28Nijusseiki%20Denki%20Mokuroku%20Eureka%20Evrika%29%20%28Weekly%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">230.2 MiB</td>
+				<td class="text-center" data-timestamp="1785083208">2026-07-26 16:26</td>
+
+				<td class="text-center">129</td>
+				<td class="text-center">1</td>
+				<td class="text-center">1773</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2137792" title="Sparks of Tomorrow S01E04 MULTi 1080p NF WEB-DL AAC2.0 x264-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)">Sparks of Tomorrow S01E04 MULTi 1080p NF WEB-DL AAC2.0 x264-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2137792.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:c95decca4b589d62f8955be48d2390c827b376bb&amp;dn=Sparks%20of%20Tomorrow%20S01E04%20MULTi%201080p%20NF%20WEB-DL%20AAC2.0%20x264-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijuuseiki%20Denki%20Mokuroku%2C%20Destellos%20del%20manana%2C%2020th%20Century%20Electricity%20Catalog%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">984.8 MiB</td>
+				<td class="text-center" data-timestamp="1785078927">2026-07-26 15:15</td>
+
+				<td class="text-center">90</td>
+				<td class="text-center">1</td>
+				<td class="text-center">607</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2137791" title="Sparks of Tomorrow S01E04 MULTi 1080p NF WEB-DL AAC2.0 H.265-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)">Sparks of Tomorrow S01E04 MULTi 1080p NF WEB-DL AAC2.0 H.265-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2137791.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:cc05c5279c609ca9456b73ace08b2141b8559779&amp;dn=Sparks%20of%20Tomorrow%20S01E04%20MULTi%201080p%20NF%20WEB-DL%20AAC2.0%20H.265-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijuuseiki%20Denki%20Mokuroku%2C%20Destellos%20del%20manana%2C%2020th%20Century%20Electricity%20Catalog%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">527.6 MiB</td>
+				<td class="text-center" data-timestamp="1785078911">2026-07-26 15:15</td>
+
+				<td class="text-center">58</td>
+				<td class="text-center">0</td>
+				<td class="text-center">418</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2137790#comments" class="comments" title="1 comment">
+						<i class="fa fa-comments-o"></i>1</a>
+					<a href="/view/2137790" title="Sparks of Tomorrow S01E04 MULTi 1080p NF WEB-DL AAC2.0 AV1-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)">Sparks of Tomorrow S01E04 MULTi 1080p NF WEB-DL AAC2.0 AV1-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2137790.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:69f752176e68643692ccacb0f81eb18a1a67c631&amp;dn=Sparks%20of%20Tomorrow%20S01E04%20MULTi%201080p%20NF%20WEB-DL%20AAC2.0%20AV1-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijuuseiki%20Denki%20Mokuroku%2C%20Destellos%20del%20manana%2C%2020th%20Century%20Electricity%20Catalog%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">302.5 MiB</td>
+				<td class="text-center" data-timestamp="1785078900">2026-07-26 15:15</td>
+
+				<td class="text-center">37</td>
+				<td class="text-center">0</td>
+				<td class="text-center">337</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2137736" title="[ToonsHub] Sparks of Tomorrow S01E04 1080p NF WEB-DL MULTi AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka Evrika, Multi-Audio, Multi-Subs)">[ToonsHub] Sparks of Tomorrow S01E04 1080p NF WEB-DL MULTi AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka Evrika, Multi-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2137736.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:e97eb1ff5b2d42750ca7f36e32b12bf8158d50d4&amp;dn=%5BToonsHub%5D%20Sparks%20of%20Tomorrow%20S01E04%201080p%20NF%20WEB-DL%20MULTi%20AAC2.0%20H.264%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%20Evrika%2C%20Multi-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">1.2 GiB</td>
+				<td class="text-center" data-timestamp="1785074826">2026-07-26 14:07</td>
+
+				<td class="text-center">110</td>
+				<td class="text-center">2</td>
+				<td class="text-center">1102</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2137732" title="Sparks of Tomorrow S01E04 The Steadfast Girl 1080p NF WEB-DL DUAL AAC2.0 H.264-VARYG (Nijusseiki Denki Mokuroku: Eureka Evrika, Dual-Audio, Multi-Subs)">Sparks of Tomorrow S01E04 The Steadfast Girl 1080p NF WEB-DL DUAL AAC2.0 H.264-VARYG (Nijusseiki Denki Mokuroku: Eureka Evrika, Dual-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2137732.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:9f5593827d29e1ffff658f823985a905ce1a3f26&amp;dn=Sparks%20of%20Tomorrow%20S01E04%20The%20Steadfast%20Girl%201080p%20NF%20WEB-DL%20DUAL%20AAC2.0%20H.264-VARYG%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%20Evrika%2C%20Dual-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">912.2 MiB</td>
+				<td class="text-center" data-timestamp="1785074611">2026-07-26 14:03</td>
+
+				<td class="text-center">198</td>
+				<td class="text-center">3</td>
+				<td class="text-center">2499</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2137731" title="[ToonsHub] Sparks of Tomorrow S01E04 1080p NF WEB-DL DUAL AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka Evrika, Dual-Audio, Multi-Subs)">[ToonsHub] Sparks of Tomorrow S01E04 1080p NF WEB-DL DUAL AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka Evrika, Dual-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2137731.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:f69b822241b67294fb6d9e8058e40a1d9315a130&amp;dn=%5BToonsHub%5D%20Sparks%20of%20Tomorrow%20S01E04%201080p%20NF%20WEB-DL%20DUAL%20AAC2.0%20H.264%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%20Evrika%2C%20Dual-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">912.2 MiB</td>
+				<td class="text-center" data-timestamp="1785074608">2026-07-26 14:03</td>
+
+				<td class="text-center">147</td>
+				<td class="text-center">2</td>
+				<td class="text-center">2051</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2137728#comments" class="comments" title="1 comment">
+						<i class="fa fa-comments-o"></i>1</a>
+					<a href="/view/2137728" title="Sparks of Tomorrow S01E04 The Steadfast Girl 1080p NF WEB-DL MULTi AAC2.0 H.264-VARYG (Nijusseiki Denki Mokuroku: Eureka Evrika, Multi-Audio, Multi-Subs)">Sparks of Tomorrow S01E04 The Steadfast Girl 1080p NF WEB-DL MULTi AAC2.0 H.264-VARYG (Nijusseiki Denki Mokuroku: Eureka Evrika, Multi-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2137728.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:2b1d7cb009d7fd32e2f1a312a6cf5477ce3d6821&amp;dn=Sparks%20of%20Tomorrow%20S01E04%20The%20Steadfast%20Girl%201080p%20NF%20WEB-DL%20MULTi%20AAC2.0%20H.264-VARYG%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%20Evrika%2C%20Multi-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">1.2 GiB</td>
+				<td class="text-center" data-timestamp="1785074530">2026-07-26 14:02</td>
+
+				<td class="text-center">483</td>
+				<td class="text-center">8</td>
+				<td class="text-center">3662</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2137359#comments" class="comments" title="1 comment">
+						<i class="fa fa-comments-o"></i>1</a>
+					<a href="/view/2137359" title="[CrappySubs] Sparks of Tomorrow (Nijuuseiki Denki Mokuroku) - S01E03 (NF WEB 1080p H.264 AAC) [Dual Audio] [A387D606]">[CrappySubs] Sparks of Tomorrow (Nijuuseiki Denki Mokuroku) - S01E03 (NF WEB 1080p H.264 AAC) [Dual Audio] [A387D606]</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2137359.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:ef1945208b5c0135d5256fc0685ef88b2fe7ce9f&amp;dn=%5BCrappySubs%5D%20Sparks%20of%20Tomorrow%20%28Nijuuseiki%20Denki%20Mokuroku%29%20-%20S01E03%20%28NF%20WEB%201080p%20H.264%20AAC%29%20%5BDual%20Audio%5D%20%5BA387D606%5D&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">910.6 MiB</td>
+				<td class="text-center" data-timestamp="1785001443">2026-07-25 17:44</td>
+
+				<td class="text-center">29</td>
+				<td class="text-center">0</td>
+				<td class="text-center">232</td>
+			</tr>
+			<tr class="danger">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2134938" title="[Trix] Sparks of Tomorrow S01E03 1080p NF WEB-DL AAC2.0 AV1 (Dual-Audio, Multi-Subs) (Nijusseiki Denki Mokuroku Eureka Evrika) (Weekly)">[Trix] Sparks of Tomorrow S01E03 1080p NF WEB-DL AAC2.0 AV1 (Dual-Audio, Multi-Subs) (Nijusseiki Denki Mokuroku Eureka Evrika) (Weekly)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2134938.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:293e43b9804e80f36fd08c771b7a74fc342dc326&amp;dn=%5BTrix%5D%20Sparks%20of%20Tomorrow%20S01E03%201080p%20NF%20WEB-DL%20AAC2.0%20AV1%20%28Dual-Audio%2C%20Multi-Subs%29%20%28Nijusseiki%20Denki%20Mokuroku%20Eureka%20Evrika%29%20%28Weekly%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">255.7 MiB</td>
+				<td class="text-center" data-timestamp="1784474195">2026-07-19 15:16</td>
+
+				<td class="text-center">132</td>
+				<td class="text-center">0</td>
+				<td class="text-center">2181</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2134902" title="Sparks of Tomorrow S01E03 MULTi 1080p NF WEB-DL AAC2.0 x264-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)">Sparks of Tomorrow S01E03 MULTi 1080p NF WEB-DL AAC2.0 x264-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2134902.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:206c059a82de45bb23400bd8dedc1a32f52885d0&amp;dn=Sparks%20of%20Tomorrow%20S01E03%20MULTi%201080p%20NF%20WEB-DL%20AAC2.0%20x264-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijuuseiki%20Denki%20Mokuroku%2C%20Destellos%20del%20manana%2C%2020th%20Century%20Electricity%20Catalog%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">985.4 MiB</td>
+				<td class="text-center" data-timestamp="1784472030">2026-07-19 14:40</td>
+
+				<td class="text-center">61</td>
+				<td class="text-center">0</td>
+				<td class="text-center">639</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2134901" title="Sparks of Tomorrow S01E03 MULTi 1080p NF WEB-DL AAC2.0 H.265-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)">Sparks of Tomorrow S01E03 MULTi 1080p NF WEB-DL AAC2.0 H.265-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2134901.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:52130e33164438d50cc6d4faf9e062ebf52e852b&amp;dn=Sparks%20of%20Tomorrow%20S01E03%20MULTi%201080p%20NF%20WEB-DL%20AAC2.0%20H.265-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijuuseiki%20Denki%20Mokuroku%2C%20Destellos%20del%20manana%2C%2020th%20Century%20Electricity%20Catalog%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">588.3 MiB</td>
+				<td class="text-center" data-timestamp="1784472001">2026-07-19 14:40</td>
+
+				<td class="text-center">30</td>
+				<td class="text-center">0</td>
+				<td class="text-center">346</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2134900#comments" class="comments" title="1 comment">
+						<i class="fa fa-comments-o"></i>1</a>
+					<a href="/view/2134900" title="Sparks of Tomorrow S01E03 MULTi 1080p NF WEB-DL AAC2.0 AV1-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)">Sparks of Tomorrow S01E03 MULTi 1080p NF WEB-DL AAC2.0 AV1-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2134900.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:23e5f4a7d607a3f7297875f14e2c5f26c8bdb4ef&amp;dn=Sparks%20of%20Tomorrow%20S01E03%20MULTi%201080p%20NF%20WEB-DL%20AAC2.0%20AV1-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijuuseiki%20Denki%20Mokuroku%2C%20Destellos%20del%20manana%2C%2020th%20Century%20Electricity%20Catalog%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">332.1 MiB</td>
+				<td class="text-center" data-timestamp="1784471987">2026-07-19 14:39</td>
+
+				<td class="text-center">42</td>
+				<td class="text-center">0</td>
+				<td class="text-center">434</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2134888" title="[ToonsHub] Sparks of Tomorrow S01E03 1080p NF WEB-DL MULTi AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka Evrika, Multi-Audio, Multi-Subs)">[ToonsHub] Sparks of Tomorrow S01E03 1080p NF WEB-DL MULTi AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka Evrika, Multi-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2134888.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:cab8a576d469aec31e2b11f760bebd9590982147&amp;dn=%5BToonsHub%5D%20Sparks%20of%20Tomorrow%20S01E03%201080p%20NF%20WEB-DL%20MULTi%20AAC2.0%20H.264%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%20Evrika%2C%20Multi-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">1.2 GiB</td>
+				<td class="text-center" data-timestamp="1784470014">2026-07-19 14:06</td>
+
+				<td class="text-center">61</td>
+				<td class="text-center">1</td>
+				<td class="text-center">1106</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2134887" title="Sparks of Tomorrow S01E03 Their Dream 1080p NF WEB-DL DUAL AAC2.0 H 264-VARYG (Nijusseiki Denki Mokuroku: Eureka Evrika, Dual-Audio, Multi-Subs)">Sparks of Tomorrow S01E03 Their Dream 1080p NF WEB-DL DUAL AAC2.0 H 264-VARYG (Nijusseiki Denki Mokuroku: Eureka Evrika, Dual-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2134887.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:4edb4d8c3d464c805669ee3ff2d867e80d171b93&amp;dn=Sparks%20of%20Tomorrow%20S01E03%20Their%20Dream%201080p%20NF%20WEB-DL%20DUAL%20AAC2.0%20H%20264-VARYG%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%20Evrika%2C%20Dual-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">908.6 MiB</td>
+				<td class="text-center" data-timestamp="1784469835">2026-07-19 14:03</td>
+
+				<td class="text-center">131</td>
+				<td class="text-center">1</td>
+				<td class="text-center">2236</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2134886" title="[ToonsHub] Sparks of Tomorrow S01E03 1080p NF WEB-DL DUAL AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka Evrika, Dual-Audio, Multi-Subs)">[ToonsHub] Sparks of Tomorrow S01E03 1080p NF WEB-DL DUAL AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka Evrika, Dual-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2134886.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:a434c0cde6ef127047cb38276573d0d0d6e4eadf&amp;dn=%5BToonsHub%5D%20Sparks%20of%20Tomorrow%20S01E03%201080p%20NF%20WEB-DL%20DUAL%20AAC2.0%20H.264%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%20Evrika%2C%20Dual-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">908.6 MiB</td>
+				<td class="text-center" data-timestamp="1784469770">2026-07-19 14:02</td>
+
+				<td class="text-center">442</td>
+				<td class="text-center">5</td>
+				<td class="text-center">4925</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2134884#comments" class="comments" title="1 comment">
+						<i class="fa fa-comments-o"></i>1</a>
+					<a href="/view/2134884" title="Sparks of Tomorrow S01E03 Their Dream 1080p NF WEB-DL MULTi AAC2.0 H 264-VARYG (Nijusseiki Denki Mokuroku: Eureka Evrika, Multi-Audio, Multi-Subs)">Sparks of Tomorrow S01E03 Their Dream 1080p NF WEB-DL MULTi AAC2.0 H 264-VARYG (Nijusseiki Denki Mokuroku: Eureka Evrika, Multi-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2134884.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:970a6f91cfa8136c1b779a4866f299cafac0d5d0&amp;dn=Sparks%20of%20Tomorrow%20S01E03%20Their%20Dream%201080p%20NF%20WEB-DL%20MULTi%20AAC2.0%20H%20264-VARYG%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%20Evrika%2C%20Multi-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">1.2 GiB</td>
+				<td class="text-center" data-timestamp="1784469747">2026-07-19 14:02</td>
+
+				<td class="text-center">197</td>
+				<td class="text-center">1</td>
+				<td class="text-center">1890</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2134486#comments" class="comments" title="2 comments">
+						<i class="fa fa-comments-o"></i>2</a>
+					<a href="/view/2134486" title="[CrappySubs] Sparks of Tomorrow - S01E02 (NF WEB 1080p H.264 AAC) [Dual Audio] [E00BEC70]">[CrappySubs] Sparks of Tomorrow - S01E02 (NF WEB 1080p H.264 AAC) [Dual Audio] [E00BEC70]</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2134486.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:aa673d9cb10ce25eecf8393e323b9f3bbca916cd&amp;dn=%5BCrappySubs%5D%20Sparks%20of%20Tomorrow%20-%20S01E02%20%28NF%20WEB%201080p%20H.264%20AAC%29%20%5BDual%20Audio%5D%20%5BE00BEC70%5D&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">913.1 MiB</td>
+				<td class="text-center" data-timestamp="1784401104">2026-07-18 18:58</td>
+
+				<td class="text-center">19</td>
+				<td class="text-center">0</td>
+				<td class="text-center">205</td>
+			</tr>
+			<tr class="danger">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2132637" title="[Trix] Sparks of Tomorrow S01E02 1080p NF WEB-DL AAC2.0 AV1 (Dual-Audio, Multi-Subs) (Nijusseiki Denki Mokuroku Eureka Evrika) (Weekly)">[Trix] Sparks of Tomorrow S01E02 1080p NF WEB-DL AAC2.0 AV1 (Dual-Audio, Multi-Subs) (Nijusseiki Denki Mokuroku Eureka Evrika) (Weekly)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2132637.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:b5288426babe101b3f03e9b862fba9dac3670aed&amp;dn=%5BTrix%5D%20Sparks%20of%20Tomorrow%20S01E02%201080p%20NF%20WEB-DL%20AAC2.0%20AV1%20%28Dual-Audio%2C%20Multi-Subs%29%20%28Nijusseiki%20Denki%20Mokuroku%20Eureka%20Evrika%29%20%28Weekly%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">252.5 MiB</td>
+				<td class="text-center" data-timestamp="1784061388">2026-07-14 20:36</td>
+
+				<td class="text-center">116</td>
+				<td class="text-center">1</td>
+				<td class="text-center">1918</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2132601" title="Sparks of Tomorrow S01E02 MULTi 1080p NF WEB-DL AAC2.0 x264-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)">Sparks of Tomorrow S01E02 MULTi 1080p NF WEB-DL AAC2.0 x264-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2132601.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:4733ac16f710961a736bd2432f69018e2989b77c&amp;dn=Sparks%20of%20Tomorrow%20S01E02%20MULTi%201080p%20NF%20WEB-DL%20AAC2.0%20x264-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijuuseiki%20Denki%20Mokuroku%2C%20Destellos%20del%20manana%2C%2020th%20Century%20Electricity%20Catalog%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">989.9 MiB</td>
+				<td class="text-center" data-timestamp="1784052235">2026-07-14 18:03</td>
+
+				<td class="text-center">58</td>
+				<td class="text-center">0</td>
+				<td class="text-center">596</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2132598" title="Sparks of Tomorrow S01E02 MULTi 1080p NF WEB-DL AAC2.0 H.265-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)">Sparks of Tomorrow S01E02 MULTi 1080p NF WEB-DL AAC2.0 H.265-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2132598.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:75327ca89ade862832ae09d569b276a4173e4e08&amp;dn=Sparks%20of%20Tomorrow%20S01E02%20MULTi%201080p%20NF%20WEB-DL%20AAC2.0%20H.265-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijuuseiki%20Denki%20Mokuroku%2C%20Destellos%20del%20manana%2C%2020th%20Century%20Electricity%20Catalog%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">638.5 MiB</td>
+				<td class="text-center" data-timestamp="1784052119">2026-07-14 18:01</td>
+
+				<td class="text-center">19</td>
+				<td class="text-center">0</td>
+				<td class="text-center">318</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2132596#comments" class="comments" title="1 comment">
+						<i class="fa fa-comments-o"></i>1</a>
+					<a href="/view/2132596" title="Sparks of Tomorrow S01E02 MULTi 1080p NF WEB-DL AAC2.0 AV1-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)">Sparks of Tomorrow S01E02 MULTi 1080p NF WEB-DL AAC2.0 AV1-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijuuseiki Denki Mokuroku, Destellos del manana, 20th Century Electricity Catalog)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2132596.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:f735f64023ae002005e06039d8237dfe08acd19f&amp;dn=Sparks%20of%20Tomorrow%20S01E02%20MULTi%201080p%20NF%20WEB-DL%20AAC2.0%20AV1-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijuuseiki%20Denki%20Mokuroku%2C%20Destellos%20del%20manana%2C%2020th%20Century%20Electricity%20Catalog%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">331.0 MiB</td>
+				<td class="text-center" data-timestamp="1784052004">2026-07-14 18:00</td>
+
+				<td class="text-center">42</td>
+				<td class="text-center">0</td>
+				<td class="text-center">424</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2131675" title="[ToonsHub] Sparks of Tomorrow S01E02 1080p NF WEB-DL MULTi AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka・Evrika, Multi-Audio, Multi-Subs)">[ToonsHub] Sparks of Tomorrow S01E02 1080p NF WEB-DL MULTi AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka・Evrika, Multi-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2131675.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:9f35826a3b8ae83f54adaa52a1fd3df67c1a409d&amp;dn=%5BToonsHub%5D%20Sparks%20of%20Tomorrow%20S01E02%201080p%20NF%20WEB-DL%20MULTi%20AAC2.0%20H.264%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%E3%83%BBEvrika%2C%20Multi-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">1.2 GiB</td>
+				<td class="text-center" data-timestamp="1783865352">2026-07-12 14:09</td>
+
+				<td class="text-center">76</td>
+				<td class="text-center">1</td>
+				<td class="text-center">1466</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2131671" title="Sparks of Tomorrow S01E02 The Mysteries of the Catalog 1080p NF WEB-DL DUAL AAC2.0 H 264-VARYG (Nijusseiki Denki Mokuroku: Eureka・Evrika, Dual-Audio, Multi-Subs)">Sparks of Tomorrow S01E02 The Mysteries of the Catalog 1080p NF WEB-DL DUAL AAC2.0 H 264-VARYG (Nijusseiki Denki Mokuroku: Eureka・Evrika, Dual-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2131671.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:658381fde907b47d9aad311dca051a8b411e40ba&amp;dn=Sparks%20of%20Tomorrow%20S01E02%20The%20Mysteries%20of%20the%20Catalog%201080p%20NF%20WEB-DL%20DUAL%20AAC2.0%20H%20264-VARYG%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%E3%83%BBEvrika%2C%20Dual-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">911.1 MiB</td>
+				<td class="text-center" data-timestamp="1783865020">2026-07-12 14:03</td>
+
+				<td class="text-center">118</td>
+				<td class="text-center">1</td>
+				<td class="text-center">2553</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2131670" title="[ToonsHub] Sparks of Tomorrow S01E02 1080p NF WEB-DL DUAL AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka・Evrika, Dual-Audio, Multi-Subs)">[ToonsHub] Sparks of Tomorrow S01E02 1080p NF WEB-DL DUAL AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka・Evrika, Dual-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2131670.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:8ba307a1e8c9437d21daafed9d367432292fe1ec&amp;dn=%5BToonsHub%5D%20Sparks%20of%20Tomorrow%20S01E02%201080p%20NF%20WEB-DL%20DUAL%20AAC2.0%20H.264%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%E3%83%BBEvrika%2C%20Dual-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">911.1 MiB</td>
+				<td class="text-center" data-timestamp="1783864965">2026-07-12 14:02</td>
+
+				<td class="text-center">437</td>
+				<td class="text-center">6</td>
+				<td class="text-center">5838</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2131669#comments" class="comments" title="1 comment">
+						<i class="fa fa-comments-o"></i>1</a>
+					<a href="/view/2131669" title="Sparks of Tomorrow S01E02 The Mysteries of the Catalog 1080p NF WEB-DL MULTi AAC2.0 H 264-VARYG (Nijusseiki Denki Mokuroku: Eureka・Evrika, Multi-Audio, Multi-Subs)">Sparks of Tomorrow S01E02 The Mysteries of the Catalog 1080p NF WEB-DL MULTi AAC2.0 H 264-VARYG (Nijusseiki Denki Mokuroku: Eureka・Evrika, Multi-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2131669.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:b5d3e7b0795188a2a32f7fed26153272550f6a86&amp;dn=Sparks%20of%20Tomorrow%20S01E02%20The%20Mysteries%20of%20the%20Catalog%201080p%20NF%20WEB-DL%20MULTi%20AAC2.0%20H%20264-VARYG%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%E3%83%BBEvrika%2C%20Multi-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">1.2 GiB</td>
+				<td class="text-center" data-timestamp="1783864934">2026-07-12 14:02</td>
+
+				<td class="text-center">153</td>
+				<td class="text-center">1</td>
+				<td class="text-center">1938</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2129590#comments" class="comments" title="2 comments">
+						<i class="fa fa-comments-o"></i>2</a>
+					<a href="/view/2129590" title="[CrappySubs] Sparks of Tomorrow - S01E01 (NF WEB 1080p H.264 AAC) [Dual Audio] [5A4FA7A3]">[CrappySubs] Sparks of Tomorrow - S01E01 (NF WEB 1080p H.264 AAC) [Dual Audio] [5A4FA7A3]</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2129590.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:bcbb91919fe08019b516fe6bc5e02ee88f9e1465&amp;dn=%5BCrappySubs%5D%20Sparks%20of%20Tomorrow%20-%20S01E01%20%28NF%20WEB%201080p%20H.264%20AAC%29%20%5BDual%20Audio%5D%20%5B5A4FA7A3%5D&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">916.3 MiB</td>
+				<td class="text-center" data-timestamp="1783457826">2026-07-07 20:57</td>
+
+				<td class="text-center">25</td>
+				<td class="text-center">0</td>
+				<td class="text-center">375</td>
+			</tr>
+			<tr class="danger">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2128885" title="[Trix] Sparks of Tomorrow S01E01 1080p NF WEB-DL AAC2.0 AV1 (Dual-Audio, Multi-Subs) (Nijusseiki Denki Mokuroku Eureka Evrika) (Weekly)">[Trix] Sparks of Tomorrow S01E01 1080p NF WEB-DL AAC2.0 AV1 (Dual-Audio, Multi-Subs) (Nijusseiki Denki Mokuroku Eureka Evrika) (Weekly)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2128885.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:985e7635d4f0486c59ea971e43a5658dab096856&amp;dn=%5BTrix%5D%20Sparks%20of%20Tomorrow%20S01E01%201080p%20NF%20WEB-DL%20AAC2.0%20AV1%20%28Dual-Audio%2C%20Multi-Subs%29%20%28Nijusseiki%20Denki%20Mokuroku%20Eureka%20Evrika%29%20%28Weekly%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">259.4 MiB</td>
+				<td class="text-center" data-timestamp="1783281064">2026-07-05 19:51</td>
+
+				<td class="text-center">170</td>
+				<td class="text-center">2</td>
+				<td class="text-center">3257</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2128733" title="Sparks of Tomorrow S01E01 MULTi 1080p NF WEB-DL AAC2.0 x264-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijusseiki Denki Mokuroku Eureka Evrika, 20th Century Electricity Catalog)">Sparks of Tomorrow S01E01 MULTi 1080p NF WEB-DL AAC2.0 x264-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijusseiki Denki Mokuroku Eureka Evrika, 20th Century Electricity Catalog)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2128733.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:4723ddafb664fcf2644e2e91943191641e9a3f17&amp;dn=Sparks%20of%20Tomorrow%20S01E01%20MULTi%201080p%20NF%20WEB-DL%20AAC2.0%20x264-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijusseiki%20Denki%20Mokuroku%20Eureka%20Evrika%2C%2020th%20Century%20Electricity%20Catalog%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">987.8 MiB</td>
+				<td class="text-center" data-timestamp="1783262908">2026-07-05 14:48</td>
+
+				<td class="text-center">86</td>
+				<td class="text-center">0</td>
+				<td class="text-center">1065</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2128732" title="Sparks of Tomorrow S01E01 MULTi 1080p NF WEB-DL AAC2.0 H.265-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijusseiki Denki Mokuroku Eureka Evrika, 20th Century Electricity Catalog)">Sparks of Tomorrow S01E01 MULTi 1080p NF WEB-DL AAC2.0 H.265-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijusseiki Denki Mokuroku Eureka Evrika, 20th Century Electricity Catalog)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2128732.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:3b488226e8089aac87257fc6751043c88cbc027e&amp;dn=Sparks%20of%20Tomorrow%20S01E01%20MULTi%201080p%20NF%20WEB-DL%20AAC2.0%20H.265-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijusseiki%20Denki%20Mokuroku%20Eureka%20Evrika%2C%2020th%20Century%20Electricity%20Catalog%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">595.3 MiB</td>
+				<td class="text-center" data-timestamp="1783262883">2026-07-05 14:48</td>
+
+				<td class="text-center">43</td>
+				<td class="text-center">0</td>
+				<td class="text-center">570</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_3" title="Anime - Non-English-translated">
+						<img src="/static/img/icons/nyaa/1_3.png" alt="Anime - Non-English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2128731#comments" class="comments" title="2 comments">
+						<i class="fa fa-comments-o"></i>2</a>
+					<a href="/view/2128731" title="Sparks of Tomorrow S01E01 MULTi 1080p NF WEB-DL AAC2.0 AV1-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijusseiki Denki Mokuroku Eureka Evrika, 20th Century Electricity Catalog)">Sparks of Tomorrow S01E01 MULTi 1080p NF WEB-DL AAC2.0 AV1-Tsundere-Raws (READNFO, VF, FRENCH, SUBFRENCH, VOSTFR, Nijusseiki Denki Mokuroku Eureka Evrika, 20th Century Electricity Catalog)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2128731.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:7144346807222f0d9b02247c4f3349adea17a931&amp;dn=Sparks%20of%20Tomorrow%20S01E01%20MULTi%201080p%20NF%20WEB-DL%20AAC2.0%20AV1-Tsundere-Raws%20%28READNFO%2C%20VF%2C%20FRENCH%2C%20SUBFRENCH%2C%20VOSTFR%2C%20Nijusseiki%20Denki%20Mokuroku%20Eureka%20Evrika%2C%2020th%20Century%20Electricity%20Catalog%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">335.7 MiB</td>
+				<td class="text-center" data-timestamp="1783262868">2026-07-05 14:47</td>
+
+				<td class="text-center">31</td>
+				<td class="text-center">0</td>
+				<td class="text-center">577</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2128729" title="Sparks of Tomorrow S01E01 The Electric Boy 1080p NF WEB-DL DUAL AAC2.0 H 264-VARYG (Nijusseiki Denki Mokuroku: Eureka・Evrika, Dual-Audio, Multi-Subs)">Sparks of Tomorrow S01E01 The Electric Boy 1080p NF WEB-DL DUAL AAC2.0 H 264-VARYG (Nijusseiki Denki Mokuroku: Eureka・Evrika, Dual-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2128729.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:8ce9f137d0e8070b32d90a9970741f80f8119b89&amp;dn=Sparks%20of%20Tomorrow%20S01E01%20The%20Electric%20Boy%201080p%20NF%20WEB-DL%20DUAL%20AAC2.0%20H%20264-VARYG%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%E3%83%BBEvrika%2C%20Dual-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">911.1 MiB</td>
+				<td class="text-center" data-timestamp="1783262113">2026-07-05 14:35</td>
+
+				<td class="text-center">135</td>
+				<td class="text-center">19</td>
+				<td class="text-center">3341</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2128728#comments" class="comments" title="1 comment">
+						<i class="fa fa-comments-o"></i>1</a>
+					<a href="/view/2128728" title="Sparks of Tomorrow S01E01 The Electric Boy 1080p NF WEB-DL MULTi AAC2.0 H 264-VARYG (Nijusseiki Denki Mokuroku: Eureka・Evrika, Multi-Audio, Multi-Subs)">Sparks of Tomorrow S01E01 The Electric Boy 1080p NF WEB-DL MULTi AAC2.0 H 264-VARYG (Nijusseiki Denki Mokuroku: Eureka・Evrika, Multi-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2128728.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:473973a5f8515028ab569a528213d51928857fa2&amp;dn=Sparks%20of%20Tomorrow%20S01E01%20The%20Electric%20Boy%201080p%20NF%20WEB-DL%20MULTi%20AAC2.0%20H%20264-VARYG%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%E3%83%BBEvrika%2C%20Multi-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">1.2 GiB</td>
+				<td class="text-center" data-timestamp="1783262035">2026-07-05 14:33</td>
+
+				<td class="text-center">114</td>
+				<td class="text-center">3</td>
+				<td class="text-center">1848</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2128723" title="[ToonsHub] Sparks of Tomorrow S01E01 1080p NF WEB-DL MULTi AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka・Evrika, Multi-Audio, Multi-Subs)">[ToonsHub] Sparks of Tomorrow S01E01 1080p NF WEB-DL MULTi AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka・Evrika, Multi-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2128723.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:c3572590ffe5777bd5d5b241df1a829f2e82ec50&amp;dn=%5BToonsHub%5D%20Sparks%20of%20Tomorrow%20S01E01%201080p%20NF%20WEB-DL%20MULTi%20AAC2.0%20H.264%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%E3%83%BBEvrika%2C%20Multi-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">1.2 GiB</td>
+				<td class="text-center" data-timestamp="1783260402">2026-07-05 14:06</td>
+
+				<td class="text-center">77</td>
+				<td class="text-center">0</td>
+				<td class="text-center">1616</td>
+			</tr>
+			<tr class="default">
+				<td>
+					<a href="/?c=1_2" title="Anime - English-translated">
+						<img src="/static/img/icons/nyaa/1_2.png" alt="Anime - English-translated" class="category-icon">
+					</a>
+				</td>
+				<td colspan="2">
+					<a href="/view/2128720#comments" class="comments" title="1 comment">
+						<i class="fa fa-comments-o"></i>1</a>
+					<a href="/view/2128720" title="[ToonsHub] Sparks of Tomorrow S01E01 1080p NF WEB-DL DUAL AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka・Evrika, Dual-Audio, Multi-Subs)">[ToonsHub] Sparks of Tomorrow S01E01 1080p NF WEB-DL DUAL AAC2.0 H.264 (Nijusseiki Denki Mokuroku: Eureka・Evrika, Dual-Audio, Multi-Subs)</a>
+				</td>
+				<td class="text-center">
+					<a href="/download/2128720.torrent"><i class="fa fa-fw fa-download"></i></a>
+					<a href="magnet:?xt=urn:btih:a604b98a0f184a957a74bfa04022ab1b8a304008&amp;dn=%5BToonsHub%5D%20Sparks%20of%20Tomorrow%20S01E01%201080p%20NF%20WEB-DL%20DUAL%20AAC2.0%20H.264%20%28Nijusseiki%20Denki%20Mokuroku%3A%20Eureka%E3%83%BBEvrika%2C%20Dual-Audio%2C%20Multi-Subs%29&amp;tr=http%3A%2F%2Fnyaa.tracker.wf%3A7777%2Fannounce&amp;tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&amp;tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&amp;tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce"><i class="fa fa-fw fa-magnet"></i></a>
+				</td>
+				<td class="text-center">911.1 MiB</td>
+				<td class="text-center" data-timestamp="1783260166">2026-07-05 14:02</td>
+
+				<td class="text-center">476</td>
+				<td class="text-center">4</td>
+				<td class="text-center">7377</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<div class="center">
+	<div class="pagination-page-info">Displaying results 1-45 out of 45 results.<br>
+Please refine your search results if you can't find what you were looking for.</div>
+	
+</div>
+		</div> <!-- /container -->
+
+		<footer style="text-align: center;">
+			<p>Dark Mode: <a href="#" id="themeToggle">Toggle</a></p>
+		</footer>
+	</body>
+</html>

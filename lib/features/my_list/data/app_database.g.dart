@@ -1835,6 +1835,71 @@ class $DownloadIntentsTable extends DownloadIntents
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _releaseGroupMeta = const VerificationMeta(
+    'releaseGroup',
+  );
+  @override
+  late final GeneratedColumn<String> releaseGroup = GeneratedColumn<String>(
+    'release_group',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _qualityMeta = const VerificationMeta(
+    'quality',
+  );
+  @override
+  late final GeneratedColumn<String> quality = GeneratedColumn<String>(
+    'quality',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _categoryMeta = const VerificationMeta(
+    'category',
+  );
+  @override
+  late final GeneratedColumn<String> category = GeneratedColumn<String>(
+    'category',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('1_2'),
+  );
+  static const VerificationMeta _seasonMeta = const VerificationMeta('season');
+  @override
+  late final GeneratedColumn<int> season = GeneratedColumn<int>(
+    'season',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _seriesTitleMeta = const VerificationMeta(
+    'seriesTitle',
+  );
+  @override
+  late final GeneratedColumn<String> seriesTitle = GeneratedColumn<String>(
+    'series_title',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _alternativeFirstSeenAtMeta =
+      const VerificationMeta('alternativeFirstSeenAt');
+  @override
+  late final GeneratedColumn<DateTime> alternativeFirstSeenAt =
+      GeneratedColumn<DateTime>(
+        'alternative_first_seen_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1868,6 +1933,12 @@ class $DownloadIntentsTable extends DownloadIntents
     destinationOverride,
     lastCheckedAt,
     errorMessage,
+    releaseGroup,
+    quality,
+    category,
+    season,
+    seriesTitle,
+    alternativeFirstSeenAt,
     createdAt,
     updatedAt,
   ];
@@ -1957,6 +2028,51 @@ class $DownloadIntentsTable extends DownloadIntents
         ),
       );
     }
+    if (data.containsKey('release_group')) {
+      context.handle(
+        _releaseGroupMeta,
+        releaseGroup.isAcceptableOrUnknown(
+          data['release_group']!,
+          _releaseGroupMeta,
+        ),
+      );
+    }
+    if (data.containsKey('quality')) {
+      context.handle(
+        _qualityMeta,
+        quality.isAcceptableOrUnknown(data['quality']!, _qualityMeta),
+      );
+    }
+    if (data.containsKey('category')) {
+      context.handle(
+        _categoryMeta,
+        category.isAcceptableOrUnknown(data['category']!, _categoryMeta),
+      );
+    }
+    if (data.containsKey('season')) {
+      context.handle(
+        _seasonMeta,
+        season.isAcceptableOrUnknown(data['season']!, _seasonMeta),
+      );
+    }
+    if (data.containsKey('series_title')) {
+      context.handle(
+        _seriesTitleMeta,
+        seriesTitle.isAcceptableOrUnknown(
+          data['series_title']!,
+          _seriesTitleMeta,
+        ),
+      );
+    }
+    if (data.containsKey('alternative_first_seen_at')) {
+      context.handle(
+        _alternativeFirstSeenAtMeta,
+        alternativeFirstSeenAt.isAcceptableOrUnknown(
+          data['alternative_first_seen_at']!,
+          _alternativeFirstSeenAtMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -2018,6 +2134,30 @@ class $DownloadIntentsTable extends DownloadIntents
         DriftSqlType.string,
         data['${effectivePrefix}error_message'],
       ),
+      releaseGroup: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}release_group'],
+      ),
+      quality: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}quality'],
+      ),
+      category: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}category'],
+      )!,
+      season: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}season'],
+      ),
+      seriesTitle: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}series_title'],
+      ),
+      alternativeFirstSeenAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}alternative_first_seen_at'],
+      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -2045,6 +2185,12 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
   final String? destinationOverride;
   final DateTime? lastCheckedAt;
   final String? errorMessage;
+  final String? releaseGroup;
+  final String? quality;
+  final String category;
+  final int? season;
+  final String? seriesTitle;
+  final DateTime? alternativeFirstSeenAt;
   final DateTime createdAt;
   final DateTime updatedAt;
   const DownloadIntent({
@@ -2057,6 +2203,12 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
     this.destinationOverride,
     this.lastCheckedAt,
     this.errorMessage,
+    this.releaseGroup,
+    this.quality,
+    required this.category,
+    this.season,
+    this.seriesTitle,
+    this.alternativeFirstSeenAt,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -2077,6 +2229,24 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
     }
     if (!nullToAbsent || errorMessage != null) {
       map['error_message'] = Variable<String>(errorMessage);
+    }
+    if (!nullToAbsent || releaseGroup != null) {
+      map['release_group'] = Variable<String>(releaseGroup);
+    }
+    if (!nullToAbsent || quality != null) {
+      map['quality'] = Variable<String>(quality);
+    }
+    map['category'] = Variable<String>(category);
+    if (!nullToAbsent || season != null) {
+      map['season'] = Variable<int>(season);
+    }
+    if (!nullToAbsent || seriesTitle != null) {
+      map['series_title'] = Variable<String>(seriesTitle);
+    }
+    if (!nullToAbsent || alternativeFirstSeenAt != null) {
+      map['alternative_first_seen_at'] = Variable<DateTime>(
+        alternativeFirstSeenAt,
+      );
     }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
@@ -2100,6 +2270,22 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
       errorMessage: errorMessage == null && nullToAbsent
           ? const Value.absent()
           : Value(errorMessage),
+      releaseGroup: releaseGroup == null && nullToAbsent
+          ? const Value.absent()
+          : Value(releaseGroup),
+      quality: quality == null && nullToAbsent
+          ? const Value.absent()
+          : Value(quality),
+      category: Value(category),
+      season: season == null && nullToAbsent
+          ? const Value.absent()
+          : Value(season),
+      seriesTitle: seriesTitle == null && nullToAbsent
+          ? const Value.absent()
+          : Value(seriesTitle),
+      alternativeFirstSeenAt: alternativeFirstSeenAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(alternativeFirstSeenAt),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -2126,6 +2312,14 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
       ),
       lastCheckedAt: serializer.fromJson<DateTime?>(json['lastCheckedAt']),
       errorMessage: serializer.fromJson<String?>(json['errorMessage']),
+      releaseGroup: serializer.fromJson<String?>(json['releaseGroup']),
+      quality: serializer.fromJson<String?>(json['quality']),
+      category: serializer.fromJson<String>(json['category']),
+      season: serializer.fromJson<int?>(json['season']),
+      seriesTitle: serializer.fromJson<String?>(json['seriesTitle']),
+      alternativeFirstSeenAt: serializer.fromJson<DateTime?>(
+        json['alternativeFirstSeenAt'],
+      ),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -2143,6 +2337,14 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
       'destinationOverride': serializer.toJson<String?>(destinationOverride),
       'lastCheckedAt': serializer.toJson<DateTime?>(lastCheckedAt),
       'errorMessage': serializer.toJson<String?>(errorMessage),
+      'releaseGroup': serializer.toJson<String?>(releaseGroup),
+      'quality': serializer.toJson<String?>(quality),
+      'category': serializer.toJson<String>(category),
+      'season': serializer.toJson<int?>(season),
+      'seriesTitle': serializer.toJson<String?>(seriesTitle),
+      'alternativeFirstSeenAt': serializer.toJson<DateTime?>(
+        alternativeFirstSeenAt,
+      ),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -2158,6 +2360,12 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
     Value<String?> destinationOverride = const Value.absent(),
     Value<DateTime?> lastCheckedAt = const Value.absent(),
     Value<String?> errorMessage = const Value.absent(),
+    Value<String?> releaseGroup = const Value.absent(),
+    Value<String?> quality = const Value.absent(),
+    String? category,
+    Value<int?> season = const Value.absent(),
+    Value<String?> seriesTitle = const Value.absent(),
+    Value<DateTime?> alternativeFirstSeenAt = const Value.absent(),
     DateTime? createdAt,
     DateTime? updatedAt,
   }) => DownloadIntent(
@@ -2174,6 +2382,14 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
         ? lastCheckedAt.value
         : this.lastCheckedAt,
     errorMessage: errorMessage.present ? errorMessage.value : this.errorMessage,
+    releaseGroup: releaseGroup.present ? releaseGroup.value : this.releaseGroup,
+    quality: quality.present ? quality.value : this.quality,
+    category: category ?? this.category,
+    season: season.present ? season.value : this.season,
+    seriesTitle: seriesTitle.present ? seriesTitle.value : this.seriesTitle,
+    alternativeFirstSeenAt: alternativeFirstSeenAt.present
+        ? alternativeFirstSeenAt.value
+        : this.alternativeFirstSeenAt,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -2200,6 +2416,18 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
       errorMessage: data.errorMessage.present
           ? data.errorMessage.value
           : this.errorMessage,
+      releaseGroup: data.releaseGroup.present
+          ? data.releaseGroup.value
+          : this.releaseGroup,
+      quality: data.quality.present ? data.quality.value : this.quality,
+      category: data.category.present ? data.category.value : this.category,
+      season: data.season.present ? data.season.value : this.season,
+      seriesTitle: data.seriesTitle.present
+          ? data.seriesTitle.value
+          : this.seriesTitle,
+      alternativeFirstSeenAt: data.alternativeFirstSeenAt.present
+          ? data.alternativeFirstSeenAt.value
+          : this.alternativeFirstSeenAt,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -2217,6 +2445,12 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
           ..write('destinationOverride: $destinationOverride, ')
           ..write('lastCheckedAt: $lastCheckedAt, ')
           ..write('errorMessage: $errorMessage, ')
+          ..write('releaseGroup: $releaseGroup, ')
+          ..write('quality: $quality, ')
+          ..write('category: $category, ')
+          ..write('season: $season, ')
+          ..write('seriesTitle: $seriesTitle, ')
+          ..write('alternativeFirstSeenAt: $alternativeFirstSeenAt, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -2234,6 +2468,12 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
     destinationOverride,
     lastCheckedAt,
     errorMessage,
+    releaseGroup,
+    quality,
+    category,
+    season,
+    seriesTitle,
+    alternativeFirstSeenAt,
     createdAt,
     updatedAt,
   );
@@ -2250,6 +2490,12 @@ class DownloadIntent extends DataClass implements Insertable<DownloadIntent> {
           other.destinationOverride == this.destinationOverride &&
           other.lastCheckedAt == this.lastCheckedAt &&
           other.errorMessage == this.errorMessage &&
+          other.releaseGroup == this.releaseGroup &&
+          other.quality == this.quality &&
+          other.category == this.category &&
+          other.season == this.season &&
+          other.seriesTitle == this.seriesTitle &&
+          other.alternativeFirstSeenAt == this.alternativeFirstSeenAt &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -2264,6 +2510,12 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
   final Value<String?> destinationOverride;
   final Value<DateTime?> lastCheckedAt;
   final Value<String?> errorMessage;
+  final Value<String?> releaseGroup;
+  final Value<String?> quality;
+  final Value<String> category;
+  final Value<int?> season;
+  final Value<String?> seriesTitle;
+  final Value<DateTime?> alternativeFirstSeenAt;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   const DownloadIntentsCompanion({
@@ -2276,6 +2528,12 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
     this.destinationOverride = const Value.absent(),
     this.lastCheckedAt = const Value.absent(),
     this.errorMessage = const Value.absent(),
+    this.releaseGroup = const Value.absent(),
+    this.quality = const Value.absent(),
+    this.category = const Value.absent(),
+    this.season = const Value.absent(),
+    this.seriesTitle = const Value.absent(),
+    this.alternativeFirstSeenAt = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
@@ -2289,6 +2547,12 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
     this.destinationOverride = const Value.absent(),
     this.lastCheckedAt = const Value.absent(),
     this.errorMessage = const Value.absent(),
+    this.releaseGroup = const Value.absent(),
+    this.quality = const Value.absent(),
+    this.category = const Value.absent(),
+    this.season = const Value.absent(),
+    this.seriesTitle = const Value.absent(),
+    this.alternativeFirstSeenAt = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
   }) : state = Value(state),
@@ -2304,6 +2568,12 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
     Expression<String>? destinationOverride,
     Expression<DateTime>? lastCheckedAt,
     Expression<String>? errorMessage,
+    Expression<String>? releaseGroup,
+    Expression<String>? quality,
+    Expression<String>? category,
+    Expression<int>? season,
+    Expression<String>? seriesTitle,
+    Expression<DateTime>? alternativeFirstSeenAt,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -2321,6 +2591,13 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
         'destination_override': destinationOverride,
       if (lastCheckedAt != null) 'last_checked_at': lastCheckedAt,
       if (errorMessage != null) 'error_message': errorMessage,
+      if (releaseGroup != null) 'release_group': releaseGroup,
+      if (quality != null) 'quality': quality,
+      if (category != null) 'category': category,
+      if (season != null) 'season': season,
+      if (seriesTitle != null) 'series_title': seriesTitle,
+      if (alternativeFirstSeenAt != null)
+        'alternative_first_seen_at': alternativeFirstSeenAt,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -2336,6 +2613,12 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
     Value<String?>? destinationOverride,
     Value<DateTime?>? lastCheckedAt,
     Value<String?>? errorMessage,
+    Value<String?>? releaseGroup,
+    Value<String?>? quality,
+    Value<String>? category,
+    Value<int?>? season,
+    Value<String?>? seriesTitle,
+    Value<DateTime?>? alternativeFirstSeenAt,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
   }) {
@@ -2349,6 +2632,13 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
       destinationOverride: destinationOverride ?? this.destinationOverride,
       lastCheckedAt: lastCheckedAt ?? this.lastCheckedAt,
       errorMessage: errorMessage ?? this.errorMessage,
+      releaseGroup: releaseGroup ?? this.releaseGroup,
+      quality: quality ?? this.quality,
+      category: category ?? this.category,
+      season: season ?? this.season,
+      seriesTitle: seriesTitle ?? this.seriesTitle,
+      alternativeFirstSeenAt:
+          alternativeFirstSeenAt ?? this.alternativeFirstSeenAt,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -2388,6 +2678,26 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
     if (errorMessage.present) {
       map['error_message'] = Variable<String>(errorMessage.value);
     }
+    if (releaseGroup.present) {
+      map['release_group'] = Variable<String>(releaseGroup.value);
+    }
+    if (quality.present) {
+      map['quality'] = Variable<String>(quality.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(category.value);
+    }
+    if (season.present) {
+      map['season'] = Variable<int>(season.value);
+    }
+    if (seriesTitle.present) {
+      map['series_title'] = Variable<String>(seriesTitle.value);
+    }
+    if (alternativeFirstSeenAt.present) {
+      map['alternative_first_seen_at'] = Variable<DateTime>(
+        alternativeFirstSeenAt.value,
+      );
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -2409,6 +2719,12 @@ class DownloadIntentsCompanion extends UpdateCompanion<DownloadIntent> {
           ..write('destinationOverride: $destinationOverride, ')
           ..write('lastCheckedAt: $lastCheckedAt, ')
           ..write('errorMessage: $errorMessage, ')
+          ..write('releaseGroup: $releaseGroup, ')
+          ..write('quality: $quality, ')
+          ..write('category: $category, ')
+          ..write('season: $season, ')
+          ..write('seriesTitle: $seriesTitle, ')
+          ..write('alternativeFirstSeenAt: $alternativeFirstSeenAt, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -3137,6 +3453,413 @@ class DownloadJobsCompanion extends UpdateCompanion<DownloadJob> {
   }
 }
 
+class $DownloadAlertsTable extends DownloadAlerts
+    with TableInfo<$DownloadAlertsTable, DownloadAlert> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DownloadAlertsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _animeIdMeta = const VerificationMeta(
+    'animeId',
+  );
+  @override
+  late final GeneratedColumn<int> animeId = GeneratedColumn<int>(
+    'anime_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES download_intents (anime_id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _episodeMeta = const VerificationMeta(
+    'episode',
+  );
+  @override
+  late final GeneratedColumn<int> episode = GeneratedColumn<int>(
+    'episode',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _messageMeta = const VerificationMeta(
+    'message',
+  );
+  @override
+  late final GeneratedColumn<String> message = GeneratedColumn<String>(
+    'message',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _resolvedAtMeta = const VerificationMeta(
+    'resolvedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> resolvedAt = GeneratedColumn<DateTime>(
+    'resolved_at',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    animeId,
+    episode,
+    message,
+    createdAt,
+    resolvedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'download_alerts';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<DownloadAlert> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('anime_id')) {
+      context.handle(
+        _animeIdMeta,
+        animeId.isAcceptableOrUnknown(data['anime_id']!, _animeIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_animeIdMeta);
+    }
+    if (data.containsKey('episode')) {
+      context.handle(
+        _episodeMeta,
+        episode.isAcceptableOrUnknown(data['episode']!, _episodeMeta),
+      );
+    }
+    if (data.containsKey('message')) {
+      context.handle(
+        _messageMeta,
+        message.isAcceptableOrUnknown(data['message']!, _messageMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_messageMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('resolved_at')) {
+      context.handle(
+        _resolvedAtMeta,
+        resolvedAt.isAcceptableOrUnknown(data['resolved_at']!, _resolvedAtMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DownloadAlert map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DownloadAlert(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      animeId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}anime_id'],
+      )!,
+      episode: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}episode'],
+      ),
+      message: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}message'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      resolvedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}resolved_at'],
+      ),
+    );
+  }
+
+  @override
+  $DownloadAlertsTable createAlias(String alias) {
+    return $DownloadAlertsTable(attachedDatabase, alias);
+  }
+}
+
+class DownloadAlert extends DataClass implements Insertable<DownloadAlert> {
+  final int id;
+  final int animeId;
+  final int? episode;
+  final String message;
+  final DateTime createdAt;
+  final DateTime? resolvedAt;
+  const DownloadAlert({
+    required this.id,
+    required this.animeId,
+    this.episode,
+    required this.message,
+    required this.createdAt,
+    this.resolvedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['anime_id'] = Variable<int>(animeId);
+    if (!nullToAbsent || episode != null) {
+      map['episode'] = Variable<int>(episode);
+    }
+    map['message'] = Variable<String>(message);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    if (!nullToAbsent || resolvedAt != null) {
+      map['resolved_at'] = Variable<DateTime>(resolvedAt);
+    }
+    return map;
+  }
+
+  DownloadAlertsCompanion toCompanion(bool nullToAbsent) {
+    return DownloadAlertsCompanion(
+      id: Value(id),
+      animeId: Value(animeId),
+      episode: episode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(episode),
+      message: Value(message),
+      createdAt: Value(createdAt),
+      resolvedAt: resolvedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(resolvedAt),
+    );
+  }
+
+  factory DownloadAlert.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return DownloadAlert(
+      id: serializer.fromJson<int>(json['id']),
+      animeId: serializer.fromJson<int>(json['animeId']),
+      episode: serializer.fromJson<int?>(json['episode']),
+      message: serializer.fromJson<String>(json['message']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      resolvedAt: serializer.fromJson<DateTime?>(json['resolvedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'animeId': serializer.toJson<int>(animeId),
+      'episode': serializer.toJson<int?>(episode),
+      'message': serializer.toJson<String>(message),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'resolvedAt': serializer.toJson<DateTime?>(resolvedAt),
+    };
+  }
+
+  DownloadAlert copyWith({
+    int? id,
+    int? animeId,
+    Value<int?> episode = const Value.absent(),
+    String? message,
+    DateTime? createdAt,
+    Value<DateTime?> resolvedAt = const Value.absent(),
+  }) => DownloadAlert(
+    id: id ?? this.id,
+    animeId: animeId ?? this.animeId,
+    episode: episode.present ? episode.value : this.episode,
+    message: message ?? this.message,
+    createdAt: createdAt ?? this.createdAt,
+    resolvedAt: resolvedAt.present ? resolvedAt.value : this.resolvedAt,
+  );
+  DownloadAlert copyWithCompanion(DownloadAlertsCompanion data) {
+    return DownloadAlert(
+      id: data.id.present ? data.id.value : this.id,
+      animeId: data.animeId.present ? data.animeId.value : this.animeId,
+      episode: data.episode.present ? data.episode.value : this.episode,
+      message: data.message.present ? data.message.value : this.message,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      resolvedAt: data.resolvedAt.present
+          ? data.resolvedAt.value
+          : this.resolvedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DownloadAlert(')
+          ..write('id: $id, ')
+          ..write('animeId: $animeId, ')
+          ..write('episode: $episode, ')
+          ..write('message: $message, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('resolvedAt: $resolvedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, animeId, episode, message, createdAt, resolvedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is DownloadAlert &&
+          other.id == this.id &&
+          other.animeId == this.animeId &&
+          other.episode == this.episode &&
+          other.message == this.message &&
+          other.createdAt == this.createdAt &&
+          other.resolvedAt == this.resolvedAt);
+}
+
+class DownloadAlertsCompanion extends UpdateCompanion<DownloadAlert> {
+  final Value<int> id;
+  final Value<int> animeId;
+  final Value<int?> episode;
+  final Value<String> message;
+  final Value<DateTime> createdAt;
+  final Value<DateTime?> resolvedAt;
+  const DownloadAlertsCompanion({
+    this.id = const Value.absent(),
+    this.animeId = const Value.absent(),
+    this.episode = const Value.absent(),
+    this.message = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.resolvedAt = const Value.absent(),
+  });
+  DownloadAlertsCompanion.insert({
+    this.id = const Value.absent(),
+    required int animeId,
+    this.episode = const Value.absent(),
+    required String message,
+    required DateTime createdAt,
+    this.resolvedAt = const Value.absent(),
+  }) : animeId = Value(animeId),
+       message = Value(message),
+       createdAt = Value(createdAt);
+  static Insertable<DownloadAlert> custom({
+    Expression<int>? id,
+    Expression<int>? animeId,
+    Expression<int>? episode,
+    Expression<String>? message,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? resolvedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (animeId != null) 'anime_id': animeId,
+      if (episode != null) 'episode': episode,
+      if (message != null) 'message': message,
+      if (createdAt != null) 'created_at': createdAt,
+      if (resolvedAt != null) 'resolved_at': resolvedAt,
+    });
+  }
+
+  DownloadAlertsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? animeId,
+    Value<int?>? episode,
+    Value<String>? message,
+    Value<DateTime>? createdAt,
+    Value<DateTime?>? resolvedAt,
+  }) {
+    return DownloadAlertsCompanion(
+      id: id ?? this.id,
+      animeId: animeId ?? this.animeId,
+      episode: episode ?? this.episode,
+      message: message ?? this.message,
+      createdAt: createdAt ?? this.createdAt,
+      resolvedAt: resolvedAt ?? this.resolvedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (animeId.present) {
+      map['anime_id'] = Variable<int>(animeId.value);
+    }
+    if (episode.present) {
+      map['episode'] = Variable<int>(episode.value);
+    }
+    if (message.present) {
+      map['message'] = Variable<String>(message.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (resolvedAt.present) {
+      map['resolved_at'] = Variable<DateTime>(resolvedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('DownloadAlertsCompanion(')
+          ..write('id: $id, ')
+          ..write('animeId: $animeId, ')
+          ..write('episode: $episode, ')
+          ..write('message: $message, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('resolvedAt: $resolvedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $AppSettingsTable extends AppSettings
     with TableInfo<$AppSettingsTable, AppSetting> {
   @override
@@ -3360,6 +4083,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     this,
   );
   late final $DownloadJobsTable downloadJobs = $DownloadJobsTable(this);
+  late final $DownloadAlertsTable downloadAlerts = $DownloadAlertsTable(this);
   late final $AppSettingsTable appSettings = $AppSettingsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
@@ -3372,6 +4096,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     customListItems,
     downloadIntents,
     downloadJobs,
+    downloadAlerts,
     appSettings,
   ];
   @override
@@ -3410,6 +4135,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('download_jobs', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'download_intents',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('download_alerts', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -5100,6 +5832,12 @@ typedef $$DownloadIntentsTableCreateCompanionBuilder =
       Value<String?> destinationOverride,
       Value<DateTime?> lastCheckedAt,
       Value<String?> errorMessage,
+      Value<String?> releaseGroup,
+      Value<String?> quality,
+      Value<String> category,
+      Value<int?> season,
+      Value<String?> seriesTitle,
+      Value<DateTime?> alternativeFirstSeenAt,
       required DateTime createdAt,
       required DateTime updatedAt,
     });
@@ -5114,6 +5852,12 @@ typedef $$DownloadIntentsTableUpdateCompanionBuilder =
       Value<String?> destinationOverride,
       Value<DateTime?> lastCheckedAt,
       Value<String?> errorMessage,
+      Value<String?> releaseGroup,
+      Value<String?> quality,
+      Value<String> category,
+      Value<int?> season,
+      Value<String?> seriesTitle,
+      Value<DateTime?> alternativeFirstSeenAt,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
     });
@@ -5193,6 +5937,36 @@ class $$DownloadIntentsTableFilterComposer
 
   ColumnFilters<String> get errorMessage => $composableBuilder(
     column: $table.errorMessage,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get releaseGroup => $composableBuilder(
+    column: $table.releaseGroup,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get quality => $composableBuilder(
+    column: $table.quality,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get season => $composableBuilder(
+    column: $table.season,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get seriesTitle => $composableBuilder(
+    column: $table.seriesTitle,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get alternativeFirstSeenAt => $composableBuilder(
+    column: $table.alternativeFirstSeenAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5279,6 +6053,36 @@ class $$DownloadIntentsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get releaseGroup => $composableBuilder(
+    column: $table.releaseGroup,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get quality => $composableBuilder(
+    column: $table.quality,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get season => $composableBuilder(
+    column: $table.season,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get seriesTitle => $composableBuilder(
+    column: $table.seriesTitle,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get alternativeFirstSeenAt => $composableBuilder(
+    column: $table.alternativeFirstSeenAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -5358,6 +6162,30 @@ class $$DownloadIntentsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<String> get releaseGroup => $composableBuilder(
+    column: $table.releaseGroup,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get quality =>
+      $composableBuilder(column: $table.quality, builder: (column) => column);
+
+  GeneratedColumn<String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
+
+  GeneratedColumn<int> get season =>
+      $composableBuilder(column: $table.season, builder: (column) => column);
+
+  GeneratedColumn<String> get seriesTitle => $composableBuilder(
+    column: $table.seriesTitle,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get alternativeFirstSeenAt => $composableBuilder(
+    column: $table.alternativeFirstSeenAt,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -5427,6 +6255,12 @@ class $$DownloadIntentsTableTableManager
                 Value<String?> destinationOverride = const Value.absent(),
                 Value<DateTime?> lastCheckedAt = const Value.absent(),
                 Value<String?> errorMessage = const Value.absent(),
+                Value<String?> releaseGroup = const Value.absent(),
+                Value<String?> quality = const Value.absent(),
+                Value<String> category = const Value.absent(),
+                Value<int?> season = const Value.absent(),
+                Value<String?> seriesTitle = const Value.absent(),
+                Value<DateTime?> alternativeFirstSeenAt = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
               }) => DownloadIntentsCompanion(
@@ -5439,6 +6273,12 @@ class $$DownloadIntentsTableTableManager
                 destinationOverride: destinationOverride,
                 lastCheckedAt: lastCheckedAt,
                 errorMessage: errorMessage,
+                releaseGroup: releaseGroup,
+                quality: quality,
+                category: category,
+                season: season,
+                seriesTitle: seriesTitle,
+                alternativeFirstSeenAt: alternativeFirstSeenAt,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
@@ -5453,6 +6293,12 @@ class $$DownloadIntentsTableTableManager
                 Value<String?> destinationOverride = const Value.absent(),
                 Value<DateTime?> lastCheckedAt = const Value.absent(),
                 Value<String?> errorMessage = const Value.absent(),
+                Value<String?> releaseGroup = const Value.absent(),
+                Value<String?> quality = const Value.absent(),
+                Value<String> category = const Value.absent(),
+                Value<int?> season = const Value.absent(),
+                Value<String?> seriesTitle = const Value.absent(),
+                Value<DateTime?> alternativeFirstSeenAt = const Value.absent(),
                 required DateTime createdAt,
                 required DateTime updatedAt,
               }) => DownloadIntentsCompanion.insert(
@@ -5465,6 +6311,12 @@ class $$DownloadIntentsTableTableManager
                 destinationOverride: destinationOverride,
                 lastCheckedAt: lastCheckedAt,
                 errorMessage: errorMessage,
+                releaseGroup: releaseGroup,
+                quality: quality,
+                category: category,
+                season: season,
+                seriesTitle: seriesTitle,
+                alternativeFirstSeenAt: alternativeFirstSeenAt,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
@@ -5861,6 +6713,210 @@ typedef $$DownloadJobsTableProcessedTableManager =
       DownloadJob,
       PrefetchHooks Function()
     >;
+typedef $$DownloadAlertsTableCreateCompanionBuilder =
+    DownloadAlertsCompanion Function({
+      Value<int> id,
+      required int animeId,
+      Value<int?> episode,
+      required String message,
+      required DateTime createdAt,
+      Value<DateTime?> resolvedAt,
+    });
+typedef $$DownloadAlertsTableUpdateCompanionBuilder =
+    DownloadAlertsCompanion Function({
+      Value<int> id,
+      Value<int> animeId,
+      Value<int?> episode,
+      Value<String> message,
+      Value<DateTime> createdAt,
+      Value<DateTime?> resolvedAt,
+    });
+
+class $$DownloadAlertsTableFilterComposer
+    extends Composer<_$AppDatabase, $DownloadAlertsTable> {
+  $$DownloadAlertsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get episode => $composableBuilder(
+    column: $table.episode,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get message => $composableBuilder(
+    column: $table.message,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get resolvedAt => $composableBuilder(
+    column: $table.resolvedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$DownloadAlertsTableOrderingComposer
+    extends Composer<_$AppDatabase, $DownloadAlertsTable> {
+  $$DownloadAlertsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get episode => $composableBuilder(
+    column: $table.episode,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get message => $composableBuilder(
+    column: $table.message,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get resolvedAt => $composableBuilder(
+    column: $table.resolvedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$DownloadAlertsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $DownloadAlertsTable> {
+  $$DownloadAlertsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get episode =>
+      $composableBuilder(column: $table.episode, builder: (column) => column);
+
+  GeneratedColumn<String> get message =>
+      $composableBuilder(column: $table.message, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get resolvedAt => $composableBuilder(
+    column: $table.resolvedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$DownloadAlertsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $DownloadAlertsTable,
+          DownloadAlert,
+          $$DownloadAlertsTableFilterComposer,
+          $$DownloadAlertsTableOrderingComposer,
+          $$DownloadAlertsTableAnnotationComposer,
+          $$DownloadAlertsTableCreateCompanionBuilder,
+          $$DownloadAlertsTableUpdateCompanionBuilder,
+          (
+            DownloadAlert,
+            BaseReferences<_$AppDatabase, $DownloadAlertsTable, DownloadAlert>,
+          ),
+          DownloadAlert,
+          PrefetchHooks Function()
+        > {
+  $$DownloadAlertsTableTableManager(
+    _$AppDatabase db,
+    $DownloadAlertsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$DownloadAlertsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$DownloadAlertsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$DownloadAlertsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> animeId = const Value.absent(),
+                Value<int?> episode = const Value.absent(),
+                Value<String> message = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime?> resolvedAt = const Value.absent(),
+              }) => DownloadAlertsCompanion(
+                id: id,
+                animeId: animeId,
+                episode: episode,
+                message: message,
+                createdAt: createdAt,
+                resolvedAt: resolvedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int animeId,
+                Value<int?> episode = const Value.absent(),
+                required String message,
+                required DateTime createdAt,
+                Value<DateTime?> resolvedAt = const Value.absent(),
+              }) => DownloadAlertsCompanion.insert(
+                id: id,
+                animeId: animeId,
+                episode: episode,
+                message: message,
+                createdAt: createdAt,
+                resolvedAt: resolvedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$DownloadAlertsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $DownloadAlertsTable,
+      DownloadAlert,
+      $$DownloadAlertsTableFilterComposer,
+      $$DownloadAlertsTableOrderingComposer,
+      $$DownloadAlertsTableAnnotationComposer,
+      $$DownloadAlertsTableCreateCompanionBuilder,
+      $$DownloadAlertsTableUpdateCompanionBuilder,
+      (
+        DownloadAlert,
+        BaseReferences<_$AppDatabase, $DownloadAlertsTable, DownloadAlert>,
+      ),
+      DownloadAlert,
+      PrefetchHooks Function()
+    >;
 typedef $$AppSettingsTableCreateCompanionBuilder =
     AppSettingsCompanion Function({
       required String key,
@@ -6016,6 +7072,8 @@ class $AppDatabaseManager {
       $$DownloadIntentsTableTableManager(_db, _db.downloadIntents);
   $$DownloadJobsTableTableManager get downloadJobs =>
       $$DownloadJobsTableTableManager(_db, _db.downloadJobs);
+  $$DownloadAlertsTableTableManager get downloadAlerts =>
+      $$DownloadAlertsTableTableManager(_db, _db.downloadAlerts);
   $$AppSettingsTableTableManager get appSettings =>
       $$AppSettingsTableTableManager(_db, _db.appSettings);
 }

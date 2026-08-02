@@ -1,11 +1,16 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/router.dart';
+import '../../features/downloads/domain/providers/download_providers.dart';
+import '../../features/downloads/presentation/torrent_chooser_dialog.dart';
+import '../../features/my_list/domain/models/user_anime.dart';
+import '../../features/my_list/domain/providers/my_list_providers.dart';
 import '../services/navigation_history.dart';
 
-class AppShell extends StatelessWidget {
+class AppShell extends ConsumerWidget {
   const AppShell({
     required this.location,
     required this.navigationHistory,
@@ -18,7 +23,7 @@ class AppShell extends StatelessWidget {
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Listener(
       behavior: HitTestBehavior.translucent,
       onPointerDown: (event) => _handlePointerDown(context, event),
@@ -43,6 +48,7 @@ class AppShell extends StatelessWidget {
 
           return Scaffold(
             body: child,
+            floatingActionButton: const _DownloadNotificationsButton(),
             bottomNavigationBar: _BottomNavigation(
               selectedRoute: selectedRoute,
               navigationHistory: navigationHistory,
@@ -122,12 +128,120 @@ class _SidebarNavigation extends StatelessWidget {
                     ],
                   ),
                 ),
+                const Divider(),
+                const _DownloadNotificationsButton(),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class _DownloadNotificationsButton extends ConsumerWidget {
+  const _DownloadNotificationsButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final alerts = ref.watch(downloadAlertsProvider).value ?? const [];
+    return Badge(
+      isLabelVisible: alerts.isNotEmpty,
+      label: Text('${alerts.length}'),
+      child: IconButton(
+        tooltip: 'Download notifications',
+        onPressed: () => _showNotifications(context, ref, alerts),
+        icon: const Icon(Icons.notifications_outlined),
+      ),
+    );
+  }
+
+  Future<void> _showNotifications(
+    BuildContext context,
+    WidgetRef ref,
+    List<DownloadAlert> alerts,
+  ) async {
+    if (alerts.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No download notifications.')),
+      );
+      return;
+    }
+    final selected = await showDialog<DownloadAlert>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Download notifications'),
+        content: SizedBox(
+          width: 560,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: alerts.length,
+            itemBuilder: (context, index) {
+              final alert = alerts[index];
+              return ListTile(
+                leading: const Icon(Icons.warning_amber_rounded),
+                title: Text(alert.message),
+                subtitle: Text(alert.createdAt.toLocal().toString()),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.pop(context, alert),
+              );
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+    if (selected == null || !context.mounted) return;
+    final library = await ref.read(libraryProvider.future);
+    final item = library
+        .where((entry) => entry.anime.id == selected.animeId)
+        .firstOrNull;
+    if (item == null || item.download == null || !context.mounted) return;
+    final choice = await showDialog<TorrentChoice>(
+      context: context,
+      builder: (context) => TorrentChooserDialog(
+        anime: item.anime.toAppAnime(),
+        episode: selected.episode,
+        initialPublisher: item.download?.releaseGroup,
+        initialQuality: item.download?.quality,
+      ),
+    );
+    if (choice == null) return;
+    final intent = item.download!;
+    await ref
+        .read(myListControllerProvider)
+        .saveDownloadIntent(
+          anime: item.anime.toAppAnime(),
+          selectedEpisodes: intent.selectedEpisodes,
+          allAvailableEpisodes: intent.allAvailableEpisodes,
+          autoDownloadFuture: intent.autoDownloadFuture,
+          releaseGroup: choice.publisher,
+          quality: choice.quality,
+          category: choice.category.code,
+          season: choice.season,
+          seriesTitle: choice.seriesTitle,
+        );
+    await ref.read(myListControllerProvider).resolveDownloadAlert(selected.id);
+    await ref
+        .read(downloadCoordinatorProvider)
+        .queueSelected(
+          selected.animeId,
+          choice.toCandidate(),
+          requestedEpisode: selected.episode,
+        );
+    ref.read(downloadCoordinatorProvider).checkNow();
+  }
+}
+
+extension<T> on Iterable<T> {
+  T? get firstOrNull {
+    final iterator = this.iterator;
+    return iterator.moveNext() ? iterator.current : null;
   }
 }
 

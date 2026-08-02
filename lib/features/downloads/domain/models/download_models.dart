@@ -25,10 +25,15 @@ final class DownloadSettings {
 }
 
 final class TorrentSearchRequest {
-  const TorrentSearchRequest({required this.anime, required this.intent});
+  const TorrentSearchRequest({
+    required this.anime,
+    required this.intent,
+    this.episode,
+  });
 
   final SavedAnime anime;
   final DownloadIntent intent;
+  final int? episode;
 }
 
 final class TorrentCandidate {
@@ -41,6 +46,11 @@ final class TorrentCandidate {
     this.infoHash,
     this.quality,
     this.releaseGroup,
+    this.torrentUri,
+    this.uploadedAt,
+    this.seeders = 0,
+    this.leechers = 0,
+    this.category = '0_0',
   });
 
   final String id;
@@ -51,6 +61,11 @@ final class TorrentCandidate {
   final String? infoHash;
   final String? quality;
   final String? releaseGroup;
+  final Uri? torrentUri;
+  final DateTime? uploadedAt;
+  final int seeders;
+  final int leechers;
+  final String category;
 }
 
 abstract interface class TorrentSearchProvider {
@@ -76,6 +91,21 @@ final class QBittorrentConnectionInfo {
   final String webApiVersion;
 }
 
+sealed class TorrentSource {
+  const TorrentSource();
+}
+
+final class TorrentUriSource extends TorrentSource {
+  const TorrentUriSource(this.uri);
+  final Uri uri;
+}
+
+final class TorrentFileSource extends TorrentSource {
+  const TorrentFileSource({required this.bytes, required this.fileName});
+  final List<int> bytes;
+  final String fileName;
+}
+
 final class AddTorrentRequest {
   const AddTorrentRequest({
     required this.source,
@@ -85,7 +115,7 @@ final class AddTorrentRequest {
     this.paused = false,
   });
 
-  final Uri source;
+  final TorrentSource source;
   final String savePath;
   final String tag;
   final String category;

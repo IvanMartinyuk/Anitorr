@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../shared/models/app_anime.dart';
-import '../../data/app_database.dart';
+import '../../data/app_database.dart' hide DownloadAlert;
 import '../../data/my_list_repository.dart';
 import '../models/user_anime.dart';
 
@@ -21,6 +21,10 @@ final libraryProvider = StreamProvider<List<LibraryAnime>>((ref) {
 
 final customListsProvider = StreamProvider<List<CustomAnimeList>>((ref) {
   return ref.watch(myListRepositoryProvider).watchCustomLists();
+});
+
+final downloadAlertsProvider = StreamProvider<List<DownloadAlert>>((ref) {
+  return ref.watch(myListRepositoryProvider).watchDownloadAlerts();
 });
 
 final libraryAnimeProvider = StreamProvider.family<LibraryAnime?, int>((
@@ -191,12 +195,22 @@ final class MyListController {
     required Set<int> selectedEpisodes,
     required bool allAvailableEpisodes,
     required bool autoDownloadFuture,
+    String? releaseGroup,
+    String? quality,
+    String category = '1_2',
+    int? season,
+    String? seriesTitle,
   }) {
     return _repository.saveDownloadIntent(
       anime: anime,
       selectedEpisodes: selectedEpisodes,
       allAvailableEpisodes: allAvailableEpisodes,
       autoDownloadFuture: autoDownloadFuture,
+      releaseGroup: releaseGroup,
+      quality: quality,
+      category: category,
+      season: season,
+      seriesTitle: seriesTitle,
     );
   }
 
@@ -220,5 +234,9 @@ final class MyListController {
 
   Future<void> removeDownloadIntent(int animeId) {
     return _repository.removeDownloadIntent(animeId);
+  }
+
+  Future<void> resolveDownloadAlert(int id) {
+    return _repository.resolveDownloadAlert(id);
   }
 }

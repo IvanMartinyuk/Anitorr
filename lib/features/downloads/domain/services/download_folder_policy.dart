@@ -4,12 +4,19 @@ import '../models/download_models.dart';
 final class DownloadFolderPolicy {
   const DownloadFolderPolicy();
 
-  String destinationFor(SavedAnime anime, DownloadSettings settings) {
+  String destinationFor(
+    SavedAnime anime,
+    DownloadSettings settings, {
+    DownloadIntent? intent,
+  }) {
     final root = anime.isMovie ? settings.moviesRoot : settings.seriesRoot;
     final year = anime.year == null ? '' : ' (${anime.year})';
-    final folder = _sanitize('${anime.title}$year');
+    final folder = _sanitize(intent?.seriesTitle ?? '${anime.title}$year');
     final separator = root.contains(r'\') ? r'\' : '/';
-    return '${root.replaceAll(RegExp(r'[/\\]+$'), '')}$separator$folder';
+    final base = '${root.replaceAll(RegExp(r'[/\\]+$'), '')}$separator$folder';
+    if (anime.isMovie) return base;
+    final season = (intent?.season ?? 1).toString().padLeft(2, '0');
+    return '$base${separator}Season $season';
   }
 
   String _sanitize(String value) {

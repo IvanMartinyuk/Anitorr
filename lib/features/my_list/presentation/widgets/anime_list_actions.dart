@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../shared/models/app_anime.dart';
+import '../../../downloads/domain/providers/download_providers.dart';
+import '../../../downloads/presentation/torrent_chooser_dialog.dart';
 import '../../domain/models/user_anime.dart';
 import '../../domain/providers/my_list_providers.dart';
 
@@ -474,44 +478,169 @@ class _DownloadButton extends ConsumerWidget {
 
   Future<void> _configureDownload(BuildContext context, WidgetRef ref) async {
     final controller = ref.read(myListControllerProvider);
+    final inheritedPreference = _relatedDownloadPreference(
+      anime,
+      ref.read(libraryProvider).value ?? const [],
+    );
+    final preferredPublisher =
+        intent?.releaseGroup ?? inheritedPreference?.releaseGroup;
+    final preferredQuality = intent?.quality ?? inheritedPreference?.quality;
     if (anime.type?.toLowerCase() == 'movie') {
+      final choice = await showDialog<TorrentChoice>(
+        context: context,
+        builder: (context) => TorrentChooserDialog(
+          anime: anime,
+          initialPublisher: preferredPublisher,
+          initialQuality: preferredQuality,
+        ),
+      );
+      if (choice == null) return;
       await controller.saveDownloadIntent(
         anime: anime,
         selectedEpisodes: const {},
         allAvailableEpisodes: true,
         autoDownloadFuture: false,
+        releaseGroup: choice.publisher,
+        quality: choice.quality,
+        category: choice.category.code,
+        seriesTitle: choice.seriesTitle,
       );
+      try {
+        await ref
+            .read(downloadCoordinatorProvider)
+            .queueSelected(anime.id, choice.toCandidate());
+      } catch (error) {
+        if (context.mounted) _showDownloadError(context, error);
+      }
+      unawaited(ref.read(downloadCoordinatorProvider).checkNow());
       if (context.mounted) {
         _showDownloadSavedMessage(context);
       }
       return;
     }
 
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.showSnackBar(
+      const SnackBar(
+        content: Text('Checking which episodes are available…'),
+        duration: Duration(seconds: 30),
+      ),
+    );
+    final availableEpisodes = await ref
+        .read(episodeAvailabilityServiceProvider)
+        .availableEpisodes(anime);
+    if (!context.mounted) return;
+    messenger.hideCurrentSnackBar();
+    if (availableEpisodes <= 0) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('No episodes are available yet.')),
+      );
+      return;
+    }
+
     final selection = await showDialog<_EpisodeSelection>(
       context: context,
-      builder: (context) =>
-          _EpisodeSelectionDialog(anime: anime, existing: intent),
+      builder: (context) => _EpisodeSelectionDialog(
+        anime: anime,
+        availableEpisodeCount: availableEpisodes,
+        existing: intent,
+      ),
     );
     if (selection == null) {
       return;
     }
+    if (!context.mounted) return;
+
+    final firstEpisode = selection.episodes.isEmpty
+        ? null
+        : (selection.episodes.toList()..sort()).first;
+    final choice = await showDialog<TorrentChoice>(
+      context: context,
+      builder: (context) => TorrentChooserDialog(
+        anime: anime,
+        episode: firstEpisode,
+        initialPublisher: preferredPublisher,
+        initialQuality: preferredQuality,
+      ),
+    );
+    if (choice == null) return;
 
     await controller.saveDownloadIntent(
       anime: anime,
       selectedEpisodes: selection.episodes,
       allAvailableEpisodes: selection.allAvailable,
       autoDownloadFuture: selection.autoFuture,
+      releaseGroup: choice.publisher,
+      quality: choice.quality,
+      category: choice.category.code,
+      season: choice.season,
+      seriesTitle: choice.seriesTitle,
     );
+    try {
+      await ref
+          .read(downloadCoordinatorProvider)
+          .queueSelected(
+            anime.id,
+            choice.toCandidate(),
+            requestedEpisode: firstEpisode,
+          );
+    } catch (error) {
+      if (context.mounted) _showDownloadError(context, error);
+    }
+    unawaited(ref.read(downloadCoordinatorProvider).checkNow());
     if (context.mounted) {
       _showDownloadSavedMessage(context);
     }
   }
 }
 
+DownloadIntent? _relatedDownloadPreference(
+  AppAnime anime,
+  List<LibraryAnime> library,
+) {
+  final relatedTitles = {
+    _normalizedSeriesTitle(anime.title),
+    if (anime.titleEnglish != null) _normalizedSeriesTitle(anime.titleEnglish!),
+    for (final relation in anime.relations)
+      _normalizedSeriesTitle(relation.title),
+  };
+  for (final item in library) {
+    final download = item.download;
+    if (download == null ||
+        download.releaseGroup == null ||
+        download.quality == null) {
+      continue;
+    }
+    final titles = {
+      _normalizedSeriesTitle(item.anime.title),
+      if (item.anime.titleEnglish != null)
+        _normalizedSeriesTitle(item.anime.titleEnglish!),
+    };
+    if (titles.any(relatedTitles.contains)) return download;
+  }
+  return null;
+}
+
+String _normalizedSeriesTitle(String value) {
+  return value
+      .toLowerCase()
+      .replaceAll(
+        RegExp(r'\b(?:season\s*\d+|\d+(?:st|nd|rd|th)\s+season|part\s*\d+)\b'),
+        '',
+      )
+      .replaceAll(RegExp(r'[^a-z0-9]+'), '')
+      .trim();
+}
+
 class _EpisodeSelectionDialog extends StatefulWidget {
-  const _EpisodeSelectionDialog({required this.anime, this.existing});
+  const _EpisodeSelectionDialog({
+    required this.anime,
+    required this.availableEpisodeCount,
+    this.existing,
+  });
 
   final AppAnime anime;
+  final int availableEpisodeCount;
   final DownloadIntent? existing;
 
   @override
@@ -527,20 +656,20 @@ class _EpisodeSelectionDialogState extends State<_EpisodeSelectionDialog> {
   @override
   void initState() {
     super.initState();
-    final count = widget.anime.episodes;
-    _selected =
-        widget.existing?.selectedEpisodes.toSet() ??
-        {
-          if (count != null)
-            for (var episode = 1; episode <= count; episode++) episode,
-        };
-    _allAvailable = widget.existing?.allAvailableEpisodes ?? true;
+    final count = widget.availableEpisodeCount;
+    _selected = widget.existing?.allAvailableEpisodes == true
+        ? {for (var episode = 1; episode <= count; episode++) episode}
+        : widget.existing?.selectedEpisodes
+                  .where((episode) => episode <= count)
+                  .toSet() ??
+              {for (var episode = 1; episode <= count; episode++) episode};
+    _allAvailable = _selected.length == count;
     _autoFuture = widget.existing?.autoDownloadFuture ?? true;
   }
 
   @override
   Widget build(BuildContext context) {
-    final count = widget.anime.episodes;
+    final count = widget.availableEpisodeCount;
     return AlertDialog(
       title: const Text('Choose episodes to download'),
       content: SizedBox(
@@ -555,16 +684,14 @@ class _EpisodeSelectionDialogState extends State<_EpisodeSelectionDialog> {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 16),
-              if (count == null)
-                CheckboxListTile(
-                  contentPadding: EdgeInsets.zero,
-                  value: _allAvailable,
-                  onChanged: (value) {
-                    setState(() => _allAvailable = value ?? false);
-                  },
-                  title: const Text('All currently available episodes'),
-                )
-              else ...[
+              Text(
+                widget.anime.episodes == null
+                    ? '$count episodes currently available'
+                    : '$count of ${widget.anime.episodes} episodes currently available',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+              const SizedBox(height: 8),
+              ...[
                 Row(
                   children: [
                     TextButton(
@@ -743,6 +870,12 @@ Future<String?> _showListNameDialog(BuildContext context) async {
   );
   controller.dispose();
   return result;
+}
+
+void _showDownloadError(BuildContext context, Object error) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text('Download saved, but could not be queued: $error')),
+  );
 }
 
 void _showDownloadSavedMessage(BuildContext context) {

@@ -39,6 +39,11 @@ void main() {
       selectedEpisodes: {3, 1, 2},
       allAvailableEpisodes: false,
       autoDownloadFuture: true,
+      releaseGroup: 'ToonsHub',
+      quality: '1080p',
+      category: '1_2',
+      season: 2,
+      seriesTitle: 'Test Anime',
     );
 
     var item = (await repository.watchLibrary().first).single;
@@ -46,6 +51,10 @@ void main() {
     expect(item.customListIds, {customListId});
     expect(item.download?.selectedEpisodes, {1, 2, 3});
     expect(item.download?.autoDownloadFuture, isTrue);
+    expect(item.download?.releaseGroup, 'ToonsHub');
+    expect(item.download?.quality, '1080p');
+    expect(item.download?.season, 2);
+    expect(item.download?.seriesTitle, 'Test Anime');
 
     await repository.removeStatus(_anime.id);
     item = (await repository.watchLibrary().first).single;
@@ -79,6 +88,30 @@ void main() {
     expect(entry.startedAt, started);
     expect(entry.rewatchCount, 0);
     expect(entry.notes, 'weekly watch');
+  });
+
+  test('download alerts are durable, deduplicated, and resolvable', () async {
+    await repository.saveDownloadIntent(
+      anime: _anime,
+      selectedEpisodes: {1},
+      allAvailableEpisodes: false,
+      autoDownloadFuture: false,
+    );
+    await repository.createDownloadAlert(
+      animeId: _anime.id,
+      episode: 1,
+      message: 'Choose another publisher',
+    );
+    await repository.createDownloadAlert(
+      animeId: _anime.id,
+      episode: 1,
+      message: 'Duplicate',
+    );
+
+    final alerts = await repository.watchDownloadAlerts().first;
+    expect(alerts, hasLength(1));
+    await repository.resolveDownloadAlert(alerts.single.id);
+    expect(await repository.watchDownloadAlerts().first, isEmpty);
   });
 }
 

@@ -219,7 +219,11 @@ class _DownloadDashboardSliver extends ConsumerWidget {
               ? 'No episodes selected'
               : '${intent.selectedEpisodes.length} episodes selected';
           final destination = settings?.isConfigured == true
-              ? folderPolicy.destinationFor(item.anime, settings!)
+              ? folderPolicy.destinationFor(
+                  item.anime,
+                  settings!,
+                  intent: intent,
+                )
               : 'Configure download folders in Settings';
           return Padding(
             padding: const EdgeInsets.only(bottom: 12),

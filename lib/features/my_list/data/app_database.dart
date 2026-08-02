@@ -70,11 +70,30 @@ class DownloadIntents extends Table {
   TextColumn get destinationOverride => text().nullable()();
   DateTimeColumn get lastCheckedAt => dateTime().nullable()();
   TextColumn get errorMessage => text().nullable()();
+  TextColumn get releaseGroup => text().nullable()();
+  TextColumn get quality => text().nullable()();
+  TextColumn get category => text().withDefault(const Constant('1_2'))();
+  IntColumn get season => integer().nullable()();
+  TextColumn get seriesTitle => text().nullable()();
+  DateTimeColumn get alternativeFirstSeenAt => dateTime().nullable()();
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
 
   @override
   Set<Column<Object>> get primaryKey => {animeId};
+}
+
+class DownloadAlerts extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get animeId => integer().references(
+    DownloadIntents,
+    #animeId,
+    onDelete: KeyAction.cascade,
+  )();
+  IntColumn get episode => integer().nullable()();
+  TextColumn get message => text()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get resolvedAt => dateTime().nullable()();
 }
 
 class DownloadJobs extends Table {
@@ -113,6 +132,7 @@ class AppSettings extends Table {
     CustomListItems,
     DownloadIntents,
     DownloadJobs,
+    DownloadAlerts,
     AppSettings,
   ],
 )
@@ -122,12 +142,26 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (migrator) async {
       await migrator.createAll();
+    },
+    onUpgrade: (migrator, from, to) async {
+      if (from < 2) {
+        await migrator.addColumn(downloadIntents, downloadIntents.releaseGroup);
+        await migrator.addColumn(downloadIntents, downloadIntents.quality);
+        await migrator.addColumn(downloadIntents, downloadIntents.category);
+        await migrator.addColumn(downloadIntents, downloadIntents.season);
+        await migrator.addColumn(downloadIntents, downloadIntents.seriesTitle);
+        await migrator.addColumn(
+          downloadIntents,
+          downloadIntents.alternativeFirstSeenAt,
+        );
+        await migrator.createTable(downloadAlerts);
+      }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');

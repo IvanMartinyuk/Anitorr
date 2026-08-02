@@ -40,13 +40,20 @@ final class QBittorrentClient implements DownloadClient {
         http.MultipartRequest('POST', _endpoint.resolve('api/v2/torrents/add'))
           ..headers.addAll(_headers)
           ..fields.addAll({
-            'urls': request.source.toString(),
             'savepath': request.savePath,
             'category': request.category,
             'tags': request.tag,
             'paused': request.paused.toString(),
             'root_folder': 'true',
           });
+    switch (request.source) {
+      case TorrentUriSource(:final uri):
+        operation.fields['urls'] = uri.toString();
+      case TorrentFileSource(:final bytes, :final fileName):
+        operation.files.add(
+          http.MultipartFile.fromBytes('torrents', bytes, filename: fileName),
+        );
+    }
     final response = await _httpClient.send(operation);
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw QBittorrentException(

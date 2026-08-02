@@ -141,6 +141,12 @@ final class DownloadIntent {
     this.destinationOverride,
     this.lastCheckedAt,
     this.errorMessage,
+    this.releaseGroup,
+    this.quality,
+    this.category = '1_2',
+    this.season,
+    this.seriesTitle,
+    this.alternativeFirstSeenAt,
   });
 
   final int animeId;
@@ -152,8 +158,30 @@ final class DownloadIntent {
   final String? destinationOverride;
   final DateTime? lastCheckedAt;
   final String? errorMessage;
+  final String? releaseGroup;
+  final String? quality;
+  final String category;
+  final int? season;
+  final String? seriesTitle;
+  final DateTime? alternativeFirstSeenAt;
   final DateTime createdAt;
   final DateTime updatedAt;
+}
+
+final class DownloadAlert {
+  const DownloadAlert({
+    required this.id,
+    required this.animeId,
+    required this.message,
+    required this.createdAt,
+    this.episode,
+  });
+
+  final int id;
+  final int animeId;
+  final int? episode;
+  final String message;
+  final DateTime createdAt;
 }
 
 final class LibraryAnime {

@@ -223,6 +223,11 @@ final class MyListRepository {
     required Set<int> selectedEpisodes,
     required bool allAvailableEpisodes,
     required bool autoDownloadFuture,
+    String? releaseGroup,
+    String? quality,
+    String category = '1_2',
+    int? season,
+    String? seriesTitle,
   }) async {
     await _database.transaction(() async {
       await _upsertAnime(anime);
@@ -244,6 +249,12 @@ final class MyListRepository {
               destinationOverride: Value(existing?.destinationOverride),
               lastCheckedAt: Value(existing?.lastCheckedAt),
               errorMessage: const Value(null),
+              releaseGroup: Value(releaseGroup ?? existing?.releaseGroup),
+              quality: Value(quality ?? existing?.quality),
+              category: Value(category),
+              season: Value(season ?? existing?.season),
+              seriesTitle: Value(seriesTitle ?? existing?.seriesTitle),
+              alternativeFirstSeenAt: Value(existing?.alternativeFirstSeenAt),
               createdAt: existing?.createdAt ?? now,
               updatedAt: now,
             ),
@@ -289,6 +300,103 @@ final class MyListRepository {
     await (_database.delete(
       _database.downloadIntents,
     )..where((table) => table.animeId.equals(animeId))).go();
+  }
+
+  Stream<List<models.DownloadAlert>> watchDownloadAlerts() {
+    return (_database.select(_database.downloadAlerts)
+          ..where((table) => table.resolvedAt.isNull())
+          ..orderBy([(table) => OrderingTerm.desc(table.createdAt)]))
+        .watch()
+        .map(
+          (rows) => [
+            for (final row in rows)
+              models.DownloadAlert(
+                id: row.id,
+                animeId: row.animeId,
+                episode: row.episode,
+                message: row.message,
+                createdAt: row.createdAt,
+              ),
+          ],
+        );
+  }
+
+  Future<void> resolveDownloadAlert(int id) async {
+    await (_database.update(_database.downloadAlerts)
+          ..where((table) => table.id.equals(id)))
+        .write(db.DownloadAlertsCompanion(resolvedAt: Value(DateTime.now())));
+  }
+
+  Future<void> createDownloadAlert({
+    required int animeId,
+    required int? episode,
+    required String message,
+  }) async {
+    final existing =
+        await (_database.select(_database.downloadAlerts)..where(
+              (table) =>
+                  table.animeId.equals(animeId) &
+                  (episode == null
+                      ? table.episode.isNull()
+                      : table.episode.equals(episode)) &
+                  table.resolvedAt.isNull(),
+            ))
+            .getSingleOrNull();
+    if (existing != null) return;
+    await _database
+        .into(_database.downloadAlerts)
+        .insert(
+          db.DownloadAlertsCompanion.insert(
+            animeId: animeId,
+            episode: Value(episode),
+            message: message,
+            createdAt: DateTime.now(),
+          ),
+        );
+  }
+
+  Future<bool> hasDownloadJob(String sourceId) async {
+    return await (_database.select(_database.downloadJobs)
+              ..where((table) => table.sourceId.equals(sourceId)))
+            .getSingleOrNull() !=
+        null;
+  }
+
+  Future<void> saveDownloadJob({
+    required int animeId,
+    required String sourceId,
+    required Uri source,
+    required Set<int> episodes,
+    required String destination,
+    String? torrentHash,
+  }) async {
+    final sorted = episodes.toList()..sort();
+    await _database
+        .into(_database.downloadJobs)
+        .insertOnConflictUpdate(
+          db.DownloadJobsCompanion.insert(
+            animeId: animeId,
+            sourceId: sourceId,
+            sourceUri: source.toString(),
+            episodeCoverageJson: Value(jsonEncode(sorted)),
+            destination: destination,
+            torrentHash: Value(torrentHash),
+            state: models.DownloadState.queued.name,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+        );
+  }
+
+  Future<void> rememberAlternativeSeen(int animeId, DateTime value) async {
+    await (_database.update(
+      _database.downloadIntents,
+    )..where((table) => table.animeId.equals(animeId))).write(
+      db.DownloadIntentsCompanion(
+        alternativeFirstSeenAt: Value(value),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
   }
 
   Future<void> _upsertAnime(AppAnime anime) async {
@@ -354,6 +462,12 @@ final class MyListRepository {
       destinationOverride: item.destinationOverride,
       lastCheckedAt: item.lastCheckedAt,
       errorMessage: item.errorMessage,
+      releaseGroup: item.releaseGroup,
+      quality: item.quality,
+      category: item.category,
+      season: item.season,
+      seriesTitle: item.seriesTitle,
+      alternativeFirstSeenAt: item.alternativeFirstSeenAt,
       createdAt: item.createdAt,
       updatedAt: item.updatedAt,
     );

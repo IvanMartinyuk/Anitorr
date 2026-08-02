@@ -16,7 +16,7 @@ void main() {
   test('series use the configured series root and a safe folder name', () {
     final destination = policy.destinationFor(_series, settings);
 
-    expect(destination, '/media/Anime/Series/Test_ Anime_ (2026)');
+    expect(destination, '/media/Anime/Series/Test_ Anime_ (2026)/Season 01');
   });
 
   test('movies use Windows separators when the root is Windows-style', () {

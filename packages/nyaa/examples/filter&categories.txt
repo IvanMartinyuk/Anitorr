@@ -1,0 +1,2 @@
+Filter request(no remakes): https://nyaa.si/?f=1&c=&q=sparks+of+tomorrow
+Filter with category request(anime - English translated): https://nyaa.si/?f=1&c=1_2&q=sparks+of+tomorrow
