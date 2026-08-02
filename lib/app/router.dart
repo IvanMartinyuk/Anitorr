@@ -7,16 +7,29 @@ import '../features/my_list/presentation/my_list_page.dart';
 import '../features/seasonal/presentation/seasonal_page.dart';
 import '../features/settings/presentation/settings_page.dart';
 import '../shared/models/app_anime.dart';
+import '../shared/services/navigation_history.dart';
 import '../shared/widgets/app_shell.dart';
 import '../shared/widgets/empty_page.dart';
 
+final navigationHistoryProvider = Provider<NavigationHistory>((ref) {
+  return NavigationHistory();
+});
+
 final appRouterProvider = Provider<GoRouter>((ref) {
+  final navigationHistory = ref.watch(navigationHistoryProvider);
+
   return GoRouter(
     initialLocation: AppRoute.myList.path,
     routes: [
       ShellRoute(
         builder: (context, state, child) {
-          return AppShell(location: state.uri.path, child: child);
+          final location = state.uri.toString();
+          navigationHistory.sync(location: location, extra: state.extra);
+          return AppShell(
+            location: state.uri.path,
+            navigationHistory: navigationHistory,
+            child: child,
+          );
         },
         routes: [
           GoRoute(

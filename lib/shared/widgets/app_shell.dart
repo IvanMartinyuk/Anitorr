@@ -1,45 +1,90 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/router.dart';
+import '../services/navigation_history.dart';
 
 class AppShell extends StatelessWidget {
-  const AppShell({required this.location, required this.child, super.key});
+  const AppShell({
+    required this.location,
+    required this.navigationHistory,
+    required this.child,
+    super.key,
+  });
 
   final String location;
+  final NavigationHistory navigationHistory;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final useSidebar = constraints.maxWidth >= 720;
-        final selectedRoute = _selectedNavigationRoute(context, location);
+    return Listener(
+      behavior: HitTestBehavior.translucent,
+      onPointerDown: (event) => _handlePointerDown(context, event),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final useSidebar = constraints.maxWidth >= 720;
+          final selectedRoute = _selectedNavigationRoute(context, location);
 
-        if (useSidebar) {
+          if (useSidebar) {
+            return Scaffold(
+              body: Row(
+                children: [
+                  _SidebarNavigation(
+                    selectedRoute: selectedRoute,
+                    navigationHistory: navigationHistory,
+                  ),
+                  Expanded(child: child),
+                ],
+              ),
+            );
+          }
+
           return Scaffold(
-            body: Row(
-              children: [
-                _SidebarNavigation(selectedRoute: selectedRoute),
-                Expanded(child: child),
-              ],
+            body: child,
+            bottomNavigationBar: _BottomNavigation(
+              selectedRoute: selectedRoute,
+              navigationHistory: navigationHistory,
             ),
           );
-        }
-
-        return Scaffold(
-          body: child,
-          bottomNavigationBar: _BottomNavigation(selectedRoute: selectedRoute),
-        );
-      },
+        },
+      ),
     );
+  }
+
+  void _handlePointerDown(BuildContext context, PointerDownEvent event) {
+    if (event.kind != PointerDeviceKind.mouse) {
+      return;
+    }
+
+    if (event.buttons & kBackMouseButton != 0) {
+      final destination = navigationHistory.back();
+      if (destination != null) {
+        context.go(destination.location, extra: destination.extra);
+      } else if (context.canPop()) {
+        context.pop();
+      }
+      return;
+    }
+
+    if (event.buttons & kForwardMouseButton != 0) {
+      final destination = navigationHistory.forward();
+      if (destination != null) {
+        context.go(destination.location, extra: destination.extra);
+      }
+    }
   }
 }
 
 class _SidebarNavigation extends StatelessWidget {
-  const _SidebarNavigation({required this.selectedRoute});
+  const _SidebarNavigation({
+    required this.selectedRoute,
+    required this.navigationHistory,
+  });
 
   final AppRoute selectedRoute;
+  final NavigationHistory navigationHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +117,7 @@ class _SidebarNavigation extends StatelessWidget {
                         _SidebarDestination(
                           item: item,
                           selected: item.route == selectedRoute,
+                          navigationHistory: navigationHistory,
                         ),
                     ],
                   ),
@@ -86,10 +132,15 @@ class _SidebarNavigation extends StatelessWidget {
 }
 
 class _SidebarDestination extends StatelessWidget {
-  const _SidebarDestination({required this.item, required this.selected});
+  const _SidebarDestination({
+    required this.item,
+    required this.selected,
+    required this.navigationHistory,
+  });
 
   final _NavigationItem item;
   final bool selected;
+  final NavigationHistory navigationHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +161,10 @@ class _SidebarDestination extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           leading: Icon(item.icon),
           title: Text(item.route.label),
-          onTap: () => context.go(item.route.path),
+          onTap: () {
+            navigationHistory.push(location: item.route.path);
+            context.go(item.route.path);
+          },
         ),
       ),
     );
@@ -118,9 +172,13 @@ class _SidebarDestination extends StatelessWidget {
 }
 
 class _BottomNavigation extends StatelessWidget {
-  const _BottomNavigation({required this.selectedRoute});
+  const _BottomNavigation({
+    required this.selectedRoute,
+    required this.navigationHistory,
+  });
 
   final AppRoute selectedRoute;
+  final NavigationHistory navigationHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +189,9 @@ class _BottomNavigation extends StatelessWidget {
     return NavigationBar(
       selectedIndex: selectedIndex < 0 ? 0 : selectedIndex,
       onDestinationSelected: (index) {
-        context.go(_navigationItems[index].route.path);
+        final location = _navigationItems[index].route.path;
+        navigationHistory.push(location: location);
+        context.go(location);
       },
       destinations: [
         for (final item in _navigationItems)

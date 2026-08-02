@@ -1,5 +1,6 @@
 import 'package:anitorr/app/app.dart';
 import 'package:anitorr/app/theme/theme_mode_provider.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,5 +36,33 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(container.read(themeModeProvider), ThemeMode.dark);
+  });
+
+  testWidgets('mouse back and forward buttons navigate route history', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const ProviderScope(child: AnitorrApp()));
+
+    await tester.tap(find.text('Settings'));
+    await tester.pumpAndSettle();
+    expect(find.text('Global'), findsOneWidget);
+
+    final backGesture = await tester.startGesture(
+      const Offset(400, 300),
+      kind: PointerDeviceKind.mouse,
+      buttons: kBackMouseButton,
+    );
+    await backGesture.up();
+    await tester.pumpAndSettle();
+    expect(find.text('Global'), findsNothing);
+
+    final forwardGesture = await tester.startGesture(
+      const Offset(400, 300),
+      kind: PointerDeviceKind.mouse,
+      buttons: kForwardMouseButton,
+    );
+    await forwardGesture.up();
+    await tester.pumpAndSettle();
+    expect(find.text('Global'), findsOneWidget);
   });
 }
