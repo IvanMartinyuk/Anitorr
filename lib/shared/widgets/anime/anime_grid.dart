@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 import '../../models/app_anime.dart';
 
 class AnimeGrid extends StatelessWidget {
-  const AnimeGrid({required this.items, this.onAnimeSelected, super.key});
+  const AnimeGrid({
+    required this.items,
+    this.onAnimeSelected,
+    this.actionsBuilder,
+    super.key,
+  });
 
   final List<AppAnime> items;
   final ValueChanged<AppAnime>? onAnimeSelected;
+  final Widget Function(BuildContext context, AppAnime anime)? actionsBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +35,7 @@ class AnimeGrid extends StatelessWidget {
               return _AnimeCard(
                 anime: items[index],
                 onSelected: onAnimeSelected,
+                actions: actionsBuilder?.call(context, items[index]),
               );
             },
           );
@@ -39,10 +46,15 @@ class AnimeGrid extends StatelessWidget {
 }
 
 class _AnimeCard extends StatelessWidget {
-  const _AnimeCard({required this.anime, required this.onSelected});
+  const _AnimeCard({
+    required this.anime,
+    required this.onSelected,
+    this.actions,
+  });
 
   final AppAnime anime;
   final ValueChanged<AppAnime>? onSelected;
+  final Widget? actions;
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +98,8 @@ class _AnimeCard extends StatelessWidget {
                         right: 8,
                         child: _AnimeRatingBadge(anime: anime),
                       ),
+                      if (actions != null)
+                        Positioned(left: 8, bottom: 8, child: actions!),
                     ],
                   ),
                 ),

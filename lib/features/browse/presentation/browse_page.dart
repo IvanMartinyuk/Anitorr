@@ -6,6 +6,7 @@ import '../../../app/router.dart';
 import '../../../shared/models/app_anime.dart';
 import '../../../shared/widgets/anime/anime_grid.dart';
 import '../../../shared/widgets/navigable_list/navigable_list_widgets.dart';
+import '../../my_list/presentation/widgets/anime_list_actions.dart';
 import '../domain/browse_anime_providers.dart';
 import 'widgets/browse_filters.dart';
 import 'widgets/browse_states.dart';
@@ -76,6 +77,8 @@ class BrowsePage extends ConsumerWidget {
         else
           AnimeGrid(
             items: items,
+            actionsBuilder: (context, anime) =>
+                AnimeCardListActions(anime: anime),
             onAnimeSelected: (anime) {
               context.pushNamed(
                 AppRoute.animeDetails.name,

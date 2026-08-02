@@ -10,12 +10,13 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: AnitorrApp()));
 
     expect(find.text('My list'), findsWidgets);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump(const Duration(milliseconds: 1));
   });
 
   testWidgets('settings theme dropdown changes app theme mode', (tester) async {
     final container = ProviderContainer();
-    addTearDown(container.dispose);
-
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
@@ -36,6 +37,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(container.read(themeModeProvider), ThemeMode.dark);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    container.dispose();
+    await tester.pump(const Duration(milliseconds: 1));
   });
 
   testWidgets('mouse back and forward buttons navigate route history', (
@@ -64,5 +69,8 @@ void main() {
     await forwardGesture.up();
     await tester.pumpAndSettle();
     expect(find.text('Global'), findsOneWidget);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump(const Duration(milliseconds: 1));
   });
 }

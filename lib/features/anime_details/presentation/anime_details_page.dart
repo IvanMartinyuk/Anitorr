@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../../app/router.dart';
 import '../../../shared/models/app_anime.dart';
+import '../../my_list/presentation/widgets/anime_list_actions.dart';
 import '../domain/providers/anime_details_provider.dart';
 
 class AnimeDetailsPage extends ConsumerWidget {
@@ -174,6 +175,8 @@ class _Header extends StatelessWidget {
               ),
           ],
         ),
+        const SizedBox(height: 20),
+        AnimeDetailsListActions(anime: anime),
         const SizedBox(height: 20),
         _StatsGrid(anime: anime),
       ],
