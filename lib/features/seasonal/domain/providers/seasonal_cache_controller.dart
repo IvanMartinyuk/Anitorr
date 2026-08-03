@@ -75,6 +75,7 @@ Future<void> cachePagesUntilEmpty({
         repository: repository,
         type: type,
       );
+      ref.read(seasonalCacheGenerationProvider.notifier).bump();
     });
 
     if (anime.isEmpty) {

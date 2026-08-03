@@ -1,3 +1,4 @@
+import 'package:anilist_api/anilist_api.dart';
 import 'package:anitorr/features/seasonal/domain/models/seasonal_filters.dart';
 import 'package:anitorr/features/seasonal/domain/services/seasonal_anime_filtering.dart';
 import 'package:anitorr/shared/models/anime_api_filters.dart';
@@ -6,6 +7,24 @@ import 'package:anitorr/shared/models/sort_direction.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  test('maps an externally loaded airing schedule onto an anime', () {
+    final airingAt = DateTime(2026, 8, 4, 18).millisecondsSinceEpoch ~/ 1000;
+    final anime = AppAnime.fromAnimeData(
+      const AnimeData(id: 42),
+      nextAiringEpisode: AiringScheduleData(
+        id: 1,
+        airingAt: airingAt,
+        timeUntilAiring: 3600,
+        episode: 6,
+        mediaId: 42,
+      ),
+    );
+
+    expect(anime.nextAiringAt, DateTime(2026, 8, 4, 18));
+    expect(anime.nextAiringEpisodeNumber, 6);
+    expect(anime.nextAiringEpisode, 'Episode 6 in 1h');
+  });
+
   group('filterSeasonalAnime', () {
     test('matches title aliases, type, score, airing, genres, and tags', () {
       final actionTv = _anime(
@@ -17,6 +36,7 @@ void main() {
         airing: true,
         genres: ['Action', 'Adventure'],
         tags: ['Time Manipulation'],
+        nextAiringAt: DateTime(2026, 8, 3, 18),
       );
       final romanceMovie = _anime(
         title: 'Quiet Film',
@@ -35,10 +55,32 @@ void main() {
           minScore: 8,
           genres: {'Action'},
           tags: {'Time Manipulation'},
+          releaseWeekdays: {ReleaseWeekday.monday},
         ),
       );
 
       expect(result, [actionTv]);
+    });
+
+    test('matches selected release weekdays using the next airing date', () {
+      final monday = _anime(
+        title: 'Monday Show',
+        nextAiringAt: DateTime(2026, 8, 3, 18),
+      );
+      final tuesday = _anime(
+        title: 'Tuesday Show',
+        nextAiringAt: DateTime(2026, 8, 4, 18),
+      );
+      final unscheduled = _anime(title: 'Unscheduled Show');
+
+      final result = filterSeasonalAnime(
+        [monday, tuesday, unscheduled],
+        filters: SeasonalFilters.empty().copyWith(
+          releaseWeekdays: {ReleaseWeekday.monday},
+        ),
+      );
+
+      expect(result, [monday]);
     });
 
     test('normalizes API type labels before comparing them', () {
@@ -85,6 +127,7 @@ AppAnime _anime({
   bool airing = true,
   List<String> genres = const [],
   List<String> tags = const [],
+  DateTime? nextAiringAt,
 }) {
   return AppAnime(
     id: title.hashCode,
@@ -98,6 +141,7 @@ AppAnime _anime({
     popularity: popularity,
     members: members,
     airing: airing,
+    nextAiringAt: nextAiringAt,
     genres: [
       for (final genre in genres)
         AppAnimeMeta(

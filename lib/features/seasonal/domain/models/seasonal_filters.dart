@@ -10,6 +10,21 @@ enum SeasonalSort {
   final String label;
 }
 
+enum ReleaseWeekday {
+  monday(DateTime.monday, 'Monday'),
+  tuesday(DateTime.tuesday, 'Tuesday'),
+  wednesday(DateTime.wednesday, 'Wednesday'),
+  thursday(DateTime.thursday, 'Thursday'),
+  friday(DateTime.friday, 'Friday'),
+  saturday(DateTime.saturday, 'Saturday'),
+  sunday(DateTime.sunday, 'Sunday');
+
+  const ReleaseWeekday(this.dateTimeValue, this.label);
+
+  final int dateTimeValue;
+  final String label;
+}
+
 final class SeasonalFilters {
   const SeasonalFilters({
     required this.query,
@@ -18,6 +33,7 @@ final class SeasonalFilters {
     required this.maxScore,
     required this.genres,
     required this.tags,
+    required this.releaseWeekdays,
   });
 
   factory SeasonalFilters.empty() {
@@ -28,6 +44,7 @@ final class SeasonalFilters {
       maxScore: 10,
       genres: {},
       tags: {},
+      releaseWeekdays: {},
     );
   }
 
@@ -37,6 +54,7 @@ final class SeasonalFilters {
   final double maxScore;
   final Set<String> genres;
   final Set<String> tags;
+  final Set<ReleaseWeekday> releaseWeekdays;
 
   bool get hasActiveCachedFilters {
     return query.trim().isNotEmpty ||
@@ -44,7 +62,8 @@ final class SeasonalFilters {
         minScore > 0 ||
         maxScore < 10 ||
         genres.isNotEmpty ||
-        tags.isNotEmpty;
+        tags.isNotEmpty ||
+        releaseWeekdays.isNotEmpty;
   }
 
   SeasonalFilters copyWith({
@@ -55,6 +74,7 @@ final class SeasonalFilters {
     double? maxScore,
     Set<String>? genres,
     Set<String>? tags,
+    Set<ReleaseWeekday>? releaseWeekdays,
   }) {
     return SeasonalFilters(
       query: query ?? this.query,
@@ -63,6 +83,7 @@ final class SeasonalFilters {
       maxScore: maxScore ?? this.maxScore,
       genres: genres ?? this.genres,
       tags: tags ?? this.tags,
+      releaseWeekdays: releaseWeekdays ?? this.releaseWeekdays,
     );
   }
 }

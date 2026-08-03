@@ -164,16 +164,27 @@ class AppDatabase extends _$AppDatabase {
         await migrator.createTable(downloadAlerts);
       }
       if (from < 3) {
-        await migrator.addColumn(
-          downloadIntents,
-          downloadIntents.preferredSizeBytes,
+        final alreadyAdded = await _columnExists(
+          'download_intents',
+          'preferred_size_bytes',
         );
+        if (!alreadyAdded) {
+          await migrator.addColumn(
+            downloadIntents,
+            downloadIntents.preferredSizeBytes,
+          );
+        }
       }
     },
     beforeOpen: (details) async {
       await customStatement('PRAGMA foreign_keys = ON');
     },
   );
+
+  Future<bool> _columnExists(String table, String column) async {
+    final columns = await customSelect('PRAGMA table_info($table)').get();
+    return columns.any((row) => row.read<String>('name') == column);
+  }
 }
 
 QueryExecutor _openDatabase() {

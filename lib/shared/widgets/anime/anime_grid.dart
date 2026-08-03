@@ -98,6 +98,12 @@ class _AnimeCard extends StatelessWidget {
                         right: 8,
                         child: _AnimeRatingBadge(anime: anime),
                       ),
+                      if (anime.nextAiringAt != null)
+                        Positioned(
+                          left: 8,
+                          top: 8,
+                          child: _NextEpisodeBadge(anime: anime),
+                        ),
                       if (actions != null)
                         Positioned(left: 8, bottom: 8, child: actions!),
                     ],
@@ -124,6 +130,111 @@ class _AnimeCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _NextEpisodeBadge extends StatelessWidget {
+  const _NextEpisodeBadge({required this.anime});
+
+  final AppAnime anime;
+
+  static const _shortWeekdays = [
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final nextAiringAt = anime.nextAiringAt!;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final weekday = _shortWeekdays[nextAiringAt.weekday - 1];
+    final episode = anime.nextAiringEpisodeNumber;
+    final remaining = _formatRemaining(nextAiringAt.difference(DateTime.now()));
+    final scheduleLabel = [
+      weekday,
+      if (episode != null) 'Ep $episode',
+    ].join(' · ');
+    final localizations = MaterialLocalizations.of(context);
+    final tooltip = [
+      if (episode != null) 'Episode $episode',
+      localizations.formatFullDate(nextAiringAt),
+      localizations.formatTimeOfDay(TimeOfDay.fromDateTime(nextAiringAt)),
+    ].join(' · ');
+
+    return Tooltip(
+      message: tooltip,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: colorScheme.tertiaryContainer,
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: colorScheme.shadow.withValues(alpha: 0.18),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.schedule_rounded,
+                size: 15,
+                color: colorScheme.tertiary,
+              ),
+              const SizedBox(width: 4),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    scheduleLabel,
+                    style: textTheme.labelSmall?.copyWith(
+                      color: colorScheme.onTertiaryContainer,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Text(
+                    remaining,
+                    style: textTheme.labelSmall?.copyWith(
+                      color: colorScheme.onTertiaryContainer,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatRemaining(Duration duration) {
+    if (duration <= Duration.zero) {
+      return 'soon';
+    }
+
+    final days = duration.inDays;
+    final hours = duration.inHours.remainder(Duration.hoursPerDay);
+    if (days > 0) {
+      return 'in ${days}d ${hours}h';
+    }
+
+    final minutes = duration.inMinutes.remainder(Duration.minutesPerHour);
+    if (duration.inHours > 0) {
+      return 'in ${duration.inHours}h ${minutes}m';
+    }
+
+    return 'in ${duration.inMinutes}m';
   }
 }
 

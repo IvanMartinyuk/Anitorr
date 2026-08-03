@@ -39,12 +39,18 @@ final class AppAnime {
     this.countryOfOrigin,
     this.hashtag,
     this.nextAiringEpisode,
+    this.nextAiringAt,
+    this.nextAiringEpisodeNumber,
     this.trailerUrl,
     this.openingThemes,
     this.endingThemes,
   });
 
-  factory AppAnime.fromAnimeData(AnimeData anime) {
+  factory AppAnime.fromAnimeData(
+    AnimeData anime, {
+    AiringScheduleData? nextAiringEpisode,
+  }) {
+    final airingSchedule = nextAiringEpisode ?? anime.nextAiringEpisode;
     return AppAnime(
       id: anime.id,
       url: anime.siteUrl ?? '',
@@ -63,7 +69,7 @@ final class AppAnime {
       status: _displayEnumName(anime.status),
       airing:
           anime.status == MediaStatus.releasing.graphqlName ||
-          anime.nextAiringEpisode != null,
+          airingSchedule != null,
       aired: _dateRange(anime.startDate, anime.endDate),
       duration: anime.duration == null ? null : '${anime.duration} min',
       rating: anime.isAdult == true ? 'Adult' : null,
@@ -81,7 +87,9 @@ final class AppAnime {
       year: anime.seasonYear,
       countryOfOrigin: anime.countryOfOrigin,
       hashtag: anime.hashtag,
-      nextAiringEpisode: _nextAiringEpisode(anime.nextAiringEpisode),
+      nextAiringEpisode: _nextAiringEpisode(airingSchedule),
+      nextAiringAt: _nextAiringAt(airingSchedule),
+      nextAiringEpisodeNumber: airingSchedule?.episode,
       trailerUrl: _trailerUrl(anime.trailer),
       genres: [for (final item in anime.genres) AppAnimeMeta.fromName(item)],
       tags: [
@@ -163,6 +171,8 @@ final class AppAnime {
   final String? countryOfOrigin;
   final String? hashtag;
   final String? nextAiringEpisode;
+  final DateTime? nextAiringAt;
+  final int? nextAiringEpisodeNumber;
   final String? trailerUrl;
   final List<String>? openingThemes;
   final List<String>? endingThemes;
@@ -319,6 +329,15 @@ String? _nextAiringEpisode(AiringScheduleData? airing) {
       (timeUntilAiring % Duration.secondsPerDay) ~/ Duration.secondsPerHour;
   final remaining = days > 0 ? '${days}d ${hours}h' : '${hours}h';
   return '$episode in $remaining';
+}
+
+DateTime? _nextAiringAt(AiringScheduleData? airing) {
+  final airingAt = airing?.airingAt ?? 0;
+  if (airingAt <= 0) {
+    return null;
+  }
+
+  return DateTime.fromMillisecondsSinceEpoch(airingAt * 1000);
 }
 
 String? _trailerUrl(MediaTrailer? trailer) {

@@ -62,6 +62,7 @@ List<AppAnime> filterSeasonalAnime(
           _matchesTitle(item, normalizedQuery) &&
           _matchesAiring(item, filters.airing) &&
           _matchesScore(item, filters.minScore, filters.maxScore) &&
+          _matchesReleaseWeekday(item, filters.releaseWeekdays) &&
           _matchesGenres(item, filters.genres) &&
           _matchesTags(item, filters.tags))
         item,
@@ -127,6 +128,21 @@ bool _matchesScore(AppAnime anime, double minScore, double maxScore) {
 
   final score = anime.score;
   return score != null && score >= minScore && score <= maxScore;
+}
+
+bool _matchesReleaseWeekday(
+  AppAnime anime,
+  Set<ReleaseWeekday> releaseWeekdays,
+) {
+  if (releaseWeekdays.isEmpty) {
+    return true;
+  }
+
+  final nextAiringAt = anime.nextAiringAt;
+  return nextAiringAt != null &&
+      releaseWeekdays.any(
+        (weekday) => weekday.dateTimeValue == nextAiringAt.weekday,
+      );
 }
 
 bool _matchesGenres(AppAnime anime, Set<String> genres) {

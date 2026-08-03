@@ -8,6 +8,7 @@ import 'seasonal_pagination_providers.dart';
 import 'seasonal_repository_provider.dart';
 
 final seasonalAnimeProvider = FutureProvider<List<AppAnime>>((ref) async {
+  ref.watch(seasonalCacheGenerationProvider);
   final typeFilter = ref.watch(seasonalTypeFilterProvider);
   final sort = ref.watch(seasonalSortProvider);
   final sortDirection = ref.watch(seasonalSortDirectionProvider);

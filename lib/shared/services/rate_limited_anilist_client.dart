@@ -91,6 +91,24 @@ final class RateLimitedAniListClient {
     });
   }
 
+  Future<AiringScheduleResponse> getAiringSchedule({
+    int page = 1,
+    int perPage = 50,
+    int? airingAtGreater,
+    int? airingAtLesser,
+    List<AiringSort>? sort,
+  }) {
+    return execute(
+      (client) => client.getAiringSchedule(
+        page: page,
+        perPage: perPage,
+        airingAtGreater: airingAtGreater,
+        airingAtLesser: airingAtLesser,
+        sort: sort,
+      ),
+    );
+  }
+
   Future<List<String>> getGenres() {
     return execute((client) => client.getGenres());
   }

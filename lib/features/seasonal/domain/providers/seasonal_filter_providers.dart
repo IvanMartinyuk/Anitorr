@@ -100,6 +100,16 @@ class SeasonalFiltersNotifier extends Notifier<SeasonalFilters> {
     ref.read(seasonalPageProvider.notifier).reset();
   }
 
+  void toggleReleaseWeekday(ReleaseWeekday weekday) {
+    final releaseWeekdays = Set<ReleaseWeekday>.of(state.releaseWeekdays);
+    if (!releaseWeekdays.add(weekday)) {
+      releaseWeekdays.remove(weekday);
+    }
+
+    state = state.copyWith(releaseWeekdays: releaseWeekdays);
+    ref.read(seasonalPageProvider.notifier).reset();
+  }
+
   void clear() {
     state = SeasonalFilters.empty();
     ref.read(seasonalPageProvider.notifier).reset();

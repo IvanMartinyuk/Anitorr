@@ -113,6 +113,21 @@ class _SeasonalFilterPanelState extends ConsumerState<SeasonalFilterPanel> {
             },
           ),
         ),
+        FilterWidgetModule(
+          LabeledMultiChoiceFilter<ReleaseWeekday>(
+            label: 'Release day',
+            options: [
+              for (final weekday in ReleaseWeekday.values)
+                FilterOption(value: weekday, label: weekday.label),
+            ],
+            selectedValues: filters.releaseWeekdays,
+            onToggle: (weekday) {
+              ref
+                  .read(seasonalFiltersProvider.notifier)
+                  .toggleReleaseWeekday(weekday);
+            },
+          ),
+        ),
         if (genres.isNotEmpty) ...[
           FilterWidgetModule(
             LabeledMultiChoiceFilter<String>(
@@ -176,6 +191,9 @@ class _SeasonalFilterPanelState extends ConsumerState<SeasonalFilterPanel> {
       count += 1;
     }
 
-    return count + filters.genres.length + filters.tags.length;
+    return count +
+        filters.genres.length +
+        filters.tags.length +
+        filters.releaseWeekdays.length;
   }
 }
